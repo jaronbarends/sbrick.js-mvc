@@ -6,6 +6,23 @@
 	/* globals someGlobalVar */ //Tell jshint someGlobalVar exists as global var
 	const SBRICKNAME = 'SBrick';
 
+	let SBrick;
+
+
+	/**
+	* initialize controls
+	* @returns {undefined}
+	*/
+	const initControls = function() {
+		document.getElementById('check-battery-btn').on('click', () => {
+			SBrick.getBattery()
+				.then( (battery) => {
+					log('battery:' + battery + '%');
+				} )
+		});
+	};
+	
+
 
 	/**
 	* connect the SBrick
@@ -15,12 +32,13 @@
 		SBrick.connect(SBRICKNAME)
 		.then( () => {
 			// SBrick now is connected
-			log('then in connect');
+			log('connected');
 			// alert('connected');
+			initControls();
 		} )
 		.catch( (e) => {
 			// alert('Caught error in SBrick.connect;\n'+e);
-			log('Caught error in SBrick.connect;', e);
+			log('Caught error in SBrick.connect;' + e);
 		});
 	};
 	
@@ -39,7 +57,7 @@
 	* log to page
 	* @returns {undefined}
 	*/
-	var log = function(msg) {
+	const log = function(msg) {
 		document.getElementById('log').innerHTML += '<bg>'+msg;
 	};
 
@@ -50,7 +68,7 @@
 	* @param {string} varname Description
 	* @returns {undefined}
 	*/
-	var init = function() {
+	const init = function() {
 		document.getElementById('permission-btn').addEventListener('click', () => {
 			connectSBrick();
 		});
