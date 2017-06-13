@@ -54,7 +54,8 @@
 		try {
 			SBRICK.drive(SBrick.CHANNEL0, SBrick.CW, SBrick.MAX);
 		} catch(e) {
-			alert('catch in channel 0'+e);
+			alert('catch in channel 0');
+			alert(e);
 		}
 		alert('done 0');
 	};
