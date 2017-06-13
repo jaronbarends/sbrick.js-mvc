@@ -12,7 +12,26 @@
 	* 
 	* @returns {undefined}
 	*/
-	var logBatteryPercentage = function(value) {
+	const logTemperature = function(value) {
+		log('temperature:' + value + '%');
+	};
+
+
+	/**
+	* 
+	* @returns {undefined}
+	*/
+	var checkTemperatureHandler = function() {
+		SBrick.getTemp()
+			.then(logTemperature);
+	};
+
+
+	/**
+	* 
+	* @returns {undefined}
+	*/
+	const logBatteryPercentage = function(value) {
 		log('battery:' + value + '%');
 	};
 
@@ -33,6 +52,7 @@
 	*/
 	const channel0Handler = function() {
 		SBRICK.drive(SBrick.CHANNEL0, SBrick.CW, SBrick.MAX);
+		alert('done 0');
 	};
 	
 
@@ -42,6 +62,7 @@
 	*/
 	const channel1Handler = function() {
 		SBRICK.drive(SBrick.CHANNEL1, SBrick.CW, SBrick.MAX);
+		alert('done 1');
 	};
 	
 
@@ -51,6 +72,7 @@
 	*/
 	const channel2Handler = function() {
 		SBRICK.drive(SBrick.CHANNEL2, SBrick.CW, SBrick.MAX);
+		alert('done 2');
 	};
 	
 
@@ -60,6 +82,7 @@
 	*/
 	const channel3Handler = function() {
 		SBRICK.drive(SBrick.CHANNEL3, SBrick.CW, SBrick.MAX);
+		alert('done 3');
 	};
 	
 	
@@ -71,6 +94,7 @@
 	*/
 	const initControls = function() {
 		document.getElementById('check-battery-btn').addEventListener('click', checkBatteryHandler);
+		document.getElementById('check-temperature-btn').addEventListener('click', checkTemperatureHandler);
 		document.getElementById('channel-0').addEventListener('click', channel0Handler);
 		document.getElementById('channel-1').addEventListener('click', channel1Handler);
 		document.getElementById('channel-2').addEventListener('click', channel2Handler);
