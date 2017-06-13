@@ -13,7 +13,19 @@
 	*/
 	var logBatteryPercentage = function(value) {
 		log('battery:' + value + '%');
+		alert("hopla")
 	};
+
+
+	/**
+	* 
+	* @returns {undefined}
+	*/
+	var checkBatteryHandler = function() {
+		SBrick.getBattery()
+			.then(logBatteryPercentage);
+	};
+	
 	
 
 
@@ -22,10 +34,7 @@
 	* @returns {undefined}
 	*/
 	const initControls = function() {
-		document.getElementById('check-battery-btn').addEventListener('click', () => {
-			SBrick.getBattery()
-				.then(logBatteryPercentage);
-		});
+		document.getElementById('check-battery-btn').addEventListener('click', checkBatteryHandler);
 	};
 	
 
