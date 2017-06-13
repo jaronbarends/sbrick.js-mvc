@@ -1,0 +1,18 @@
+
+html {
+	font-family: arial, sans-serif;
+}
+
+button {
+	display: inline-block;
+	margin: 0 0 1em;
+	border: none;
+	padding: 1em;
+	background: #f30;
+	color: white;
+}
+
+.log-window {
+	min-height: 1em;
+	background: beige;
+}

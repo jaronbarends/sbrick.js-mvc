@@ -8,6 +8,16 @@
 
 
 	/**
+	* 
+	* @returns {undefined}
+	*/
+	var logBatteryPercentage = function(value) {
+		log('battery:' + value + '%');
+	};
+	
+
+
+	/**
 	* initialize controls
 	* @returns {undefined}
 	*/
@@ -15,9 +25,7 @@
 		alert('init controls');
 		document.getElementById('check-battery-btn').addEventListener('click', () => {
 			SBrick.getBattery()
-				.then( (battery) => {
-					log('battery:' + battery + '%');
-				} )
+				.then(logBatteryPercentage);
 		});
 	};
 	
