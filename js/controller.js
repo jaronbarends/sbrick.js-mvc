@@ -14,12 +14,13 @@
 	* @returns {undefined}
 	*/
 	const initControls = function() {
-		document.getElementById('check-battery-btn').on('click', () => {
-			SBrick.getBattery()
-				.then( (battery) => {
-					log('battery:' + battery + '%');
-				} )
-		});
+		alert('init controls');
+		// document.getElementById('check-battery-btn').on('click', () => {
+		// 	SBrick.getBattery()
+		// 		.then( (battery) => {
+		// 			log('battery:' + battery + '%');
+		// 		} )
+		// });
 	};
 	
 
