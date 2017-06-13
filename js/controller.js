@@ -13,7 +13,6 @@
 	*/
 	var logBatteryPercentage = function(value) {
 		log('battery:' + value + '%');
-		alert("hopla")
 	};
 
 
@@ -35,6 +34,8 @@
 	*/
 	const initControls = function() {
 		document.getElementById('check-battery-btn').addEventListener('click', checkBatteryHandler);
+
+		document.getElementById('controls').classList.remove('is-hidden');
 	};
 	
 

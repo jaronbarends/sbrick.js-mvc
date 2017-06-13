@@ -16,3 +16,7 @@ button {
 	min-height: 1em;
 	background: beige;
 }
+
+.is-hidden {
+	visibility: hidden;
+}
