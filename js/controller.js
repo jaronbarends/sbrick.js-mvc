@@ -52,7 +52,7 @@
 	*/
 	const channel0Handler = function() {
 		try {
-			SBRICK.drive(SBrick.CHANNEL0, SBrick.CW, SBrick.MAX);
+			SBrick.drive(SBrick.CHANNEL0, SBrick.CW, SBrick.MAX);
 		} catch(e) {
 			alert('catch in channel 0');
 			alert(e);
@@ -66,7 +66,7 @@
 	* @returns {undefined}
 	*/
 	const channel1Handler = function() {
-		SBRICK.drive(SBrick.CHANNEL1, SBrick.CW, SBrick.MAX);
+		SBrick.drive(SBrick.CHANNEL1, SBrick.CW, SBrick.MAX);
 		alert('done 1');
 	};
 	
@@ -76,7 +76,7 @@
 	* @returns {undefined}
 	*/
 	const channel2Handler = function() {
-		SBRICK.drive(SBrick.CHANNEL2, SBrick.CW, SBrick.MAX);
+		SBrick.drive(SBrick.CHANNEL2, SBrick.CW, SBrick.MAX);
 		alert('done 2');
 	};
 	
@@ -86,7 +86,7 @@
 	* @returns {undefined}
 	*/
 	const channel3Handler = function() {
-		SBRICK.drive(SBrick.CHANNEL3, SBrick.CW, SBrick.MAX);
+		SBrick.drive(SBrick.CHANNEL3, SBrick.CW, SBrick.MAX);
 		alert('done 3');
 	};
 	
@@ -154,6 +154,7 @@
 	* @returns {undefined}
 	*/
 	const init = function() {
+		alert(1);
 		document.getElementById('permission-btn').addEventListener('click', connectSBrick);
 	};
 
