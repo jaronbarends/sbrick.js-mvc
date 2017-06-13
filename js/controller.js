@@ -31,9 +31,35 @@
 	* 
 	* @returns {undefined}
 	*/
-	const channel1Handler = function() {
-		alert('channel1');
+	const channel0Handler = function() {
 		SBRICK.drive(SBrick.CHANNEL0, SBrick.CW, SBrick.MAX);
+	};
+	
+
+	/**
+	* 
+	* @returns {undefined}
+	*/
+	const channel1Handler = function() {
+		SBRICK.drive(SBrick.CHANNEL1, SBrick.CW, SBrick.MAX);
+	};
+	
+
+	/**
+	* 
+	* @returns {undefined}
+	*/
+	const channel2Handler = function() {
+		SBRICK.drive(SBrick.CHANNEL2, SBrick.CW, SBrick.MAX);
+	};
+	
+
+	/**
+	* 
+	* @returns {undefined}
+	*/
+	const channel3Handler = function() {
+		SBRICK.drive(SBrick.CHANNEL3, SBrick.CW, SBrick.MAX);
 	};
 	
 	
@@ -45,7 +71,10 @@
 	*/
 	const initControls = function() {
 		document.getElementById('check-battery-btn').addEventListener('click', checkBatteryHandler);
+		document.getElementById('channel-0').addEventListener('click', channel0Handler);
 		document.getElementById('channel-1').addEventListener('click', channel1Handler);
+		document.getElementById('channel-2').addEventListener('click', channel2Handler);
+		document.getElementById('channel-3').addEventListener('click', channel3Handler);
 		document.getElementById('controls').classList.remove('is-hidden');
 	};
 	
