@@ -5,19 +5,29 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	
 	<title>SBrick test</title>
+	<style>
+		html {
+			font-family: arial, sans-serif;
+		}
+		
+		#log {
+			min-height: 1em;
+			background: beige;
+		}
+	</style>
 	
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	
+</head>
+<body>
+
+	<button id="permission-btn">Allow bluetooth</button>
 
 	<p>
 		<a href="javascript:location.reload(true)">refresh</a>
 	</p>
 	<div id="log">
 	</div>
-	
-</head>
-<body>
-
-	<button id="permission-btn">Allow bluetooth</button>
 
 	<script src="js/vendor/jquery-3.1.0.min.js"></script>
 	<script src="js/vendor/promise-queue.js"></script>
