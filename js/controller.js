@@ -15,10 +15,12 @@
 		SBrick.connect(SBRICKNAME)
 		.then( () => {
 			// SBrick now is connected
-			console.log('then in connect');
+			// console.log('then in connect');
+			alert('connected');
 		} )
 		.catch( (e) => {
-			console.log('Caught error in SBrick.connect;', e);
+			alert('Caught error in SBrick.connect;\n'+e);
+			// console.log('Caught error in SBrick.connect;', e);
 		});
 	};
 	
