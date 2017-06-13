@@ -30,7 +30,7 @@
 	* @returns {undefined}
 	*/
 	const connectSBrick = function() {
-		SBrick.connect(SBRICKNAME)
+		SBrick = SBrick.connect(SBRICKNAME)
 		.then( () => {
 			// SBrick now is connected
 			log('connected');
