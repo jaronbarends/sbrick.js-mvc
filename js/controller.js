@@ -6,8 +6,6 @@
 	/* globals someGlobalVar */ //Tell jshint someGlobalVar exists as global var
 	const SBRICKNAME = 'SBrick';
 
-	let SBrick;
-
 
 	/**
 	* initialize controls
@@ -15,12 +13,12 @@
 	*/
 	const initControls = function() {
 		alert('init controls');
-		// document.getElementById('check-battery-btn').on('click', () => {
-		// 	SBrick.getBattery()
-		// 		.then( (battery) => {
-		// 			log('battery:' + battery + '%');
-		// 		} )
-		// });
+		document.getElementById('check-battery-btn').on('click', () => {
+			SBrick.getBattery()
+				.then( (battery) => {
+					log('battery:' + battery + '%');
+				} )
+		});
 	};
 	
 
@@ -30,7 +28,7 @@
 	* @returns {undefined}
 	*/
 	const connectSBrick = function() {
-		SBrick = SBrick.connect(SBRICKNAME)
+		SBrick.connect(SBRICKNAME)
 		.then( () => {
 			// SBrick now is connected
 			log('connected');
