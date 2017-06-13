@@ -5,6 +5,7 @@
 	// (optional) tell jshint about globals (they should remain commented out)
 	/* globals someGlobalVar */ //Tell jshint someGlobalVar exists as global var
 	const SBRICKNAME = 'SBrick';
+	// const 
 
 
 	/**
@@ -25,6 +26,16 @@
 			.then(logBatteryPercentage);
 	};
 	
+
+	/**
+	* 
+	* @returns {undefined}
+	*/
+	const channel1Handler = function() {
+		alert('channel1');
+		SBRICK.drive(SBrick.CHANNEL0, SBrick.CW, SBrick.MAX);
+	};
+	
 	
 
 
@@ -34,7 +45,7 @@
 	*/
 	const initControls = function() {
 		document.getElementById('check-battery-btn').addEventListener('click', checkBatteryHandler);
-
+		document.getElementById('channel-1').addEventListener('click', channel1Handler);
 		document.getElementById('controls').classList.remove('is-hidden');
 	};
 	
@@ -85,18 +96,7 @@
 	* @returns {undefined}
 	*/
 	const init = function() {
-		document.getElementById('permission-btn').addEventListener('click', () => {
-			connectSBrick();
-		});
-
-		// SBrick.disconnect()
-		// .then( ()=> {
-		// 	// SBrick now is disconnected
-		// 	console.log('SBrick is disconnected');
-		// } )
-		// .catch( (e) => {
-		// 	console.log('Caught error in SBrick.disconnect:', e);
-		// });
+		document.getElementById('permission-btn').addEventListener('click', connectSBrick);
 	};
 
 

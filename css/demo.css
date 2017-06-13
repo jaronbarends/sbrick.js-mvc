@@ -5,7 +5,7 @@ html {
 
 button {
 	display: inline-block;
-	margin: 0 0 1em;
+	margin: 0 1em 1em 0;
 	border: none;
 	padding: 1em;
 	background: #f30;
