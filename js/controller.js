@@ -15,12 +15,12 @@
 		SBrick.connect(SBRICKNAME)
 		.then( () => {
 			// SBrick now is connected
-			console.log('then in connect');
+			log('then in connect');
 			// alert('connected');
 		} )
 		.catch( (e) => {
 			// alert('Caught error in SBrick.connect;\n'+e);
-			console.log('Caught error in SBrick.connect;', e);
+			log('Caught error in SBrick.connect;', e);
 		});
 	};
 	
@@ -33,6 +33,16 @@
 	const permissionHandler = function() {
 		connectSBrick();
 	};
+
+
+	/**
+	* log to page
+	* @returns {undefined}
+	*/
+	var log = function(msg) {
+		document.getElementById('log').innerHTML += '<bg>'+msg;
+	};
+
 	
 
 	/**
