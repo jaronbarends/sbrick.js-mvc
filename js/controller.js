@@ -41,7 +41,7 @@
 	* @returns {undefined}
 	*/
 	var init = function() {
-
+		alert('go!');
 		document.getElementById('permission-btn').addEventListener('click', () => {
 			connectSBrick();
 		});
