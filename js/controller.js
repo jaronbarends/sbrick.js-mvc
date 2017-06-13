@@ -50,7 +50,7 @@
 	* 
 	* @returns {undefined}
 	*/
-	const channel0Handler = function() {\
+	const channel0Handler = function() {
 		try {
 			SBRICK.drive(SBrick.CHANNEL0, SBrick.CW, SBrick.MAX);
 		} catch(e) {
