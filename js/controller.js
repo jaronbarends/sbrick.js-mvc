@@ -22,7 +22,6 @@
 	* @returns {undefined}
 	*/
 	const initControls = function() {
-		alert('init controls');
 		document.getElementById('check-battery-btn').addEventListener('click', () => {
 			SBrick.getBattery()
 				.then(logBatteryPercentage);
@@ -65,7 +64,7 @@
 	* @returns {undefined}
 	*/
 	const log = function(msg) {
-		document.getElementById('log').innerHTML += '<bg>'+msg;
+		document.getElementById('log').innerHTML += '<br>'+msg;
 	};
 
 	
