@@ -13,7 +13,7 @@
 	*/
 	const initControls = function() {
 		alert('init controls');
-		document.getElementById('check-battery-btn').on('click', () => {
+		document.getElementById('check-battery-btn').addEventListener('click', () => {
 			SBrick.getBattery()
 				.then( (battery) => {
 					log('battery:' + battery + '%');
