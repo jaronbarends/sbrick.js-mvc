@@ -4,7 +4,8 @@
 	/* globals SBrick */ //Tell jshint someGlobalVar exists as global var
 
 	const SBRICKNAME = 'SBrick',
-		MIN_VALUE_BELOW_WHICH_MOTOR_DOES_NOT_WORK = 98;// somehow, motor does not seem to work for power values < 98
+		// MIN_VALUE_BELOW_WHICH_MOTOR_DOES_NOT_WORK = 98;// somehow, motor does not seem to work for power values < 98
+		MIN_VALUE_BELOW_WHICH_MOTOR_DOES_NOT_WORK = 48;// somehow, motor does not seem to work for power values < 98
 	let logWin,
 		connectBtn,
 		controlPanel;
