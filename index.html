@@ -16,7 +16,12 @@
 		Connect
 	</button>
 	<div id="controlPanel" class="is-hiddean">
-		<button id="channel-0" class="btn btn--start">0</button>
+		<div class="channel-controls">
+			<button id="channel-0" class="btn btn--start">0</button>
+			<input id="ch1-power" type="range" min="-1" max="1"><label for="ch1-power">Power</label>
+			<input id="ch1-dir-cw" type="radio" name="direction" value="CW" checked><label for="ch1-dir-cw">CW</label>
+			<input id="ch1-dir-ccw" type="radio" name="direction" value="CCW"><label for="ch1-dir-ccw">CCW</label>
+		</div>
 		<button id="channel-1" class="btn btn--start">1</button>
 		<button id="channel-2" class="btn btn--start">2</button>
 		<button id="channel-3" class="btn btn--start">3</button>

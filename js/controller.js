@@ -58,7 +58,7 @@
 	* @returns {undefined}
 	*/
 	const channel2Handler = function() {
-		SBrick.drive(SBrick.CHANNEL2, SBrick.CW, SBrick.MAX);
+		SBrick.drive(SBrick.CHANNEL1, SBrick.CW, -1*SBrick.MAX);
 	};
 	
 
