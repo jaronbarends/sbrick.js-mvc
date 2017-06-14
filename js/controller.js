@@ -84,7 +84,7 @@
 			channel = SBrick['CHANNEL'+channelId];
 
 		log(channelId + ', ' + power + ', ' + direction);
-		// SBrick.drive(channel, direction, power);
+		SBrick.drive(channel, direction, power);
 	};
 	
 
@@ -211,7 +211,7 @@
 		// Per the specs, this has to be done IN RESPONSE TO A USER ACTION
 		connectBtn.addEventListener('click', connectHandler);
 
-		log('C');
+		log('D');
 	};
 
 	// kick of the script when all dom content has loaded
