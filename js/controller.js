@@ -77,7 +77,19 @@
 	* @returns {undefined}
 	*/
 	const updateLights = function(channelId) {
-		console.log('lights');
+		let	power = document.getElementById('ch' + channelId + '-power').value,
+			// powerNumber = document.getElementById('ch' + channelId + '-power-number').value,
+			direction = SBrick.CW,// we need a value
+			channel = SBrick['CHANNEL'+channelId];
+
+
+		power = Math.round(SBrick.MAX * power/100);
+		// power = Math.round(SBrick.MAX * power/100);
+		// power = parseInt(powerNumber, 10);
+		console.log(channel, direction, power);
+
+		log('Lights: ' + channelId + ', ' + direction + ', ' + power);
+		SBrick.drive(channel, direction, power);
 	};
 
 
@@ -99,7 +111,7 @@
 		direction = SBrick[direction];
 		console.log(channel, direction, power);
 
-		log(channelId + ', ' + direction + ', ' + power);
+		log('Drive: ' + channelId + ', ' + direction + ', ' + power);
 		SBrick.drive(channel, direction, power);
 	};
 	
@@ -251,7 +263,7 @@
 		// Per the specs, this has to be done IN RESPONSE TO A USER ACTION
 		connectBtn.addEventListener('click', connectHandler);
 
-		log('v5');
+		log('v6');
 	};
 
 	// kick of the script when all dom content has loaded
