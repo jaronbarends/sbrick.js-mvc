@@ -78,14 +78,19 @@
 	*/
 	const channelBtnHandler = function(e) {
 		const btn = e.target,
-			channelId = btn.getAttribute('data-channel'),
-			power = document.getElementById('ch' + channelId + '-power').value;
+			channelId = btn.getAttribute('data-channel');
+
+		let	power = document.getElementById('ch' + channelId + '-power').value;
 			direction = document.querySelector('[name="ch' + channelId + '-direction"]:checked').value,
 			channel = SBrick['CHANNEL'+channelId];
 
+		power = Math.round(SBrick.MAX * power/100);
+		direction = SBrick[direction];
+		// console.log(power, SBrick.MAX, direction);
+
 		log(channelId + ', ' + power + ', ' + direction);
-		// SBrick.drive(channel, direction, SBrick.MAX * power/100);
-		SBrick.drive(channel, SBrick[direction], SBrick.MAX);
+		SBrick.drive(channel, direction, power);
+		// SBrick.drive(channel, SBrick[direction], SBrick.MAX);
 	};
 	
 
@@ -212,7 +217,7 @@
 		// Per the specs, this has to be done IN RESPONSE TO A USER ACTION
 		connectBtn.addEventListener('click', connectHandler);
 
-		log('A');
+		log('B');
 	};
 
 	// kick of the script when all dom content has loaded
