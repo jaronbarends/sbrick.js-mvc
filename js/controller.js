@@ -1,4 +1,4 @@
-;(function($) {
+(() => {
 
 	// (optional) tell jshint about globals (they should remain commented out)
 	/* globals SBrick */ //Tell jshint someGlobalVar exists as global var
@@ -16,7 +16,7 @@
 		SBrick.getTemp()
 			.then( (value) => {
 				value = Math.round(10*value)/10;
-				log('Temperature:' + value + '&deg;C');
+				log('Temperature: ' + value + '&deg;C');
 			});
 	};
 
@@ -28,7 +28,7 @@
 	var checkBattery = function() {
 		SBrick.getBattery()
 			.then( (value) => {
-				log('Battery:' + value + '%');			
+				log('Battery: ' + value + '%');			
 			});
 	};
 	
@@ -123,12 +123,11 @@
 	*/
 	const init = function() {
 		logWin = document.getElementById('log-window');
-		log('aa');
-		log('aa');
-		log('aa');
-		document.getElementById('permission-btn').addEventListener('click', connectSBrick);
+		// Connect to SBrick via bluetooth.
+		// Per the specs, this has to be done IN RESPONSE TO A USER ACTION
+		document.getElementById('connect-btn').addEventListener('click', connectSBrick);
 	};
 
-	$(document).ready(init);
+	document.addEventListener('DOMContentLoaded', init);
 
-})(jQuery);
+})();
