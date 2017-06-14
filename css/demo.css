@@ -67,7 +67,7 @@ label {
 }
 
 input[type="range"] {
-	width: 5em;
+	width: 8em;
 	vertical-align: middle;
 }
 
@@ -82,7 +82,8 @@ input[type="range"] {
 }
 
 .is-hidden {
-	visibility: hidden;
+	/*visibility: hidden;*/
+	opacity: 0.5;
 }
 
 .footnote {
