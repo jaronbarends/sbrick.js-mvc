@@ -1,6 +1,11 @@
 
 html {
 	font-family: arial, sans-serif;
+	font-size: 62.5%;
+}
+
+body {
+	font-size: 1.6rem;
 }
 
 button {
@@ -10,6 +15,7 @@ button {
 	padding: 1em;
 	background: #f30;
 	color: white;
+	font: inherit;
 }
 
 .log-window {
@@ -19,4 +25,8 @@ button {
 
 .is-hidden {
 	visibility: hidden;
+}
+
+.footnote {
+	font-size: 1.2rem;
 }

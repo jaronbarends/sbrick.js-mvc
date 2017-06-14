@@ -147,7 +147,6 @@
 		document.getElementById('permission-btn').addEventListener('click', connectSBrick);
 	};
 
-
 	$(document).ready(init);
 
 })(jQuery);
