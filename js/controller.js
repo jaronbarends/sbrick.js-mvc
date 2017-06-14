@@ -58,7 +58,7 @@
 	* @returns {undefined}
 	*/
 	const channel2Handler = function() {
-		SBrick.drive(SBrick.CHANNEL1, SBrick.CW, -1*SBrick.MAX);
+		SBrick.drive(SBrick.CHANNEL0, SBrick.CW, SBrick.MAX);
 	};
 	
 
@@ -72,6 +72,22 @@
 	
 	
 
+	/**
+	* handle click on channel
+	* @returns {undefined}
+	*/
+	const channelBtnHandler = function(e) {
+		const btn = e.target,
+			channelId = btn.getAttribute('data-channel'),
+			power = document.getElementById('ch' + channelId + '-power').value;
+			direction = document.querySelector('[name="ch' + channelId + '-direction"]:checked').value,
+			channel = SBrick['CHANNEL'+channelId];
+
+		log(channelId + ', ' + power + ', ' + direction);
+		// SBrick.drive(channel, direction, power);
+	};
+	
+
 
 	/**
 	* initialize controlPanel
@@ -80,8 +96,12 @@
 	const initControlPanel = function() {
 		document.getElementById('check-battery-btn').addEventListener('click', checkBattery);
 		document.getElementById('check-temperature-btn').addEventListener('click', checkTemperature);
-		document.getElementById('channel-0').addEventListener('click', channel0Handler);
-		document.getElementById('channel-1').addEventListener('click', channel1Handler);
+		const channelBtns = Array.from(document.querySelectorAll('button[data-channel]'));
+		channelBtns.forEach( (btn) => {
+			btn.addEventListener('click', channelBtnHandler);
+		});
+		// document.getElementById('channel-0').addEventListener('click', channel0Handler);
+		// document.getElementById('channel-1').addEventListener('click', channel1Handler);
 		document.getElementById('channel-2').addEventListener('click', channel2Handler);
 		document.getElementById('channel-3').addEventListener('click', channel3Handler);
 		document.getElementById('stop-all').addEventListener('click', () => { SBrick.stopAll(); });
@@ -191,7 +211,7 @@
 		// Per the specs, this has to be done IN RESPONSE TO A USER ACTION
 		connectBtn.addEventListener('click', connectHandler);
 
-		log('B');
+		log('C');
 	};
 
 	// kick of the script when all dom content has loaded

@@ -17,12 +17,20 @@
 	</button>
 	<div id="controlPanel" class="is-hiddean">
 		<div class="channel-controls">
-			<button id="channel-0" class="btn btn--start">0</button>
-			<input id="ch1-power" type="range" min="-1" max="1"><label for="ch1-power">Power</label>
-			<input id="ch1-dir-cw" type="radio" name="direction" value="CW" checked><label for="ch1-dir-cw">CW</label>
-			<input id="ch1-dir-ccw" type="radio" name="direction" value="CCW"><label for="ch1-dir-ccw">CCW</label>
+			<button class="btn btn--start" data-channel="0">0</button>
+			<input id="ch0-power" type="range" min="0" max="100" value="1"><label for="ch0-power">Power</label>
+			<input id="ch0-dir-cw" type="radio" name="ch0-direction" value="CW" checked><label for="ch0-dir-cw"><span class="symbol">&#8635;</span></label>
+			<input id="ch0-dir-ccw" type="radio" name="ch0-direction" value="CCW"><label for="ch0-dir-ccw"><span class="symbol">&#8634;</span></label>
 		</div>
-		<button id="channel-1" class="btn btn--start">1</button>
+
+		<div class="channel-controls">
+			<button class="btn btn--start" data-channel="1">1</button>
+			<input id="ch1-power" type="range" min="0" max="100" value="1"><label for="ch1-power">Power</label>
+			<input id="ch1-dir-cw" type="radio" name="ch1-direction" value="CW" checked><label for="ch1-dir-cw"><span class="symbol">&#8635;</span></label>
+			<input id="ch1-dir-ccw" type="radio" name="ch1-direction" value="CCW"><label for="ch1-dir-ccw"><span class="symbol">&#8634;</span></label>
+		</div>
+
+		<!-- <button id="channel-1" class="btn btn--start">1</button> -->
 		<button id="channel-2" class="btn btn--start">2</button>
 		<button id="channel-3" class="btn btn--start">3</button>
 		<button id="stop-all" class="btn btn--stop">stop all</button>

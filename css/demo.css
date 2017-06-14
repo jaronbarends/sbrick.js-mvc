@@ -57,6 +57,20 @@ a {
 
 /*-- End buttons --*/
 
+label {
+	margin-left: 0.5em;
+}
+
+.symbol {
+	font-weight: bold;
+	font-size: larger;
+}
+
+input[type="range"] {
+	width: 5em;
+	vertical-align: middle;
+}
+
 .log-window {
 	padding: 0.5em;
 	font-size: 1.2rem;
