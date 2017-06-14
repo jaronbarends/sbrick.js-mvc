@@ -4,7 +4,9 @@
 	/* globals SBrick */ //Tell jshint someGlobalVar exists as global var
 
 	const SBRICKNAME = 'SBrick';
-	let logWin;
+	let logWin,
+		connectBtn,
+		controlPanel;
 
 
 
@@ -72,10 +74,10 @@
 
 
 	/**
-	* initialize controls
+	* initialize controlPanel
 	* @returns {undefined}
 	*/
-	const initControls = function() {
+	const initControlPanel = function() {
 		document.getElementById('check-battery-btn').addEventListener('click', checkBattery);
 		document.getElementById('check-temperature-btn').addEventListener('click', checkTemperature);
 		document.getElementById('channel-0').addEventListener('click', channel0Handler);
@@ -83,25 +85,81 @@
 		document.getElementById('channel-2').addEventListener('click', channel2Handler);
 		document.getElementById('channel-3').addEventListener('click', channel3Handler);
 		document.getElementById('stop-all').addEventListener('click', () => { SBrick.stopAll(); });
-		document.getElementById('controls').classList.remove('is-hidden');
+	};
+
+
+	/**
+	* connect the sbrick
+	* @returns {undefined}
+	*/
+	var connectSBrick = function() {
+		SBrick.connect(SBRICKNAME)
+		.then( () => {
+			// SBrick now is connected
+			log('SBrick is now Connected');
+			updateConnectionState();
+		} )
+		.catch( (e) => {
+			log('Caught error in SBrick.connect: ' + e);
+			updateConnectionState();
+		});
+	};
+
+
+	/**
+	* disconnect the sbrick
+	* @returns {undefined}
+	*/
+	var disconnectSBrick = function() {
+		SBrick.disconnect(SBRICKNAME)
+		.then( () => {
+			// SBrick now is disconnected
+			log('SBrick is now disconnected');
+			updateConnectionState();
+		} )
+		.catch( (e) => {
+			// something went wrong
+			log('Caught error in SBrick.disconnect: ' + e);
+			updateConnectionState();
+		});
 	};
 	
 
 
 	/**
-	* connect the SBrick
+	* update the connect button and control panel
 	* @returns {undefined}
 	*/
-	const connectSBrick = function() {
-		SBrick.connect(SBRICKNAME)
-		.then( () => {
-			// SBrick now is connected
-			log('SBrick is now Connected');
-			initControls();
-		} )
-		.catch( (e) => {
-			log('Caught error in SBrick.connect: ' + e);
-		});
+	const updateConnectionState = function() {
+		if (SBrick.isConnected()) {
+			connectBtn.classList.remove('btn--is-busy', 'btn--start');
+			connectBtn.classList.add('btn-stop');
+			connectBtn.innerHTML = 'Disconnect';
+			controlPanel.classList.remove('is-hidden');
+		} else {
+			// disconnected
+			connectBtn.classList.remove('btn--is-busy', 'btn--stop');
+			connectBtn.classList.add('btn-start');
+			connectBtn.innerHTML = 'Connect';
+			controlPanel.classList.add('is-hidden');
+		}
+	};
+	
+	
+
+
+	/**
+	* connect or disconnect the SBrick
+	* @returns {undefined}
+	*/
+	const connectHandler = function() {
+		connectBtn.classList.add('btn--is-busy');
+
+		if (SBrick.isConnected()) {
+			disconnectSBrick();
+		} else {
+			connectSBrick();
+		}
 	};
 	
 
@@ -117,17 +175,24 @@
 	
 
 	/**
-	* initialize all
+	* initialize all functionality
 	* @param {string} varname Description
 	* @returns {undefined}
 	*/
 	const init = function() {
 		logWin = document.getElementById('log-window');
+		connectBtn = document.getElementById('connect-btn');
+		controlPanel = document.getElementById('controlPanel');
+
+		// initialize controlPanel - they'll remain hidden until connection is made
+		initControlPanel();
+
 		// Connect to SBrick via bluetooth.
 		// Per the specs, this has to be done IN RESPONSE TO A USER ACTION
-		document.getElementById('connect-btn').addEventListener('click', connectSBrick);
+		connectBtn.addEventListener('click', connectHandler);
 	};
 
+	// kick of the script when all dom content has loaded
 	document.addEventListener('DOMContentLoaded', init);
 
 })();

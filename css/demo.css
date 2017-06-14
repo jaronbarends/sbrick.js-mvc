@@ -50,6 +50,11 @@ a {
 		background: #1f49c7;
 	}
 
+	.btn--is-busy {
+		opacity: 0.5;
+		cursor: wait;
+	}
+
 /*-- End buttons --*/
 
 .log-window {
