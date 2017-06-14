@@ -3,7 +3,8 @@
 	// (optional) tell jshint about globals (they should remain commented out)
 	/* globals SBrick */ //Tell jshint someGlobalVar exists as global var
 
-	const SBRICKNAME = 'SBrick';
+	const SBRICKNAME = 'SBrick',
+		MIN_VALUE_BELOW_WHICH_MOTOR_DOES_NOT_WORK = 98;// somehow, motor does not seem to work for power values < 98
 	let logWin,
 		connectBtn,
 		controlPanel;
@@ -78,15 +79,18 @@
 	*/
 	const channelBtnHandler = function(e) {
 		const btn = e.target,
-			channelId = btn.getAttribute('data-channel');
+			channelId = btn.getAttribute('data-channel'),
+			powerRange = SBrick.MAX - MIN_VALUE_BELOW_WHICH_MOTOR_DOES_NOT_WORK;
 
 		let	power = document.getElementById('ch' + channelId + '-power').value,
-			powerNumber = document.getElementById('ch' + channelId + '-power-number').value,
+			// powerNumber = document.getElementById('ch' + channelId + '-power-number').value,
 			direction = document.querySelector('[name="ch' + channelId + '-direction"]:checked').value,
 			channel = SBrick['CHANNEL'+channelId];
 
-		power = Math.round(SBrick.MAX * power/100);
-		power = parseInt(powerNumber, 10);
+
+		power = Math.round(powerRange * power/100 + MIN_VALUE_BELOW_WHICH_MOTOR_DOES_NOT_WORK);
+		// power = Math.round(SBrick.MAX * power/100);
+		// power = parseInt(powerNumber, 10);
 		direction = SBrick[direction];
 		console.log(channel, direction, power);
 
@@ -220,7 +224,7 @@
 		// Per the specs, this has to be done IN RESPONSE TO A USER ACTION
 		connectBtn.addEventListener('click', connectHandler);
 
-		log('v2');
+		log('v3');
 	};
 
 	// kick of the script when all dom content has loaded
