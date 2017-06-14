@@ -95,6 +95,7 @@
 		document.getElementById('channel-1').addEventListener('click', channel1Handler);
 		document.getElementById('channel-2').addEventListener('click', channel2Handler);
 		document.getElementById('channel-3').addEventListener('click', channel3Handler);
+		document.getElementById('stop-all').addEventListener('click', () => { SBrick.stopAll(); });
 		document.getElementById('controls').classList.remove('is-hidden');
 	};
 	
@@ -109,11 +110,9 @@
 		.then( () => {
 			// SBrick now is connected
 			log('connected');
-			// alert('connected');
 			initControls();
 		} )
 		.catch( (e) => {
-			// alert('Caught error in SBrick.connect;\n'+e);
 			log('Caught error in SBrick.connect;' + e);
 		});
 	};
