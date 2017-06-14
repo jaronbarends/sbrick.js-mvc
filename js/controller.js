@@ -113,7 +113,10 @@
 		console.log(channel, direction, power);
 		log('Drive: ' + channelId + ', ' + direction + ', ' + power);
 
-		SBrick.drive(channel, direction, power);
+		SBrick.quickDrive([
+			{channel, direction, power}
+		]);
+		// SBrick.drive(channel, direction, power);
 	};
 	
 	
@@ -259,7 +262,7 @@
 		// Per the specs, this has to be done IN RESPONSE TO A USER ACTION
 		connectBtn.addEventListener('click', connectHandler);
 
-		log('v8');
+		log('v9');
 	};
 
 	// kick of the script when all dom content has loaded
