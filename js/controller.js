@@ -133,13 +133,13 @@
 	const updateConnectionState = function() {
 		if (SBrick.isConnected()) {
 			connectBtn.classList.remove('btn--is-busy', 'btn--start');
-			connectBtn.classList.add('btn-stop');
+			connectBtn.classList.add('btn--stop');
 			connectBtn.innerHTML = 'Disconnect';
 			controlPanel.classList.remove('is-hidden');
 		} else {
 			// disconnected
 			connectBtn.classList.remove('btn--is-busy', 'btn--stop');
-			connectBtn.classList.add('btn-start');
+			connectBtn.classList.add('btn--start');
 			connectBtn.innerHTML = 'Connect';
 			controlPanel.classList.add('is-hidden');
 		}
