@@ -74,10 +74,12 @@
 
 	/**
 	* update a set of lights
+	* @param {string} channelId The number (0-3) of the channel this set of lights is attached to
+	* @param {deviceId} string An id for this attached set of lights, corresponding to id's in html to retrieve input values
 	* @returns {undefined}
 	*/
-	const updateLights = function(channelId, functionId) {
-		let	power = document.getElementById(functionId + '-power').value,
+	const updateLights = function(channelId, deviceId) {
+		let	power = document.getElementById(deviceId + '-power').value,
 			direction = SBrick.CW,// we need a value
 			channel = SBrick['CHANNEL'+channelId];
 
@@ -92,13 +94,15 @@
 
 	/**
 	* update a drive motor
+	* @param {string} channelId The number (0-3) of the channel this motor is attached to
+	* @param {deviceId} string An id for this attached motor, corresponding to id's in html to retrieve input values
 	* @returns {undefined}
 	*/
-	const updateDrive = function(channelId, functionId) {
+	const updateDrive = function(channelId, deviceId) {
 		const powerRange = SBrick.MAX - MIN_VALUE_BELOW_WHICH_MOTOR_DOES_NOT_WORK;
-		let	power = document.getElementById(functionId + '-power').value,
-			// powerNumber = document.getElementById(functionId + '-power-number').value,
-			direction = document.querySelector('[name="' + functionId + '-direction"]:checked').value,
+		let	power = document.getElementById(deviceId + '-power').value,
+			// powerNumber = document.getElementById(deviceId + '-power-number').value,
+			direction = document.querySelector('[name="' + deviceId + '-direction"]:checked').value,
 			channel = SBrick['CHANNEL'+channelId];
 
 
@@ -116,25 +120,22 @@
 	
 
 	/**
-	* handle click on channel
+	* handle click on channel - call function for connected type of device (lights, drive motor, servo, ...)
 	* @returns {undefined}
 	*/
 	const channelBtnHandler = function(e) {
 		const btn = e.target,
 			channelId = btn.getAttribute('data-channel'),
-			functionType = btn.getAttribute('data-function-type'),
-			functionId = btn.getAttribute('data-function-id');
+			deviceType = btn.getAttribute('data-device-type'),
+			deviceId = btn.getAttribute('data-device-id');
 
-		if (functionType === 'lights') {
-			updateLights(channelId, functionId);
-		} else if (functionType === 'drive') {
-			updateDrive(channelId, functionId);
-		} else if (functionType === 'servo') {
-			// updateServo(channelId, functionId);
+		if (deviceType === 'lights') {
+			updateLights(channelId, deviceId);
+		} else if (deviceType === 'drive') {
+			updateDrive(channelId, deviceId);
+		} else if (deviceType === 'servo') {
+			// updateServo(channelId, deviceId);
 		}
-
-		// SBrick.drive(channel, SBrick[direction], SBrick.MAX);
-		// SBrick.drive(channel, SBrick.CCW, SBrick.MAX);
 	};
 	
 
@@ -144,17 +145,14 @@
 	* @returns {undefined}
 	*/
 	const initControlPanel = function() {
-		document.getElementById('check-battery-btn').addEventListener('click', checkBattery);
-		document.getElementById('check-temperature-btn').addEventListener('click', checkTemperature);
 		const channelBtns = Array.from(document.querySelectorAll('button[data-channel]'));
 		channelBtns.forEach( (btn) => {
 			btn.addEventListener('click', channelBtnHandler);
 		});
-		// document.getElementById('channel-0').addEventListener('click', channel0Handler);
-		// document.getElementById('channel-1').addEventListener('click', channel1Handler);
-		document.getElementById('channel-2').addEventListener('click', channel2Handler);
-		document.getElementById('channel-3').addEventListener('click', channel3Handler);
+
 		document.getElementById('stop-all').addEventListener('click', () => { SBrick.stopAll(); });
+		document.getElementById('check-battery-btn').addEventListener('click', checkBattery);
+		document.getElementById('check-temperature-btn').addEventListener('click', checkTemperature);
 	};
 
 
@@ -261,7 +259,7 @@
 		// Per the specs, this has to be done IN RESPONSE TO A USER ACTION
 		connectBtn.addEventListener('click', connectHandler);
 
-		log('v7');
+		log('v8');
 	};
 
 	// kick of the script when all dom content has loaded

@@ -18,21 +18,18 @@
 	<div id="controlPanel" class="is-hidden">
 
 		<div class="channel-controls">
-			<button class="btn btn--start" data-channel="0" data-function-type="lights" data-function-id="lights1">0</button>
+			<button class="btn btn--start" data-channel="0" data-device-type="lights" data-device-id="lights1">0</button>
 			<input id="lights1-power" type="range" min="0" max="100" value="1"><label for="lights1-power"></label>
 		</div>
 
 		<div class="channel-controls">
-			<button class="btn btn--start" data-channel="1" data-function-type="drive" data-function-id="drive1">1</button>
+			<button class="btn btn--start" data-channel="1" data-device-type="drive" data-device-id="drive1">1</button>
 			<input id="drive1-power" type="range" min="0" max="100" value="1"><label for="drive1-power"></label>
 			<!-- <input type="number" value="80" id="drive1-power-number"> -->
 			<input id="drive1-dir-cw" type="radio" name="drive1-direction" value="CW" checked><label for="drive1-dir-cw"><span class="symbol">&#8635;</span></label>
 			<input id="drive1-dir-ccw" type="radio" name="drive1-direction" value="CCW"><label for="drive1-dir-ccw"><span class="symbol">&#8634;</span></label>
 		</div>
 
-		<!-- <button id="channel-1" class="btn btn--start">1</button> -->
-		<button id="channel-2" class="btn btn--start">2</button>
-		<button id="channel-3" class="btn btn--start">3</button>
 		<button id="stop-all" class="btn btn--stop">stop all</button>
 		<button id="check-battery-btn" class="btn btn--info">Check battery</button>
 		<button id="check-temperature-btn" class="btn btn--info">Check temperature</button>
