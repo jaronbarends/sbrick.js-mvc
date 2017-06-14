@@ -13,7 +13,8 @@
 	* @returns {undefined}
 	*/
 	const logTemperature = function(value) {
-		log('temperature:' + value + '%');
+		value = Math.round(10*value)/10;
+		log('temperature:' + value + '&deg;C');
 	};
 
 
