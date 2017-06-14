@@ -70,18 +70,23 @@
 	const channel3Handler = function() {
 		SBrick.drive(SBrick.CHANNEL3, SBrick.CW, SBrick.MAX);
 	};
-	
-	
+
 
 	/**
-	* handle click on channel
+	* update a set of lights
 	* @returns {undefined}
 	*/
-	const channelBtnHandler = function(e) {
-		const btn = e.target,
-			channelId = btn.getAttribute('data-channel'),
-			powerRange = SBrick.MAX - MIN_VALUE_BELOW_WHICH_MOTOR_DOES_NOT_WORK;
+	const updateLights = function(channelId) {
+		console.log('lights');
+	};
 
+
+	/**
+	* update a drive motor
+	* @returns {undefined}
+	*/
+	const updateDrive = function(channelId) {
+		const powerRange = SBrick.MAX - MIN_VALUE_BELOW_WHICH_MOTOR_DOES_NOT_WORK;
 		let	power = document.getElementById('ch' + channelId + '-power').value,
 			// powerNumber = document.getElementById('ch' + channelId + '-power-number').value,
 			direction = document.querySelector('[name="ch' + channelId + '-direction"]:checked').value,
@@ -96,6 +101,28 @@
 
 		log(channelId + ', ' + direction + ', ' + power);
 		SBrick.drive(channel, direction, power);
+	};
+	
+	
+	
+
+	/**
+	* handle click on channel
+	* @returns {undefined}
+	*/
+	const channelBtnHandler = function(e) {
+		const btn = e.target,
+			channelId = btn.getAttribute('data-channel'),
+			type = btn.getAttribute('data-type');
+
+		if (type === 'lights') {
+			updateLights(channelId);
+		} else if (type === 'drive') {
+			updateDrive(channelId);
+		} else if (type === 'servo') {
+			// updateServo(channelId);
+		}
+
 		// SBrick.drive(channel, SBrick[direction], SBrick.MAX);
 		// SBrick.drive(channel, SBrick.CCW, SBrick.MAX);
 	};
@@ -224,7 +251,7 @@
 		// Per the specs, this has to be done IN RESPONSE TO A USER ACTION
 		connectBtn.addEventListener('click', connectHandler);
 
-		log('v4');
+		log('v5');
 	};
 
 	// kick of the script when all dom content has loaded
