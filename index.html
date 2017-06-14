@@ -16,17 +16,18 @@
 		Connect
 	</button>
 	<div id="controlPanel" class="is-hidden">
+
 		<div class="channel-controls">
-			<button class="btn btn--start" data-channel="0" data-type="lights">0</button>
-			<input id="ch0-power" type="range" min="0" max="100" value="1"><label for="ch0-power"></label>
+			<button class="btn btn--start" data-channel="0" data-function-type="lights" data-function-id="lights1">0</button>
+			<input id="lights1-power" type="range" min="0" max="100" value="1"><label for="lights1-power"></label>
 		</div>
 
 		<div class="channel-controls">
-			<button class="btn btn--start" data-channel="1" data-type="drive">1</button>
-			<input id="ch1-power" type="range" min="0" max="100" value="1"><label for="ch1-power"></label>
-			<!-- <input type="number" value="80" id="ch1-power-number"> -->
-			<input id="ch1-dir-cw" type="radio" name="ch1-direction" value="CW" checked><label for="ch1-dir-cw"><span class="symbol">&#8635;</span></label>
-			<input id="ch1-dir-ccw" type="radio" name="ch1-direction" value="CCW"><label for="ch1-dir-ccw"><span class="symbol">&#8634;</span></label>
+			<button class="btn btn--start" data-channel="1" data-function-type="drive" data-function-id="drive1">1</button>
+			<input id="drive1-power" type="range" min="0" max="100" value="1"><label for="drive1-power"></label>
+			<!-- <input type="number" value="80" id="drive1-power-number"> -->
+			<input id="drive1-dir-cw" type="radio" name="drive1-direction" value="CW" checked><label for="drive1-dir-cw"><span class="symbol">&#8635;</span></label>
+			<input id="drive1-dir-ccw" type="radio" name="drive1-direction" value="CCW"><label for="drive1-dir-ccw"><span class="symbol">&#8634;</span></label>
 		</div>
 
 		<!-- <button id="channel-1" class="btn btn--start">1</button> -->

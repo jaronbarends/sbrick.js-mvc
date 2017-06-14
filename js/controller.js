@@ -76,19 +76,16 @@
 	* update a set of lights
 	* @returns {undefined}
 	*/
-	const updateLights = function(channelId) {
-		let	power = document.getElementById('ch' + channelId + '-power').value,
-			// powerNumber = document.getElementById('ch' + channelId + '-power-number').value,
+	const updateLights = function(channelId, functionId) {
+		let	power = document.getElementById(functionId + '-power').value,
 			direction = SBrick.CW,// we need a value
 			channel = SBrick['CHANNEL'+channelId];
 
-
 		power = Math.round(SBrick.MAX * power/100);
-		// power = Math.round(SBrick.MAX * power/100);
-		// power = parseInt(powerNumber, 10);
-		console.log(channel, direction, power);
 
+		console.log(channel, direction, power);
 		log('Lights: ' + channelId + ', ' + direction + ', ' + power);
+
 		SBrick.drive(channel, direction, power);
 	};
 
@@ -97,21 +94,21 @@
 	* update a drive motor
 	* @returns {undefined}
 	*/
-	const updateDrive = function(channelId) {
+	const updateDrive = function(channelId, functionId) {
 		const powerRange = SBrick.MAX - MIN_VALUE_BELOW_WHICH_MOTOR_DOES_NOT_WORK;
-		let	power = document.getElementById('ch' + channelId + '-power').value,
-			// powerNumber = document.getElementById('ch' + channelId + '-power-number').value,
-			direction = document.querySelector('[name="ch' + channelId + '-direction"]:checked').value,
+		let	power = document.getElementById(functionId + '-power').value,
+			// powerNumber = document.getElementById(functionId + '-power-number').value,
+			direction = document.querySelector('[name="' + functionId + '-direction"]:checked').value,
 			channel = SBrick['CHANNEL'+channelId];
 
 
 		power = Math.round(powerRange * power/100 + MIN_VALUE_BELOW_WHICH_MOTOR_DOES_NOT_WORK);
 		// power = Math.round(SBrick.MAX * power/100);
-		// power = parseInt(powerNumber, 10);
 		direction = SBrick[direction];
-		console.log(channel, direction, power);
 
+		console.log(channel, direction, power);
 		log('Drive: ' + channelId + ', ' + direction + ', ' + power);
+
 		SBrick.drive(channel, direction, power);
 	};
 	
@@ -125,14 +122,15 @@
 	const channelBtnHandler = function(e) {
 		const btn = e.target,
 			channelId = btn.getAttribute('data-channel'),
-			type = btn.getAttribute('data-type');
+			functionType = btn.getAttribute('data-function-type'),
+			functionId = btn.getAttribute('data-function-id');
 
-		if (type === 'lights') {
-			updateLights(channelId);
-		} else if (type === 'drive') {
-			updateDrive(channelId);
-		} else if (type === 'servo') {
-			// updateServo(channelId);
+		if (functionType === 'lights') {
+			updateLights(channelId, functionId);
+		} else if (functionType === 'drive') {
+			updateDrive(channelId, functionId);
+		} else if (functionType === 'servo') {
+			// updateServo(channelId, functionId);
 		}
 
 		// SBrick.drive(channel, SBrick[direction], SBrick.MAX);
@@ -263,7 +261,7 @@
 		// Per the specs, this has to be done IN RESPONSE TO A USER ACTION
 		connectBtn.addEventListener('click', connectHandler);
 
-		log('v6');
+		log('v7');
 	};
 
 	// kick of the script when all dom content has loaded
