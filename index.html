@@ -12,24 +12,24 @@
 </head>
 <body>
 
-	<button id="permission-btn">
+	<button id="permission-btn" class="btn btn--start">
 		Connect
 		<div class="footnote">(Allow bluetooth)</div>
 	</button>
-	<div id="controls" class="is-hidden">
-		<button id="channel-0">0</button>
-		<button id="channel-1">1</button>
-		<button id="channel-2">2</button>
-		<button id="channel-3">3</button>
-		<button id="stop-all">stop all</button>
-		<button id="check-battery-btn">Check battery</button>
-		<button id="check-temperature-btn">Check temperature</button>
+	<div id="controls" class="is-hiddean">
+		<button id="channel-0" class="btn btn--start">0</button>
+		<button id="channel-1" class="btn btn--start">1</button>
+		<button id="channel-2" class="btn btn--start">2</button>
+		<button id="channel-3" class="btn btn--start">3</button>
+		<button id="stop-all" class="btn btn--stop">stop all</button>
+		<button id="check-battery-btn" class="btn btn--info">Check battery</button>
+		<button id="check-temperature-btn" class="btn btn--info">Check temperature</button>
 	</div>
 
 	<p>
 		<a href="javascript:location.reload(true)">refresh</a> 
 	</p>
-	<div id="log" class="log-window">
+	<div id="log-window" class="log-window">
 	</div>
 
 	<script src="js/vendor/jquery-3.1.0.min.js"></script>

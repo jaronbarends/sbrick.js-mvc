@@ -8,19 +8,58 @@ body {
 	font-size: 1.6rem;
 }
 
-button {
-	display: inline-block;
-	margin: 0 1em 1em 0;
-	border: none;
-	padding: 1em;
-	background: #f30;
-	color: white;
-	font: inherit;
+a {
+	color: royalblue;
 }
 
+/*-- Start buttons --*/
+
+	.btn {
+		display: inline-block;
+		margin: 0 1em 1em 0;
+		border: none;
+		padding: 1em;
+		background: #999;
+		color: white;
+		font: inherit;
+		cursor: pointer;
+	}
+
+	.btn--start {
+		background: seagreen;
+	}
+	.btn--start:hover,
+	.btn--start:focus {
+		background: #20603b;
+	}
+
+	.btn--stop {
+		background: crimson;
+	}
+	.btn--stop:hover,
+	.btn--stop:focus {
+		background: #bb1133;
+	}
+
+
+	.btn--info {
+		background: royalblue;
+	}
+	.btn--info:hover,
+	.btn--info:focus {
+		background: #1f49c7;
+	}
+
+/*-- End buttons --*/
+
 .log-window {
-	min-height: 1em;
+	padding: 0.5em;
+	font-size: 1.2rem;
 	background: beige;
+}
+
+.log-window p {
+	margin: 0 0 0.3em;
 }
 
 .is-hidden {

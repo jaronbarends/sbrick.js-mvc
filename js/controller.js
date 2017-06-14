@@ -5,7 +5,7 @@
 	// (optional) tell jshint about globals (they should remain commented out)
 	/* globals someGlobalVar */ //Tell jshint someGlobalVar exists as global var
 	const SBRICKNAME = 'SBrick';
-	// const 
+	let logWin;
 
 
 	/**
@@ -114,27 +114,18 @@
 			initControls();
 		} )
 		.catch( (e) => {
-			log('Caught error in SBrick.connect;' + e);
+			log('Caught error in SBrick.connect: ' + e);
 		});
 	};
 	
 
 
 	/**
-	* handle user giving permission to use bluetooth
-	* @returns {undefined}
-	*/
-	const permissionHandler = function() {
-		connectSBrick();
-	};
-
-
-	/**
-	* log to page
+	* log to page's log window
 	* @returns {undefined}
 	*/
 	const log = function(msg) {
-		document.getElementById('log').innerHTML += '<br>'+msg;
+		logWin.innerHTML += '<p>' + msg + '</p>';
 	};
 
 	
@@ -145,6 +136,10 @@
 	* @returns {undefined}
 	*/
 	const init = function() {
+		logWin = document.getElementById('log-window');
+		log('aa');
+		log('aa');
+		log('aa');
 		document.getElementById('permission-btn').addEventListener('click', connectSBrick);
 	};
 
