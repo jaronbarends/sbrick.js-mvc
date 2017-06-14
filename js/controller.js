@@ -1,30 +1,23 @@
 ;(function($) {
 
-	'use strict';
-
 	// (optional) tell jshint about globals (they should remain commented out)
-	/* globals someGlobalVar */ //Tell jshint someGlobalVar exists as global var
+	/* globals SBrick */ //Tell jshint someGlobalVar exists as global var
+
 	const SBRICKNAME = 'SBrick';
 	let logWin;
 
 
-	/**
-	* 
-	* @returns {undefined}
-	*/
-	const logTemperature = function(value) {
-		value = Math.round(10*value)/10;
-		log('temperature:' + value + '&deg;C');
-	};
-
 
 	/**
 	* 
 	* @returns {undefined}
 	*/
-	var checkTemperatureHandler = function() {
+	var checkTemperature = function() {
 		SBrick.getTemp()
-			.then(logTemperature);
+			.then( (value) => {
+				value = Math.round(10*value)/10;
+				log('Temperature:' + value + '&deg;C');
+			});
 	};
 
 
@@ -32,18 +25,11 @@
 	* 
 	* @returns {undefined}
 	*/
-	const logBatteryPercentage = function(value) {
-		log('battery:' + value + '%');
-	};
-
-
-	/**
-	* 
-	* @returns {undefined}
-	*/
-	var checkBatteryHandler = function() {
+	var checkBattery = function() {
 		SBrick.getBattery()
-			.then(logBatteryPercentage);
+			.then( (value) => {
+				log('Battery:' + value + '%');			
+			});
 	};
 	
 
@@ -90,8 +76,8 @@
 	* @returns {undefined}
 	*/
 	const initControls = function() {
-		document.getElementById('check-battery-btn').addEventListener('click', checkBatteryHandler);
-		document.getElementById('check-temperature-btn').addEventListener('click', checkTemperatureHandler);
+		document.getElementById('check-battery-btn').addEventListener('click', checkBattery);
+		document.getElementById('check-temperature-btn').addEventListener('click', checkTemperature);
 		document.getElementById('channel-0').addEventListener('click', channel0Handler);
 		document.getElementById('channel-1').addEventListener('click', channel1Handler);
 		document.getElementById('channel-2').addEventListener('click', channel2Handler);
@@ -110,7 +96,7 @@
 		SBrick.connect(SBRICKNAME)
 		.then( () => {
 			// SBrick now is connected
-			log('connected');
+			log('SBrick is now Connected');
 			initControls();
 		} )
 		.catch( (e) => {
