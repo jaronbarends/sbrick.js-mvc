@@ -86,11 +86,12 @@
 
 		power = Math.round(SBrick.MAX * power/100);
 		direction = SBrick[direction];
-		// console.log(power, SBrick.MAX, direction);
+		console.log(power, SBrick.MAX, direction);
 
 		log(channelId + ', ' + power + ', ' + direction);
-		SBrick.drive(channel, direction, power);
+		// SBrick.drive(channel, direction, power);
 		// SBrick.drive(channel, SBrick[direction], SBrick.MAX);
+		SBrick.drive(channel, SBrick.CCW, SBrick.MAX);
 	};
 	
 
@@ -217,7 +218,7 @@
 		// Per the specs, this has to be done IN RESPONSE TO A USER ACTION
 		connectBtn.addEventListener('click', connectHandler);
 
-		log('B');
+		log('C');
 	};
 
 	// kick of the script when all dom content has loaded
