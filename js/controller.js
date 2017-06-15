@@ -141,9 +141,9 @@
 		console.log(channel, direction, power);
 		log('Drive: ' + channelId + ', ' + direction + ', ' + power);
 
-		// SBrick.quickDrive([
-		// 	{channel, direction, power}
-		// ]);
+		SBrick.quickDrive([
+			{channel, direction, power}
+		]);
 		// SBrick.drive(channel, direction, power);
 	};
 	
