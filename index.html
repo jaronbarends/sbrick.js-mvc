@@ -19,15 +19,23 @@
 
 		<div class="channel-controls">
 			<button class="btn btn--start" data-channel="0" data-device-type="lights" data-device-id="lights1">Lights</button>
-			<input id="lights1-power" type="range" min="0" max="100" value="1"><label for="lights1-power"></label>
+			<input id="lights1-power" type="range" min="0" max="100" value="100">
 		</div>
 
 		<div class="channel-controls">
 			<button class="btn btn--start" data-channel="1" data-device-type="drive" data-device-id="drive1">Motor</button>
-			<input id="drive1-power" type="range" min="0" max="100" value="1"><label for="drive1-power"></label>
+			<input id="drive1-power" type="range" min="0" max="100" value="100">
 			<!-- <input type="number" value="80" id="drive1-power-number"> -->
 			<input id="drive1-dir-cw" type="radio" name="drive1-direction" value="CW" checked><label for="drive1-dir-cw"><span class="symbol">&#8635;</span></label>
 			<input id="drive1-dir-ccw" type="radio" name="drive1-direction" value="CCW"><label for="drive1-dir-ccw"><span class="symbol">&#8634;</span></label>
+		</div>
+
+		<div class="channel-controls">
+			<button class="btn btn--start" data-channel="2" data-device-type="drive" data-device-id="servo1">Servo</button>
+			<input id="servo1-power" type="range" min="0" max="100" value="50">
+			<!-- <input type="number" value="80" id="servo1-power-number"> -->
+			<input id="servo1-dir-cw" type="radio" name="servo1-direction" value="CW" checked><label for="servo1-dir-cw"><span class="symbol">&#8635;</span></label>
+			<input id="servo1-dir-ccw" type="radio" name="servo1-direction" value="CCW"><label for="servo1-dir-ccw"><span class="symbol">&#8634;</span></label>
 		</div>
 
 		<button id="stop-all" class="btn btn--stop">stop all</button>
