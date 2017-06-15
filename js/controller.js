@@ -136,6 +136,7 @@
 
 		// power = Math.round(powerRange * power/100 + MIN_VALUE_BELOW_WHICH_MOTOR_DOES_NOT_WORK);
 		power = Math.round(SBrick.MAX * powerNumber/100);
+		power = powerNumber;
 		direction = SBrick[direction];
 
 		console.log(channel, direction, power);
@@ -290,7 +291,7 @@
 		// Per the specs, this has to be done IN RESPONSE TO A USER ACTION
 		connectBtn.addEventListener('click', connectHandler);
 
-		log('v0.13');
+		log('v0.14');
 	};
 
 	// kick of the script when all dom content has loaded
