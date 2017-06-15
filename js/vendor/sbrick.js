@@ -22,7 +22,7 @@
 	const FIRMWARE_COMPATIBILITY                = 4.17;
 
 	const UUID_SERVICE_DEVICEINFORMATION        = "device_information";
-  const UUID_CHARACTERISTIC_MODELNUMBER       = "model_number_string";
+	const UUID_CHARACTERISTIC_MODELNUMBER       = "model_number_string";
 	const UUID_CHARACTERISTIC_FIRMWAREREVISION  = "firmware_revision_string";
 	const UUID_CHARACTERISTIC_HARDWAREREVISION  = "hardware_revision_string";
 	const UUID_CHARACTERISTIC_SOFTWAREREVISION  = "software_revision_string";
@@ -49,11 +49,12 @@
 	const ERROR_STATE   = 0x88; // The system is in a state where the command does not make sense
 
 	// Commands
-	const CMD_BREAK      = 0x00; // Stop command
-	const CMD_DRIVE      = 0x01; // Drive command
-	const CMD_ADC        = 0x0F; // Query ADC
-	const CMD_ADC_VOLT   = 0x08; // Get Voltage
-	const CMD_ADC_TEMP   = 0x09; // Get Temperature
+	const CMD_BREAK      			= 0x00; // Stop command
+	const CMD_DRIVE					= 0x01; // Drive command
+	const CMD_GET_CHANNEL_STATUS	= 0x22; // Get channel status command
+	const CMD_ADC        			= 0x0F; // Query ADC
+	const CMD_ADC_VOLT   			= 0x08; // Get Voltage
+	const CMD_ADC_TEMP   			= 0x09; // Get Temperature
 
 	// Channels
 	const CHANNEL_0 = 0x00; // Top-Left Channel
