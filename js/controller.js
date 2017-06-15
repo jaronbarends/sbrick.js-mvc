@@ -118,6 +118,34 @@
 		]);
 		// SBrick.drive(channel, direction, power);
 	};
+
+
+	/**
+	* update a drive motor
+	* @param {string} channelId The number (0-3) of the channel this motor is attached to
+	* @param {deviceId} string An id for this attached motor, corresponding to id's in html to retrieve input values
+	* @returns {undefined}
+	*/
+	const updateServo = function(channelId, deviceId) {
+		const powerRange = SBrick.MAX - MIN_VALUE_BELOW_WHICH_MOTOR_DOES_NOT_WORK;
+		let	power = document.getElementById(deviceId + '-power').value,
+			powerNumber = document.getElementById(deviceId + '-power-number').value,
+			direction = document.querySelector('[name="' + deviceId + '-direction"]:checked').value,
+			channel = SBrick['CHANNEL'+channelId];
+
+
+		// power = Math.round(powerRange * power/100 + MIN_VALUE_BELOW_WHICH_MOTOR_DOES_NOT_WORK);
+		power = Math.round(SBrick.MAX * powerNumber/100);
+		direction = SBrick[direction];
+
+		console.log(channel, direction, power);
+		log('Drive: ' + channelId + ', ' + direction + ', ' + power);
+
+		// SBrick.quickDrive([
+		// 	{channel, direction, power}
+		// ]);
+		// SBrick.drive(channel, direction, power);
+	};
 	
 	
 	
@@ -137,7 +165,7 @@
 		} else if (deviceType === 'drive') {
 			updateDrive(channelId, deviceId);
 		} else if (deviceType === 'servo') {
-			// updateServo(channelId, deviceId);
+			updateServo(channelId, deviceId);
 		}
 	};
 	
@@ -262,7 +290,7 @@
 		// Per the specs, this has to be done IN RESPONSE TO A USER ACTION
 		connectBtn.addEventListener('click', connectHandler);
 
-		log('v0.11');
+		log('v0.12');
 	};
 
 	// kick of the script when all dom content has loaded
