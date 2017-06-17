@@ -7,7 +7,8 @@
 		MIN_VALUE_BELOW_WHICH_MOTOR_DOES_NOT_WORK = 98;// somehow, motor does not seem to work for power values < 98
 	let logWin,
 		connectBtn,
-		controlPanel;
+		controlPanel,
+		SBrick;
 
 
 
@@ -19,13 +20,13 @@
 		SBrick.getTemp()
 			.then( (value) => {
 				value = Math.round(10*value)/10;
-				log('Temperature: ' + value + '&deg;C');
+				log('Temperature: ' + value + '°C');
 			});
 	};
 
 
 	/**
-	* 
+	* check current battery status
 	* @returns {undefined}
 	*/
 	var checkBattery = function() {
@@ -35,42 +36,6 @@
 			});
 	};
 	
-
-	/**
-	* 
-	* @returns {undefined}
-	*/
-	const channel0Handler = function() {
-		SBrick.drive(SBrick.CHANNEL0, SBrick.CW, SBrick.MAX);
-	};
-	
-
-	/**
-	* 
-	* @returns {undefined}
-	*/
-	const channel1Handler = function() {
-		SBrick.drive(SBrick.CHANNEL1, SBrick.CW, SBrick.MAX);
-	};
-	
-
-	/**
-	* 
-	* @returns {undefined}
-	*/
-	const channel2Handler = function() {
-		SBrick.drive(SBrick.CHANNEL0, SBrick.CW, SBrick.MAX);
-	};
-	
-
-	/**
-	* 
-	* @returns {undefined}
-	*/
-	const channel3Handler = function() {
-		SBrick.drive(SBrick.CHANNEL3, SBrick.CW, SBrick.MAX);
-	};
-
 
 	/**
 	* update a set of lights
@@ -88,7 +53,11 @@
 		console.log(channel, direction, power);
 		log('Lights: ' + channelId + ', ' + direction + ', ' + power);
 
-		SBrick.drive(channel, direction, power);
+		SBrick.drive(channel, direction, power)
+			.then( () => {
+				// const c = SBrick.channel[channel];
+				// console.log( 'channel ' + channelId +': power: ', c.power, 'direction: ', c.direction );
+			});
 	};
 
 
@@ -110,12 +79,15 @@
 		// power = Math.round(SBrick.MAX * power/100);
 		direction = SBrick[direction];
 
-		console.log(channel, direction, power);
-		log('Drive: ' + channelId + ', ' + direction + ', ' + power);
+		// console.log(channel, direction, power);
+		log('Drive: ', channelId, direction, power);
 
 		SBrick.quickDrive([
-			{channel, direction, power}
-		]);
+				{channel, direction, power}
+			])
+			.then( () => {
+				// log('quickdrive worked');
+			});
 		// SBrick.drive(channel, direction, power);
 	};
 
@@ -268,7 +240,8 @@
 	* log to page's log window
 	* @returns {undefined}
 	*/
-	const log = function(msg) {
+	let log = function(...msg) {// use let instead of const so we can reassign to console.log
+		msg = msg.join(', ');
 		logWin.innerHTML += '<p>' + msg + '</p>';
 	};
 
@@ -280,6 +253,20 @@
 	* @returns {undefined}
 	*/
 	const init = function() {
+		SBrick = window.SBrick;
+
+		let dummyMode = false;
+
+		// check if we're on http; 
+		if (window.location.href.indexOf('http') !== 0) {
+			dummyMode = true;
+		}
+
+		if (dummyMode) {
+			SBrick = window.SBrickDummy;
+			log = console.log;
+		}
+
 		logWin = document.getElementById('log-window');
 		connectBtn = document.getElementById('connect-btn');
 		controlPanel = document.getElementById('controlPanel');

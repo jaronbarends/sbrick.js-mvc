@@ -250,9 +250,16 @@
 		}
 
 
+		/**
+		* send drive command
+		* @returns {promise}
+		* @param {hexadecimal number} channel The number of the channel to update (0x00, 0x01, 0x02, 0x03 - you can use the constants SBrick.CHANNEL_0 etc)
+		* @param {hexadecimal number} direction The drive direction (0x00, 0x01 - you can use the constants SBrick.CLOCKWISE and SBrick.COUNTERCLOCKWISE)
+		* @param {number} power The power level for the drive command 0-255
+		*/
 		drive( channel, direction, power ) {
 			return new Promise( (resolve, reject) => {
-				if( channel!=null && direction!=null && power!=null ) {
+				if( channel !== null && direction !== null && power !== null ) {
 					resolve();
 				} else {
 					reject('Wrong input');
@@ -279,16 +286,22 @@
 		}
 
 
+		/**
+		* send quickDrive command
+		* @returns {undefined}
+		* @param {array} channel_array An array with an object {channel, direction, power} for every channel you want to update
+		*/
 		quickDrive(channel_array) {
 			return new Promise( (resolve, reject) => {
-				if( channel_array!=null || Array.isArray(channel_array) ) {
+				if( channel_array !== null && Array.isArray(channel_array) ) {
 					resolve();
 				} else {
 					reject('Wrong input');
 				}
 			} ).then( ()=> {
 
-				for(var i=0;i<4;i++) {
+				// TODO: use forEach
+				for(var i=0; i<4; i++) {
 					if( typeof channel_array[i] !== 'undefined' ) {
 						var channel = parseInt( channel_array[i].channel );
 						this.channel[channel].power     = Math.min(Math.max(parseInt(Math.abs(channel_array[i].power)), MIN), MAX);
@@ -336,6 +349,7 @@
 				}
 
 				// set motors power to 0 in the object
+				// TODO: use forEach
 				for(var i=0;i<channel.length;i++) {
 					this.channel[channel[i]].power = 0;
 				}

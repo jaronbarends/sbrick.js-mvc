@@ -18,11 +18,13 @@
 	<div id="controlPanel" class="is-hidden">
 
 		<div class="channel-controls">
+			<h2 class="channel-title">Channel 0</h2>
 			<button class="btn btn--start" data-channel="0" data-device-type="lights" data-device-id="lights1">Lights</button>
 			<input id="lights1-power" type="range" min="0" max="100" value="100">
 		</div>
 
 		<div class="channel-controls">
+			<h2 class="channel-title">Channel 1</h2>
 			<button class="btn btn--start" data-channel="1" data-device-type="drive" data-device-id="drive1">Motor</button>
 			<input id="drive1-power" type="range" min="0" max="100" value="100">
 			<!-- <input type="number" value="80" id="drive1-power-number"> -->
@@ -31,6 +33,7 @@
 		</div>
 
 		<div class="channel-controls">
+			<h2 class="channel-title">Channel 2</h2>
 			<button class="btn btn--start" data-channel="2" data-device-type="servo" data-device-id="servo1">Servo</button>
 			<input id="servo1-power" type="range" min="0" max="100" value="50">
 			<input type="number" value="80" id="servo1-power-number">
@@ -50,8 +53,10 @@
 	</div>
 
 	<script src="js/vendor/promise-queue.js"></script>
-	<script src="js/vendor/bluetooth.js"></script>
+	<!-- <script src="js/vendor/bluetooth.js"></script> -->
+	<script src="js/vendor/bluetooth-cleant-up.js"></script>
 	<script src="js/vendor/sbrick.js"></script>
+	<script src="js/sbrick-dummy.js"></script>
 
 	<script src="js/controller.js"></script>
 </body>

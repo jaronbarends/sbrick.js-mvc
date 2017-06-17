@@ -12,6 +12,10 @@ a {
 	color: royalblue;
 }
 
+.channel-title {
+	font-size: 1.2rem;
+}
+
 /*-- Start buttons --*/
 
 	.btn {
