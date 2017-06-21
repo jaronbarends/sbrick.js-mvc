@@ -205,6 +205,10 @@
 			return WebBluetooth && WebBluetooth.isConnected();
 		}
 
+		/**
+		* get device info
+		* @returns {promise}
+		*/
 		_deviceInfo( uuid_characteristic ) {
 			return new Promise( (resolve, reject) => {
 				if( typeof this.SERVICES[UUID_SERVICE_DEVICEINFORMATION].characteristics[uuid_characteristic] != 'undefined' ) {
@@ -212,16 +216,14 @@
 				} else {
 					reject('Wrong input');
 				}
-			} ).then( () => {
+			}).then( () => {
 				return WebBluetooth.readCharacteristicValue( uuid_characteristic )
-				.then(data => {
-					var str = "";
-					for (let i = 0; i < data.byteLength; i++) {
-						str += String.fromCharCode(data.getUint8(i));
-					}
-					return str;
-				})
-				.catch( e => { this._error(e) } );
+			}).then( data => {
+				var str = "";
+				for (let i = 0; i < data.byteLength; i++) {
+					str += String.fromCharCode(data.getUint8(i));
+				}
+				return str;
 			})
 			.catch( e => { this._error(e) } );
 		}
