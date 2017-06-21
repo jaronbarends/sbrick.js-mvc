@@ -111,6 +111,12 @@
 			this._debug         = false;
     	}
 
+
+    	/**
+    	* connect the SBrick
+    	* @param {string} sbrick_name The name of the sbrick
+    	* @returns {promise returning undefined}
+    	*/
 		connect( sbrick_name ) {
 			this.SERVICES = {
 				[UUID_SERVICE_DEVICEINFORMATION] : {
@@ -162,6 +168,7 @@
 			} else {
 				options.acceptAllDevices = true;
 			}
+
 			return WebBluetooth.connect(options,this.SERVICES)
 			.then( () => {
 				if( this.isConnected() ) {
@@ -186,7 +193,7 @@
 
 	    /**
 	    * disconnect the SBrick
-	    * @returns {promise}
+	    * @returns {promise returning undefined}
 	    */
 		disconnect() {
 			return new Promise( (resolve, reject) => {
@@ -237,6 +244,7 @@
 			.catch( e => { this._error(e) } );
 		}
 
+
 		/**
 		* get the SBrick's model number
 		* @returns {promise returning string}
@@ -244,6 +252,7 @@
 		getModelNumber() {
 			return this._deviceInfo(UUID_CHARACTERISTIC_MODELNUMBER);
 		}
+
 
 		/**
 		* get the SBrick's firmware version
@@ -253,6 +262,7 @@
 			return this._deviceInfo(UUID_CHARACTERISTIC_FIRMWAREREVISION);
 		}
 
+
 		/**
 		* get the SBrick's hardware version
 		* @returns {promise returning string}
@@ -261,6 +271,7 @@
 			return this._deviceInfo(UUID_CHARACTERISTIC_HARDWAREREVISION);
 		}
 
+
 		/**
 		* get the SBrick's software version
 		* @returns {promise returning string}
@@ -268,6 +279,7 @@
 		getSoftwareVersion() {
 			return this._deviceInfo(UUID_CHARACTERISTIC_SOFTWAREREVISION);
 		}
+
 
 		/**
 		* get the SBrick's manufacturer's name
@@ -416,6 +428,10 @@
 		}
 
 
+		/**
+		* get battery percentage
+		* @returns {promise returning number}
+		*/
 		getBattery() {
 			return this._volt()
 			.then( volt => {
@@ -424,17 +440,19 @@
 		}
 
 
-		getTemp( fahrenheit ) {
+		/**
+		* get sbrick's temperature in degrees Celsius (default) or Fahrenheit
+		* @param {boolean} isFahrenheit If true, temperature is returned in Fahrenheit
+		* @returns {promise returning number}
+		*/
+		getTemp( isFahrenheit = false) {
 			return this._temp()
 			.then( temp => {
-				let result = 0;
-				if( fahrenheit ) {
-					result = temp * 9/5 + 32;
-					result = result; // ' °F';
-				} else {
-					result = temp; // ' °C';
+				// return value from this._temp is in °C
+				if( isFahrenheit ) {
+					temp = temp * 9/5 + 32;// °F;
 				}
-				return result;
+				return temp;
 			});
 		}
 
@@ -477,7 +495,10 @@
 			} )
 		}
 
-
+		/**
+		* 
+		* @returns {undefined}
+		*/
 		_temp() {
 			return this._adc(CMD_ADC_TEMP).then( temp => {
 				return parseFloat(temp / 118.85795 - 160); // °C;

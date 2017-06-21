@@ -18,7 +18,7 @@
 	* @returns {undefined}
 	*/
 	var checkTemperature = function() {
-		SBrick.getTemp()
+		SBrick.getTemp(true)
 			.then( (value) => {
 				value = Math.round(10*value)/10;
 				log('Temperature: ' + value + '°C');
@@ -302,7 +302,7 @@
 		// Per the specs, this has to be done IN RESPONSE TO A USER ACTION
 		connectBtn.addEventListener('click', connectHandler);
 
-		log('v0.40');
+		log('v0.41');
 	};
 
 	// kick of the script when all dom content has loaded
