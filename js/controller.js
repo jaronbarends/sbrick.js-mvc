@@ -284,7 +284,7 @@
 		// Per the specs, this has to be done IN RESPONSE TO A USER ACTION
 		connectBtn.addEventListener('click', connectHandler);
 
-		log('v0.17');
+		log('v0.18');
 	};
 
 	// kick of the script when all dom content has loaded
