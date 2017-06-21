@@ -317,7 +317,12 @@
 					this._setAllChannelsBusy();
 					this.queue.add( () => {
 						this._setAllChannelsIdle();
-						console.log(_createQuickDriveUint8(1));
+
+						try {
+						log(_createQuickDriveUint8(1));
+						} catch(e) {
+							log(e);
+						}
 						return WebBluetooth.writeCharacteristicValue(
 							UUID_CHARACTERISTIC_QUICKDRIVE,
 							new Uint8Array([
