@@ -85,7 +85,7 @@
 
 		SBrick.quickDrive([
 				{
-					id: channelIdx,
+					channelIdx,
 					direction,
 					power
 				}
@@ -284,7 +284,7 @@
 		// Per the specs, this has to be done IN RESPONSE TO A USER ACTION
 		connectBtn.addEventListener('click', connectHandler);
 
-		log('v0.15');
+		log('v0.16');
 	};
 
 	// kick of the script when all dom content has loaded
