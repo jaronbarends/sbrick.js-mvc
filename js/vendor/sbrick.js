@@ -217,7 +217,8 @@
 					reject('Wrong input');
 				}
 			}).then( () => {
-				return WebBluetooth.readCharacteristicValue( uuid_characteristic )
+				return WebBluetooth.readCharacteristicValue( 'zup' )
+				// return WebBluetooth.readCharacteristicValue( uuid_characteristic )
 			}).then( data => {
 				var str = "";
 				for (let i = 0; i < data.byteLength; i++) {
