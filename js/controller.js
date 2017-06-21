@@ -190,7 +190,8 @@
 		SBrick.connect(SBRICKNAME)
 		.then( (value) => {
 			// SBrick now is connected
-			log('SBrick is now Connected', value);
+			log('SBrick is now Connected');
+			log('typof value:' + typeof value);
 			updateConnectionState();
 		} )
 		.catch( (e) => {
@@ -301,7 +302,7 @@
 		// Per the specs, this has to be done IN RESPONSE TO A USER ACTION
 		connectBtn.addEventListener('click', connectHandler);
 
-		log('v0.39');
+		log('v0.40');
 	};
 
 	// kick of the script when all dom content has loaded
