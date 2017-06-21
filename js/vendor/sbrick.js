@@ -56,11 +56,18 @@
 	const CMD_ADC_VOLT   			= 0x08; // Get Voltage
 	const CMD_ADC_TEMP   			= 0x09; // Get Temperature
 
-	// Channels
-	const CHANNEL_0 = 0x00; // Top-Left Channel
-	const CHANNEL_1 = 0x01; // Bottom-Left Channel
-	const CHANNEL_2 = 0x02; // Top-Right Channel
-	const CHANNEL_3 = 0x03; // Bottom-Right Channel
+	// Channels hex values to send with bluetooth commands
+	const CHANNEL_0_HEX_ID = 0x00; // Top-Left Channel
+	const CHANNEL_1_HEX_ID = 0x01; // Bottom-Left Channel
+	const CHANNEL_2_HEX_ID = 0x02; // Top-Right Channel
+	const CHANNEL_3_HEX_ID = 0x03; // Bottom-Right Channel
+	// create array with hex ids, so we can always reference them with normal numbers
+	const CHANNEL_HEX_IDS  = [	
+								CHANNEL_0_HEX_ID,
+								CHANNEL_1_HEX_ID,
+								CHANNEL_2_HEX_ID,
+								CHANNEL_3_HEX_ID
+							];
 
 	// Directions
 	const CLOCKWISE        = 0x00; // Clockwise
@@ -77,10 +84,10 @@
 
 		constructor() {
 			// export constants
-			this.CHANNEL0   = CHANNEL_0;
-			this.CHANNEL1   = CHANNEL_1;
-			this.CHANNEL2   = CHANNEL_2;
-			this.CHANNEL3   = CHANNEL_3;
+			this.CHANNEL0   = CHANNEL_0_HEX_ID;
+			this.CHANNEL1   = CHANNEL_1_HEX_ID;
+			this.CHANNEL2   = CHANNEL_2_HEX_ID;
+			this.CHANNEL3   = CHANNEL_3_HEX_ID;
 			this.CW         = CLOCKWISE;
 			this.CCW        = COUNTERCLOCKWISE;
 			this.MAX        = MAX;
@@ -265,7 +272,7 @@
 					reject('Wrong input');
 				}
 			} ).then( () => {
-				let channelHexIds = [CHANNEL_0, CHANNEL_1, CHANNEL_2, CHANNEL_3];
+				let channelHexIds = [CHANNEL_0_HEX_ID, CHANNEL_1_HEX_ID, CHANNEL_2_HEX_ID, CHANNEL_3_HEX_ID];
 				let directions = [CLOCKWISE, COUNTERCLOCKWISE];
 				let channel = this.channels[channelId];
 
@@ -335,39 +342,62 @@
 		}
 
 
-		stop( channel ) {
+		/**
+		* stop a channel
+		* @param {number | array} channelIds The number or array of numbers of channels to stop
+		* @returns {promise}
+		*/
+		stop( channelIds ) {
 			return new Promise( (resolve, reject) => {
-				if( channel!=null ) {
+				// TODO: better input checking: number | array
+				if( channelIds !== null ) {
 					resolve();
 				} else {
 					reject('wrong input');
 				}
-			} ).then( ()=> {
+			} ).then( () => {
 
 				let command = null;
 
-				if( !Array.isArray(channel) ) {
-					channel = [ channel ];
+				if( !Array.isArray(channelIds) ) {
+					channelIds = [ channelIds ];
 				}
 
 				// set motors power to 0 in the object
-				// TODO: use forEach
-				for(var i=0;i<channel.length;i++) {
-					this.channels[channel[i]].power = 0;
-				}
+				channelIds.foreach( (channelId) => {
+					this.channels[channelId].power = 0;
+				});
 
-				switch( channel.length ) {
+				switch( channelIds.length ) {
 					default:
-						command = new Uint8Array([ CMD_BREAK, channel[0] ]);
+						command = new Uint8Array([
+							CMD_BREAK,
+							CHANNEL_HEX_IDS[channelIds[0]]
+						]);
 						break;
 					case 2:
-						command = new Uint8Array([ CMD_BREAK,channel[0], channel[1] ]);
+						command = new Uint8Array([
+							CMD_BREAK,
+							CHANNEL_HEX_IDS[channelIds[0]],
+							CHANNEL_HEX_IDS[channelIds[1]]
+						]);
 						break;
 					case 3:
-						command = new Uint8Array([ CMD_BREAK, channel[0], channel[1], channel[2] ]);
+						command = new Uint8Array([
+							CMD_BREAK,
+							CHANNEL_HEX_IDS[channelIds[0]],
+							CHANNEL_HEX_IDS[channelIds[1]],
+							CHANNEL_HEX_IDS[channelIds[2]]
+						]);
 						break;
 					case 4:
-						command = new Uint8Array([ CMD_BREAK, channel[0], channel[1], channel[2], channel[3] ]);
+						command = new Uint8Array([
+							CMD_BREAK,
+							CHANNEL_HEX_IDS[channelIds[0]],
+							CHANNEL_HEX_IDS[channelIds[1]],
+							CHANNEL_HEX_IDS[channelIds[2]],
+							CHANNEL_HEX_IDS[channelIds[3]]
+						]);
 						break;
 				}
 
@@ -384,7 +414,7 @@
 
 
 		stopAll() {
-			return this.stop([ CHANNEL_0, CHANNEL_1, CHANNEL_2, CHANNEL_3 ]);
+			return this.stop([ CHANNEL_0_HEX_ID, CHANNEL_1_HEX_ID, CHANNEL_2_HEX_ID, CHANNEL_3_HEX_ID ]);
 		}
 
 
@@ -445,14 +475,14 @@
 
 		_volt() {
 			return this._adc(CMD_ADC_VOLT).then( volt => {
-					return parseFloat( volt * 0.83875 / 2047.0 ); // V;
+				return parseFloat( volt * 0.83875 / 2047.0 ); // V;
 			} )
 		}
 
 
 		_temp() {
 			return this._adc(CMD_ADC_TEMP).then( temp => {
-					return parseFloat(temp / 118.85795 - 160); // °C;
+				return parseFloat(temp / 118.85795 - 160); // °C;
 			} )
 		}
 
