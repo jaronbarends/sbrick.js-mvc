@@ -321,10 +321,14 @@
 						return WebBluetooth.writeCharacteristicValue(
 							UUID_CHARACTERISTIC_QUICKDRIVE,
 							new Uint8Array([
-								this._createQuickDriveUint8(0),
-								this._createQuickDriveUint8(1),
-								this._createQuickDriveUint8(2),
-								this._createQuickDriveUint8(3)
+								// this._createQuickDriveUint8(0),
+								// this._createQuickDriveUint8(1),
+								// this._createQuickDriveUint8(2),
+								// this._createQuickDriveUint8(3)
+								parseInt( parseInt(this.channels[0].power/MAX*MAX_QD).toString(2) + this.channels[0].direction, 2 ),
+								parseInt( parseInt(this.channels[1].power/MAX*MAX_QD).toString(2) + this.channels[1].direction, 2 ),
+								parseInt( parseInt(this.channels[2].power/MAX*MAX_QD).toString(2) + this.channels[2].direction, 2 ),
+								parseInt( parseInt(this.channels[3].power/MAX*MAX_QD).toString(2) + this.channels[3].direction, 2 )
 							])
 						) }
 					);
