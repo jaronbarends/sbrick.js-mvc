@@ -253,7 +253,7 @@
 		/**
 		* send drive command
 		* @returns {promise}
-		* @param {hexadecimal number} channel The number of the channel to update (0x00, 0x01, 0x02, 0x03 - you can use the constants SBrick.CHANNEL_0 etc)
+		* @param {number} channelId The index of the channel to update in the this.channels array
 		* @param {hexadecimal number} direction The drive direction (0x00, 0x01 - you can use the constants SBrick.CLOCKWISE and SBrick.COUNTERCLOCKWISE)
 		* @param {number} power The power level for the drive command 0-255
 		*/
@@ -289,8 +289,8 @@
 		/**
 		* send quickDrive command
 		* @returns {undefined}
-		* @param {array} channelSettings An array with a settings object {channelIdx, direction, power} for every channel you want to update
-		* 	in every channel's object, the property channel (SBrick['CHANNEL'+channelIdx]) is supported for legacy reasons
+		* @param {array} channelSettings An array with a settings object {channelId, direction, power} for every channel you want to update
+		* 	in every channel's object, the property channel (SBrick['CHANNEL'+channelId]) is supported for legacy reasons
 		*/
 		quickDrive(channelSettings) {
 			return new Promise( (resolve, reject) => {
@@ -302,12 +302,12 @@
 			} ).then( ()=> {
 
 				channelSettings.forEach( (setting) => {
-					let channelIdx = setting.channelIdx;
+					let channelId = setting.channelId;
 					if (setting.channel) {
 						// it uses the old syntax
-						channelIdx = parseInt( setting.channel );
+						channelId = parseInt( setting.channel );
 					}
-					let channel = this.channels[channelIdx];
+					let channel = this.channels[channelId];
 					channel.power     = Math.min(Math.max(parseInt(Math.abs(setting.power)), MIN), MAX);
 					channel.direction = setting.direction ? COUNTERCLOCKWISE : CLOCKWISE;
 				})
@@ -318,11 +318,6 @@
 					this.queue.add( () => {
 						this._setAllChannelsIdle();
 
-						// try {
-						// 	log(this._createQuickDriveUint8(1));
-						// } catch(e) {
-						// 	log(e);
-						// }
 						return WebBluetooth.writeCharacteristicValue(
 							UUID_CHARACTERISTIC_QUICKDRIVE,
 							new Uint8Array([
@@ -330,10 +325,6 @@
 								this._createQuickDriveUint8(1, this.channels),
 								this._createQuickDriveUint8(2, this.channels),
 								this._createQuickDriveUint8(3, this.channels)
-								// parseInt( parseInt(this.channels[0].power/MAX*MAX_QD).toString(2) + this.channels[0].direction, 2 ),
-								// parseInt( parseInt(this.channels[1].power/MAX*MAX_QD).toString(2) + this.channels[1].direction, 2 ),
-								// parseInt( parseInt(this.channels[2].power/MAX*MAX_QD).toString(2) + this.channels[2].direction, 2 ),
-								// parseInt( parseInt(this.channels[3].power/MAX*MAX_QD).toString(2) + this.channels[3].direction, 2 )
 							])
 						) }
 					);
@@ -484,8 +475,8 @@
 		* create a Uint8 value with quick drive instructions
 		* @returns {uint8 value}
 		*/
-		_createQuickDriveUint8(channelIdx, channels) {
-			return parseInt( parseInt(this.channels[channelIdx].power/MAX*MAX_QD).toString(2) + this.channels[channelIdx].direction, 2 );
+		_createQuickDriveUint8(channelId, channels) {
+			return parseInt( parseInt(this.channels[channelId].power/MAX*MAX_QD).toString(2) + this.channels[channelId].direction, 2 );
 		};
 		
 
