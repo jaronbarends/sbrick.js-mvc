@@ -272,7 +272,6 @@
 					reject('Wrong input');
 				}
 			} ).then( () => {
-				let channelHexIds = [CHANNEL_0_HEX_ID, CHANNEL_1_HEX_ID, CHANNEL_2_HEX_ID, CHANNEL_3_HEX_ID];
 				let directions = [CLOCKWISE, COUNTERCLOCKWISE];
 				let channel = this.channels[channelId];
 
@@ -285,7 +284,7 @@
 						channel.busy = false;
 						return WebBluetooth.writeCharacteristicValue(
 							UUID_CHARACTERISTIC_REMOTECONTROL,
-							new Uint8Array([ CMD_DRIVE, channelHexIds[channelId], channel.direction, channel.power ])
+							new Uint8Array([ CMD_DRIVE, CHANNEL_HEX_IDS[channelId], channel.direction, channel.power ])
 						) }
 					);
 				}
@@ -375,41 +374,6 @@
 
 				let command = new Uint8Array(uint8ArrayInput);
 
-
-
-				// switch( channelIds.length ) {
-				// 	default:
-				// 		command = new Uint8Array([
-				// 			CMD_BREAK,
-				// 			CHANNEL_HEX_IDS[channelIds[0]]
-				// 		]);
-				// 		break;
-				// 	case 2:
-				// 		command = new Uint8Array([
-				// 			CMD_BREAK,
-				// 			CHANNEL_HEX_IDS[channelIds[0]],
-				// 			CHANNEL_HEX_IDS[channelIds[1]]
-				// 		]);
-				// 		break;
-				// 	case 3:
-				// 		command = new Uint8Array([
-				// 			CMD_BREAK,
-				// 			CHANNEL_HEX_IDS[channelIds[0]],
-				// 			CHANNEL_HEX_IDS[channelIds[1]],
-				// 			CHANNEL_HEX_IDS[channelIds[2]]
-				// 		]);
-				// 		break;
-				// 	case 4:
-				// 		command = new Uint8Array([
-				// 			CMD_BREAK,
-				// 			CHANNEL_HEX_IDS[channelIds[0]],
-				// 			CHANNEL_HEX_IDS[channelIds[1]],
-				// 			CHANNEL_HEX_IDS[channelIds[2]],
-				// 			CHANNEL_HEX_IDS[channelIds[3]]
-				// 		]);
-				// 		break;
-				// }
-
 				this.queue.add( () => {
 					return WebBluetooth.writeCharacteristicValue(
 						UUID_CHARACTERISTIC_REMOTECONTROL,
@@ -422,8 +386,12 @@
 		}
 
 
+		/**
+		* stop all channels
+		* @returns {promise}
+		*/
 		stopAll() {
-			return this.stop([ CHANNEL_0_HEX_ID, CHANNEL_1_HEX_ID, CHANNEL_2_HEX_ID, CHANNEL_3_HEX_ID ]);
+			return this.stop([0, 1, 2, 3]);
 		}
 
 
