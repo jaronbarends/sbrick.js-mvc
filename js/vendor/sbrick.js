@@ -253,31 +253,32 @@
 		/**
 		* send drive command
 		* @returns {promise}
-		* @param {number} channelId The index of the channel to update in the this.channels array
+		* @param {number} channelId The id (0-3) of the channel to update in the this.channels array
 		* @param {hexadecimal number} direction The drive direction (0x00, 0x01 - you can use the constants SBrick.CLOCKWISE and SBrick.COUNTERCLOCKWISE)
 		* @param {number} power The power level for the drive command 0-255
 		*/
-		drive( channel, direction, power ) {
+		drive( channelId, direction, power ) {
 			return new Promise( (resolve, reject) => {
-				if( channel !== null && direction !== null && power !== null ) {
+				if( channelId !== null && direction !== null && power !== null ) {
 					resolve();
 				} else {
 					reject('Wrong input');
 				}
 			} ).then( () => {
-				let channels    = [CHANNEL_0,CHANNEL_1,CHANNEL_2,CHANNEL_3];
-				let directions = [CLOCKWISE,COUNTERCLOCKWISE];
+				let channelHexIds = [CHANNEL_0, CHANNEL_1, CHANNEL_2, CHANNEL_3];
+				let directions = [CLOCKWISE, COUNTERCLOCKWISE];
+				let channel = this.channels[channelId];
 
-				this.channels[channel].power     = Math.min(Math.max(parseInt(Math.abs(power)), MIN), MAX);
-				this.channels[channel].direction = directions[direction];
+				channel.power     = Math.min(Math.max(parseInt(Math.abs(power)), MIN), MAX);
+				channel.direction = directions[direction];
 
-				if( !this.channels[channel].busy ) {
-					this.channels[channel].busy = true;
+				if( !channel.busy ) {
+					channel.busy = true;
 					this.queue.add( () => {
-						this.channels[channel].busy = false;
+						channel.busy = false;
 						return WebBluetooth.writeCharacteristicValue(
 							UUID_CHARACTERISTIC_REMOTECONTROL,
-							new Uint8Array([ CMD_DRIVE, channels[channel], this.channels[channel].direction, this.channels[channel].power ])
+							new Uint8Array([ CMD_DRIVE, channelHexIds[channelId], channel.direction, channel.power ])
 						) }
 					);
 				}
@@ -476,7 +477,8 @@
 		* @returns {uint8 value}
 		*/
 		_createQuickDriveUint8(channelId, channels) {
-			return parseInt( parseInt(this.channels[channelId].power/MAX*MAX_QD).toString(2) + this.channels[channelId].direction, 2 );
+			let channel = this.channels[channelId];
+			return parseInt( parseInt(channel.power/MAX*MAX_QD).toString(2) + channel.direction, 2 );
 		};
 		
 
