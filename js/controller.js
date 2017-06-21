@@ -175,6 +175,7 @@
 		document.getElementById('stop-all').addEventListener('click', () => { SBrick.stopAll(); });
 		document.getElementById('check-battery-btn').addEventListener('click', checkBattery);
 		document.getElementById('check-temperature-btn').addEventListener('click', checkTemperature);
+		document.getElementById('check-model-number-btn').addEventListener('click', getModelNumber);
 	};
 
 
@@ -297,7 +298,7 @@
 		// Per the specs, this has to be done IN RESPONSE TO A USER ACTION
 		connectBtn.addEventListener('click', connectHandler);
 
-		log('v0.28');
+		log('v0.29');
 	};
 
 	// kick of the script when all dom content has loaded
