@@ -238,110 +238,6 @@
 		
 
 
-
-
-
-
-
-
-
-
-		
-
-		// connect_bak( sbrick_name ) {
-		// 	this.SERVICES = {
-		// 		[UUID_SERVICE_DEVICEINFORMATION] : {
-		// 			name : "Device Information",
-		// 			characteristics : {
-		// 				[UUID_CHARACTERISTIC_MODELNUMBER] : {
-		// 					name : "Model Number String"
-		// 				},
-		// 				[UUID_CHARACTERISTIC_FIRMWAREREVISION] : {
-		// 					name : "Firmware Revision String"
-		// 				},
-		// 				[UUID_CHARACTERISTIC_HARDWAREREVISION] : {
-		// 					name : "Hardware Revision String"
-		// 				},
-		// 				[UUID_CHARACTERISTIC_SOFTWAREREVISION] : {
-		// 					name : "Software Revision String"
-		// 				},
-		// 				[UUID_CHARACTERISTIC_MANUFACTURERNAME] : {
-		// 					name : "Manufacturer Name String"
-		// 				}
-		// 			}
-		// 		},
-		// 		[UUID_SERVICE_REMOTECONTROL] : {
-		// 			name : "Remote Control",
-		// 			characteristics : {
-		// 				[UUID_CHARACTERISTIC_REMOTECONTROL] : {
-		// 					name : "Quick Drive"
-		// 				},
-		// 				[UUID_CHARACTERISTIC_QUICKDRIVE] : {
-		// 					name : "Remote Control"
-		// 				}
-		// 			}
-		// 		}
-		// 	}
-		// 	let options = {
-		// 		// filter by service should work but it doesn't show any SBrick...
-		// 		// filters: [{
-		// 		// 	services: [ UUID_SERVICE_DEVICEINFORMATION, UUID_SERVICE_OTA, UUID_SERVICE_REMOTECONTROL ]
-		// 		// }],
-		// 		optionalServices: Object.keys(this.SERVICES)
-		// 	};
-
-		// 	// if the SBrick name is not defined it shows all the devices
-		// 	// I don't like this solution, would be better to filter "by services"
-		// 	if( typeof sbrick_name !== 'undefined' ) {
-		// 		options.filters = [{
-		// 			namePrefix: [ sbrick_name ]
-		// 		}];
-		// 	} else {
-		// 		options.acceptAllDevices = true;
-		// 	}
-		// 	return WebBluetooth.connect(options,this.SERVICES)
-		// 	.then( () => {
-		// 		if( this.isConnected() ) {
-		// 			if( this._debug ) {
-		// 				this._log( "Connected to SBrick " + WebBluetooth.device.id );
-		// 			}
-		// 			// Firmware Compatibility Check
-		// 			this.getFirmwareVersion()
-		// 			.then( version => {
-		// 				if( parseFloat(version) >= FIRMWARE_COMPATIBILITY ) {
-		// 					this.keepalive = this._keepalive(this);
-		// 				} else {
-		// 					this._log("Firmware not compatible: please update your SBrick.");
-		// 					this.disconnect();
-		// 				}
-		// 			});
-		// 		}
-		// 	})
-		// 	.catch( e => { this._error(e) } );
-		// }
-
-
-		// disconnect_bak() {
-		// 	return new Promise( (resolve, reject) => {
-		// 			if( this.isConnected() ) {
-		// 				resolve();
-		// 			} else {
-		// 				reject('Not connected');
-		// 			}
-		// 	} ).then( ()=> {
-		// 		return this.stopAll().then( ()=>{
-		// 			clearInterval( this.keepalive );
-		// 			return WebBluetooth.disconnect();
-		// 		} );
-		// 	} )
-		// 	.catch( e => { this._error(e) } );
-		// }
-
-
-		// isConnected_bak() {
-		// 	return WebBluetooth && WebBluetooth.isConnected();
-		// }
-
 		_deviceInfo( uuid_characteristic ) {
 			return new Promise( (resolve, reject) => {
 				if( typeof this.SERVICES[UUID_SERVICE_DEVICEINFORMATION].characteristics[uuid_characteristic] != 'undefined' ) {
@@ -392,136 +288,6 @@
 					return version;
 			} )
 		}
-
-
-		// drive_bak( channel, direction, power ) {
-		// 	return new Promise( (resolve, reject) => {
-		// 		if( channel!=null && direction!=null && power!=null ) {
-		// 			resolve();
-		// 		} else {
-		// 			reject('Wrong input');
-		// 		}
-		// 	} ).then( () => {
-		// 		let channels    = [CHANNEL_0,CHANNEL_1,CHANNEL_2,CHANNEL_3];
-		// 		let directions = [CLOCKWISE,COUNTERCLOCKWISE];
-
-		// 		this.channel[channel].power     = Math.min(Math.max(parseInt(Math.abs(power)), MIN), MAX);
-		// 		this.channel[channel].direction = directions[direction];
-
-		// 		if( !this.channel[channel].busy ) {
-		// 			this.channel[channel].busy = true;
-		// 			this.queue.add( () => {
-		// 				this.channel[channel].busy = false;
-		// 				return WebBluetooth.writeCharacteristicValue(
-		// 					UUID_CHARACTERISTIC_REMOTECONTROL,
-		// 					new Uint8Array([ CMD_DRIVE, channels[channel], this.channel[channel].direction, this.channel[channel].power ])
-		// 				) }
-		// 			);
-		// 		}
-		// 	} )
-		// 	.catch( e => { this._error(e) } );
-		// }
-
-
-		// quickDrive_bak(channel_array) {
-		// 	return new Promise( (resolve, reject) => {
-		// 		if( channel_array!=null || Array.isArray(channel_array) ) {
-		// 			resolve();
-		// 		} else {
-		// 			reject('Wrong input');
-		// 		}
-		// 	} ).then( ()=> {
-
-		// 		for(var i=0;i<4;i++) {
-		// 			if( typeof channel_array[i] !== 'undefined' ) {
-		// 				var channel = parseInt( channel_array[i].channel );
-		// 				this.channel[channel].power     = Math.min(Math.max(parseInt(Math.abs(channel_array[i].power)), MIN), MAX);
-		// 				this.channel[channel].direction = channel_array[i].direction ? COUNTERCLOCKWISE : CLOCKWISE;
-		// 			}
-		// 		}
-
-		// 		if( !this.channel[0].busy && !this.channel[1].busy && !this.channel[2].busy && !this.channel[3].busy ) {
-		// 			for(var i=0;i<4;i++) {
-		// 				this.channel[i].busy = true;
-		// 			}
-		// 			this.queue.add( () => {
-		// 				for(var i=0;i<4;i++) {
-		// 					this.channel[i].busy = false;
-		// 				}
-		// 				return WebBluetooth.writeCharacteristicValue(
-		// 					UUID_CHARACTERISTIC_QUICKDRIVE,
-		// 					new Uint8Array([
-		// 						parseInt( parseInt(this.channel[0].power/MAX*MAX_QD).toString(2) + this.channel[0].direction, 2 ),
-		// 						parseInt( parseInt(this.channel[1].power/MAX*MAX_QD).toString(2) + this.channel[1].direction, 2 ),
-		// 						parseInt( parseInt(this.channel[2].power/MAX*MAX_QD).toString(2) + this.channel[2].direction, 2 ),
-		// 						parseInt( parseInt(this.channel[3].power/MAX*MAX_QD).toString(2) + this.channel[3].direction, 2 )
-		// 					])
-		// 				) }
-		// 			);
-		// 		}
-		// 	})
-		// 	.catch( e => { this._error(e) } );
-		// }
-
-
-		// stop_bak(channel) {
-		// 	return new Promise( (resolve, reject) => {
-		// 		if( channel!=null ) {
-		// 			resolve();
-		// 		} else {
-		// 			reject('wrong input');
-		// 		}
-		// 	} ).then( ()=> {
-
-		// 		let command = null;
-
-		// 		if( !Array.isArray(channel) ) {
-		// 			channel = [ channel ];
-		// 		}
-
-		// 		// set motors power to 0 in the object
-		// 		for(var i=0;i<channel.length;i++) {
-		// 			this.channel[channel[i]].power = 0;
-		// 		}
-
-		// 		switch( channel.length ) {
-		// 			default:
-		// 				command = new Uint8Array([ CMD_BREAK, channel[0] ]);
-		// 				break;
-		// 			case 2:
-		// 				command = new Uint8Array([ CMD_BREAK,channel[0], channel[1] ]);
-		// 				break;
-		// 			case 3:
-		// 				command = new Uint8Array([ CMD_BREAK, channel[0], channel[1], channel[2] ]);
-		// 				break;
-		// 			case 4:
-		// 				command = new Uint8Array([ CMD_BREAK, channel[0], channel[1], channel[2], channel[3] ]);
-		// 				break;
-		// 		}
-
-		// 		this.queue.add( () => {
-		// 			return WebBluetooth.writeCharacteristicValue(
-		// 				UUID_CHARACTERISTIC_REMOTECONTROL,
-		// 				command
-		// 			);
-		// 		});
-
-		// 	} )
-		// 	.catch( e => { this._error(e) } );
-		// }
-
-
-		// stopAll_bak() {
-		// 	return this.stop([ CHANNEL_0, CHANNEL_1, CHANNEL_2, CHANNEL_3 ]);
-		// }
-
-
-		// getBattery_bak() {
-		// 	return this._volt()
-		// 	.then( volt => {
-		// 			return parseInt( Math.abs( volt / MAX_VOLT * 100 ) );
-		// 	});
-		// }
 
 
 		/**
@@ -604,12 +370,6 @@
 		}
 
 
-		// _volt_bak() {
-		// 	return this._adc(CMD_ADC_VOLT).then( volt => {
-		// 			return parseFloat( volt * 0.83875 / 2047.0 ); // V;
-		// 	} )
-		// }
-
 
 		/**
 		* get random value for temperature in degrees °C between 22 and 36
@@ -624,12 +384,6 @@
 			});
 		}
 
-
-		// _temp_bak() {
-		// 	return this._adc(CMD_ADC_TEMP).then( temp => {
-		// 			return parseFloat(temp / 118.85795 - 160); // °C;
-		// 	} )
-		// }
 
 		_error( msg ) {
 			if(this._debug) {
