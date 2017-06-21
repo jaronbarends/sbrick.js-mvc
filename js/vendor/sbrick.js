@@ -318,11 +318,11 @@
 					this.queue.add( () => {
 						this._setAllChannelsIdle();
 
-						try {
-						log(_createQuickDriveUint8(1));
-						} catch(e) {
-							log(e);
-						}
+						// try {
+						// 	log(this._createQuickDriveUint8(1));
+						// } catch(e) {
+						// 	log(e);
+						// }
 						return WebBluetooth.writeCharacteristicValue(
 							UUID_CHARACTERISTIC_QUICKDRIVE,
 							new Uint8Array([
@@ -484,9 +484,9 @@
 		* create a Uint8 value with quick drive instructions
 		* @returns {uint8 value}
 		*/
-		_createQuickDriveUint8(channelIdx) {
-			return parseInt( parseInt(this.channels[channelIdx].power/MAX*MAX_QD).toString(2) + this.channels[channelIdx].direction, 2 );
-		};
+		// _createQuickDriveUint8(channelIdx) {
+		// 	return parseInt( parseInt(this.channels[channelIdx].power/MAX*MAX_QD).toString(2) + this.channels[channelIdx].direction, 2 );
+		// };
 		
 
 		/**
