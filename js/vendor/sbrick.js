@@ -301,7 +301,6 @@
 				}
 			} ).then( ()=> {
 
-
 				channelSettings.forEach( (setting) => {
 					let channelIdx = setting.channelIdx;
 					if (setting.channel) {
@@ -313,22 +312,11 @@
 					channel.direction = setting.direction ? COUNTERCLOCKWISE : CLOCKWISE;
 				})
 
-				// for(var i=0; i<4; i++) {
-				// 	if( typeof channelSettings[i] !== 'undefined' ) {
-				// 		var channel = parseInt( channelSettings[i].channel );
-				// 		this.channels[channel].power     = Math.min(Math.max(parseInt(Math.abs(channelSettings[i].power)), MIN), MAX);
-				// 		this.channels[channel].direction = channelSettings[i].direction ? COUNTERCLOCKWISE : CLOCKWISE;
-				// 	}
-				// }
 
-				if( !this.channels[0].busy && !this.channels[1].busy && !this.channels[2].busy && !this.channels[3].busy ) {
-					for(var i=0;i<4;i++) {
-						this.channels[i].busy = true;
-					}
+				if(this._allChannelsAreIdle()) {
+					this._setAllChannelsBusy();
 					this.queue.add( () => {
-						for(var i=0;i<4;i++) {
-							this.channels[i].busy = false;
-						}
+						this._setAllChannelsIdle();
 						return WebBluetooth.writeCharacteristicValue(
 							UUID_CHARACTERISTIC_QUICKDRIVE,
 							new Uint8Array([
@@ -479,6 +467,44 @@
 				console.log(msg);
 			}
 		}
+
+		/**
+		* check if no channel is busy
+		* @returns {boolean}
+		*/
+		_allChannelsAreIdle() {
+			let allAreIdle = true;
+			this.channels.forEach((channel) => {
+				if (channel.busy) {
+					allAreIdle = false;
+				}
+			});
+			
+			return allAreIdle;
+		}
+
+
+		/**
+		* set all channels to busy
+		* @returns {undefined}
+		*/
+		_setAllChannelsBusy() {
+			this.channels.forEach((channel) => {
+				channel.busy = true;
+			});
+		};
+
+
+		/**
+		* set all channels to idle
+		* @returns {undefined}
+		*/
+		_setAllChannelsIdle() {
+			this.channels.forEach((channel) => {
+				channel.busy = false;
+			});
+		};
+		
 
   }
 
