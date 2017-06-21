@@ -364,7 +364,7 @@
 				}
 
 				// set motors power to 0 in the object
-				channelIds.foreach( (channelId) => {
+				channelIds.forEach( (channelId) => {
 					this.channels[channelId].power = 0;
 				});
 
