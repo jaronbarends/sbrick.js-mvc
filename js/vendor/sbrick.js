@@ -357,49 +357,58 @@
 				}
 			} ).then( () => {
 
-				let command = null;
-
 				if( !Array.isArray(channelIds) ) {
 					channelIds = [ channelIds ];
 				}
 
-				// set motors power to 0 in the object
+				// create the right input for the Uint8Array:
+				// break command + hex ids from all passed in channels
+				let uint8ArrayInput = [
+					CMD_BREAK
+				];
 				channelIds.forEach( (channelId) => {
+					// set motors power to 0 in the object
 					this.channels[channelId].power = 0;
+					// add this channel's hex id to be included in uint8Array
+					uint8ArrayInput.push(CHANNEL_HEX_IDS[channelId]);
 				});
 
-				switch( channelIds.length ) {
-					default:
-						command = new Uint8Array([
-							CMD_BREAK,
-							CHANNEL_HEX_IDS[channelIds[0]]
-						]);
-						break;
-					case 2:
-						command = new Uint8Array([
-							CMD_BREAK,
-							CHANNEL_HEX_IDS[channelIds[0]],
-							CHANNEL_HEX_IDS[channelIds[1]]
-						]);
-						break;
-					case 3:
-						command = new Uint8Array([
-							CMD_BREAK,
-							CHANNEL_HEX_IDS[channelIds[0]],
-							CHANNEL_HEX_IDS[channelIds[1]],
-							CHANNEL_HEX_IDS[channelIds[2]]
-						]);
-						break;
-					case 4:
-						command = new Uint8Array([
-							CMD_BREAK,
-							CHANNEL_HEX_IDS[channelIds[0]],
-							CHANNEL_HEX_IDS[channelIds[1]],
-							CHANNEL_HEX_IDS[channelIds[2]],
-							CHANNEL_HEX_IDS[channelIds[3]]
-						]);
-						break;
-				}
+				let command = new Uint8Array(uint8ArrayInput);
+
+
+
+				// switch( channelIds.length ) {
+				// 	default:
+				// 		command = new Uint8Array([
+				// 			CMD_BREAK,
+				// 			CHANNEL_HEX_IDS[channelIds[0]]
+				// 		]);
+				// 		break;
+				// 	case 2:
+				// 		command = new Uint8Array([
+				// 			CMD_BREAK,
+				// 			CHANNEL_HEX_IDS[channelIds[0]],
+				// 			CHANNEL_HEX_IDS[channelIds[1]]
+				// 		]);
+				// 		break;
+				// 	case 3:
+				// 		command = new Uint8Array([
+				// 			CMD_BREAK,
+				// 			CHANNEL_HEX_IDS[channelIds[0]],
+				// 			CHANNEL_HEX_IDS[channelIds[1]],
+				// 			CHANNEL_HEX_IDS[channelIds[2]]
+				// 		]);
+				// 		break;
+				// 	case 4:
+				// 		command = new Uint8Array([
+				// 			CMD_BREAK,
+				// 			CHANNEL_HEX_IDS[channelIds[0]],
+				// 			CHANNEL_HEX_IDS[channelIds[1]],
+				// 			CHANNEL_HEX_IDS[channelIds[2]],
+				// 			CHANNEL_HEX_IDS[channelIds[3]]
+				// 		]);
+				// 		break;
+				// }
 
 				this.queue.add( () => {
 					return WebBluetooth.writeCharacteristicValue(
