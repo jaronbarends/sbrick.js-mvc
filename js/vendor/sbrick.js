@@ -184,26 +184,35 @@
 	    }
 
 
+	    /**
+	    * disconnect the SBrick
+	    * @returns {promise}
+	    */
 		disconnect() {
 			return new Promise( (resolve, reject) => {
-					if( this.isConnected() ) {
-						resolve();
-					} else {
-						reject('Not connected');
-					}
-			} ).then( ()=> {
-				return this.stopAll().then( ()=>{
-					clearInterval( this.keepalive );
-					return WebBluetooth.disconnect();
-				} );
-			} )
+				if( this.isConnected() ) {
+					resolve();
+				} else {
+					reject('Not connected');
+				}
+			}).then( () => {
+				return this.stopAll();
+			}).then( () => {
+				clearInterval( this.keepalive );
+				return WebBluetooth.disconnect();
+			})
 			.catch( e => { this._error(e) } );
 		}
 
 
+		/**
+		* check if the SBrick is connected to the browser
+		* @returns {boolean}
+		*/
 		isConnected() {
 			return WebBluetooth && WebBluetooth.isConnected();
 		}
+
 
 		/**
 		* get device info
@@ -228,22 +237,42 @@
 			.catch( e => { this._error(e) } );
 		}
 
+		/**
+		* get the SBrick's model number
+		* @returns {promise returning string}
+		*/
 		getModelNumber() {
 			return this._deviceInfo(UUID_CHARACTERISTIC_MODELNUMBER);
 		}
 
+		/**
+		* get the SBrick's firmware version
+		* @returns {promise returning string}
+		*/
 		getFirmwareVersion() {
 			return this._deviceInfo(UUID_CHARACTERISTIC_FIRMWAREREVISION);
 		}
 
+		/**
+		* get the SBrick's hardware version
+		* @returns {promise returning string}
+		*/
 		getHardwareVersion() {
 			return this._deviceInfo(UUID_CHARACTERISTIC_HARDWAREREVISION);
 		}
 
+		/**
+		* get the SBrick's software version
+		* @returns {promise returning string}
+		*/
 		getSoftwareVersion() {
 			return this._deviceInfo(UUID_CHARACTERISTIC_SOFTWAREREVISION);
 		}
 
+		/**
+		* get the SBrick's manufacturer's name
+		* @returns {promise returning string}
+		*/
 		getManufacturerName() {
 			return this._deviceInfo(UUID_CHARACTERISTIC_MANUFACTURERNAME);
 		}
