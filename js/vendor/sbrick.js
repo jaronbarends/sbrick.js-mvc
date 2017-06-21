@@ -51,7 +51,7 @@
 	// Commands
 	const CMD_BREAK      			= 0x00; // Stop command
 	const CMD_DRIVE					= 0x01; // Drive command
-	const CMD_GET_CHANNEL_STATUS	= 0x22; // Get channel status command
+	// const CMD_GET_CHANNEL_STATUS	= 0x22; // Get channel status command // not used yet
 	const CMD_ADC        			= 0x0F; // Query ADC
 	const CMD_ADC_VOLT   			= 0x08; // Get Voltage
 	const CMD_ADC_TEMP   			= 0x09; // Get Temperature
@@ -87,8 +87,8 @@
 			this.SERVICES   = {}
 
 			// status
-      this.keepalive = null;
-			this.channel   = [
+    		this.keepalive = null;
+			this.channels   = [
 				{ power: MIN, direction: CLOCKWISE, busy: false },
 				{ power: MIN, direction: CLOCKWISE, busy: false },
 				{ power: MIN, direction: CLOCKWISE, busy: false },
@@ -102,7 +102,7 @@
 
 			// debug
 			this._debug         = false;
-    }
+    	}
 
 		connect( sbrick_name ) {
 			this.SERVICES = {
@@ -174,7 +174,7 @@
 				}
 			})
 			.catch( e => { this._error(e) } );
-    }
+	    }
 
 
 		disconnect() {
@@ -268,16 +268,16 @@
 				let channels    = [CHANNEL_0,CHANNEL_1,CHANNEL_2,CHANNEL_3];
 				let directions = [CLOCKWISE,COUNTERCLOCKWISE];
 
-				this.channel[channel].power     = Math.min(Math.max(parseInt(Math.abs(power)), MIN), MAX);
-				this.channel[channel].direction = directions[direction];
+				this.channels[channel].power     = Math.min(Math.max(parseInt(Math.abs(power)), MIN), MAX);
+				this.channels[channel].direction = directions[direction];
 
-				if( !this.channel[channel].busy ) {
-					this.channel[channel].busy = true;
+				if( !this.channels[channel].busy ) {
+					this.channels[channel].busy = true;
 					this.queue.add( () => {
-						this.channel[channel].busy = false;
+						this.channels[channel].busy = false;
 						return WebBluetooth.writeCharacteristicValue(
 							UUID_CHARACTERISTIC_REMOTECONTROL,
-							new Uint8Array([ CMD_DRIVE, channels[channel], this.channel[channel].direction, this.channel[channel].power ])
+							new Uint8Array([ CMD_DRIVE, channels[channel], this.channels[channel].direction, this.channels[channel].power ])
 						) }
 					);
 				}
@@ -304,26 +304,26 @@
 				for(var i=0; i<4; i++) {
 					if( typeof channel_array[i] !== 'undefined' ) {
 						var channel = parseInt( channel_array[i].channel );
-						this.channel[channel].power     = Math.min(Math.max(parseInt(Math.abs(channel_array[i].power)), MIN), MAX);
-						this.channel[channel].direction = channel_array[i].direction ? COUNTERCLOCKWISE : CLOCKWISE;
+						this.channels[channel].power     = Math.min(Math.max(parseInt(Math.abs(channel_array[i].power)), MIN), MAX);
+						this.channels[channel].direction = channel_array[i].direction ? COUNTERCLOCKWISE : CLOCKWISE;
 					}
 				}
 
-				if( !this.channel[0].busy && !this.channel[1].busy && !this.channel[2].busy && !this.channel[3].busy ) {
+				if( !this.channels[0].busy && !this.channels[1].busy && !this.channels[2].busy && !this.channels[3].busy ) {
 					for(var i=0;i<4;i++) {
-						this.channel[i].busy = true;
+						this.channels[i].busy = true;
 					}
 					this.queue.add( () => {
 						for(var i=0;i<4;i++) {
-							this.channel[i].busy = false;
+							this.channels[i].busy = false;
 						}
 						return WebBluetooth.writeCharacteristicValue(
 							UUID_CHARACTERISTIC_QUICKDRIVE,
 							new Uint8Array([
-								parseInt( parseInt(this.channel[0].power/MAX*MAX_QD).toString(2) + this.channel[0].direction, 2 ),
-								parseInt( parseInt(this.channel[1].power/MAX*MAX_QD).toString(2) + this.channel[1].direction, 2 ),
-								parseInt( parseInt(this.channel[2].power/MAX*MAX_QD).toString(2) + this.channel[2].direction, 2 ),
-								parseInt( parseInt(this.channel[3].power/MAX*MAX_QD).toString(2) + this.channel[3].direction, 2 )
+								parseInt( parseInt(this.channels[0].power/MAX*MAX_QD).toString(2) + this.channels[0].direction, 2 ),
+								parseInt( parseInt(this.channels[1].power/MAX*MAX_QD).toString(2) + this.channels[1].direction, 2 ),
+								parseInt( parseInt(this.channels[2].power/MAX*MAX_QD).toString(2) + this.channels[2].direction, 2 ),
+								parseInt( parseInt(this.channels[3].power/MAX*MAX_QD).toString(2) + this.channels[3].direction, 2 )
 							])
 						) }
 					);
@@ -333,7 +333,7 @@
 		}
 
 
-		stop(channel) {
+		stop( channel ) {
 			return new Promise( (resolve, reject) => {
 				if( channel!=null ) {
 					resolve();
@@ -351,7 +351,7 @@
 				// set motors power to 0 in the object
 				// TODO: use forEach
 				for(var i=0;i<channel.length;i++) {
-					this.channel[channel[i]].power = 0;
+					this.channels[channel[i]].power = 0;
 				}
 
 				switch( channel.length ) {
@@ -408,7 +408,7 @@
 			});
 		}
 
-		/* PRIVATE METHODS */
+
 		_keepalive() {
 			return setInterval( () => {
 				if( !this.isConnected() ) {
@@ -466,11 +466,6 @@
 			if(this._debug) {
 				console.log(msg);
 			}
-		}
-
-		/* STATIC METHODS */
-		invertDirection( direction ) {
-			return direction==CLOCKWISE ? COUNTERCLOCKWISE : CLOCKWISE;
 		}
 
   }
