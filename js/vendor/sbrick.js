@@ -227,35 +227,23 @@
 		}
 
 		getModelNumber() {
-			return this._deviceInfo('aaaaa');
 			return this._deviceInfo(UUID_CHARACTERISTIC_MODELNUMBER);
-			// return this._deviceInfo(UUID_CHARACTERISTIC_MODELNUMBER).then( model => {
-			// 	return model;
-			// } );
 		}
 
 		getFirmwareVersion() {
-			return this._deviceInfo(UUID_CHARACTERISTIC_FIRMWAREREVISION).then( version => {
-				return version;
-			} );
+			return this._deviceInfo(UUID_CHARACTERISTIC_FIRMWAREREVISION);
 		}
 
 		getHardwareVersion() {
-			return this._deviceInfo(UUID_CHARACTERISTIC_HARDWAREREVISION).then( version => {
-				return version;
-			} );
+			return this._deviceInfo(UUID_CHARACTERISTIC_HARDWAREREVISION);
 		}
 
 		getSoftwareVersion() {
-			return this._deviceInfo(UUID_CHARACTERISTIC_SOFTWAREREVISION).then( version => {
-				return version;
-			} );
+			return this._deviceInfo(UUID_CHARACTERISTIC_SOFTWAREREVISION);
 		}
 
 		getManufacturerName() {
-			return this._deviceInfo(UUID_CHARACTERISTIC_MANUFACTURERNAME).then( version => {
-				return version;
-			} );
+			return this._deviceInfo(UUID_CHARACTERISTIC_MANUFACTURERNAME);
 		}
 
 
