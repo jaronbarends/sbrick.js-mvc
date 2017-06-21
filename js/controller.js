@@ -250,9 +250,15 @@
 		connectBtn.classList.add('btn--is-busy');
 
 		if (SBrick.isConnected()) {
-			disconnectSBrick();
+			disconnectSBrick()
+				.then( (value) => {
+					log(value);
+				});
 		} else {
-			connectSBrick();
+			connectSBrick()
+				.then( (value) => {
+					log(value);
+				});
 		}
 	};
 	
@@ -301,7 +307,7 @@
 		// Per the specs, this has to be done IN RESPONSE TO A USER ACTION
 		connectBtn.addEventListener('click', connectHandler);
 
-		log('v0.37');
+		log('v0.38');
 	};
 
 	// kick of the script when all dom content has loaded
