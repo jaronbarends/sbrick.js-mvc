@@ -199,7 +199,6 @@
 				return this.stopAll();
 			}).then( () => {
 				clearInterval( this.keepalive );
-				zup();
 				return WebBluetooth.disconnect();
 			})
 			.catch( e => { this._error(e) } );
