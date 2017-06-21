@@ -188,9 +188,9 @@
 	*/
 	var connectSBrick = function() {
 		SBrick.connect(SBRICKNAME)
-		.then( () => {
+		.then( (value) => {
 			// SBrick now is connected
-			log('SBrick is now Connected');
+			log('SBrick is now Connected', value);
 			updateConnectionState();
 		} )
 		.catch( (e) => {
@@ -206,9 +206,9 @@
 	*/
 	var disconnectSBrick = function() {
 		SBrick.disconnect(SBRICKNAME)
-		.then( () => {
+		.then( (value) => {
 			// SBrick now is disconnected
-			log('SBrick is now disconnected');
+			log('SBrick is now disconnected', value);
 			updateConnectionState();
 		} )
 		.catch( (e) => {
@@ -250,15 +250,9 @@
 		connectBtn.classList.add('btn--is-busy');
 
 		if (SBrick.isConnected()) {
-			disconnectSBrick()
-				.then( (value) => {
-					log(value);
-				});
+			disconnectSBrick();
 		} else {
-			connectSBrick()
-				.then( (value) => {
-					log(value);
-				});
+			connectSBrick();
 		}
 	};
 	
@@ -307,7 +301,7 @@
 		// Per the specs, this has to be done IN RESPONSE TO A USER ACTION
 		connectBtn.addEventListener('click', connectHandler);
 
-		log('v0.38');
+		log('v0.39');
 	};
 
 	// kick of the script when all dom content has loaded
