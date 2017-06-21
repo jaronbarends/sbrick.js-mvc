@@ -289,25 +289,37 @@
 		/**
 		* send quickDrive command
 		* @returns {undefined}
-		* @param {array} channel_array An array with an object {channel, direction, power} for every channel you want to update
+		* @param {array} channelSettings An array with a settings object {channelIdx, direction, power} for every channel you want to update
+		* 	in every channel's object, the property channel (SBrick['CHANNEL'+channelIdx]) is supported for legacy reasons
 		*/
-		quickDrive(channel_array) {
+		quickDrive(channelSettings) {
 			return new Promise( (resolve, reject) => {
-				if( channel_array !== null && Array.isArray(channel_array) ) {
+				if( channelSettings !== null && Array.isArray(channelSettings) ) {
 					resolve();
 				} else {
 					reject('Wrong input');
 				}
 			} ).then( ()=> {
 
-				// TODO: use forEach
-				for(var i=0; i<4; i++) {
-					if( typeof channel_array[i] !== 'undefined' ) {
-						var channel = parseInt( channel_array[i].channel );
-						this.channels[channel].power     = Math.min(Math.max(parseInt(Math.abs(channel_array[i].power)), MIN), MAX);
-						this.channels[channel].direction = channel_array[i].direction ? COUNTERCLOCKWISE : CLOCKWISE;
+
+				channelSettings.forEach( (setting) => {
+					let channelIdx = setting.channelIdx;
+					if (setting.channel) {
+						// it uses the old syntax
+						channelIdx = parseInt( setting.channel );
 					}
-				}
+					let channel = this.channels[channelIdx];
+					channel.power     = Math.min(Math.max(parseInt(Math.abs(setting.power)), MIN), MAX);
+					channel.direction = setting.direction ? COUNTERCLOCKWISE : CLOCKWISE;
+				})
+
+				// for(var i=0; i<4; i++) {
+				// 	if( typeof channelSettings[i] !== 'undefined' ) {
+				// 		var channel = parseInt( channelSettings[i].channel );
+				// 		this.channels[channel].power     = Math.min(Math.max(parseInt(Math.abs(channelSettings[i].power)), MIN), MAX);
+				// 		this.channels[channel].direction = channelSettings[i].direction ? COUNTERCLOCKWISE : CLOCKWISE;
+				// 	}
+				// }
 
 				if( !this.channels[0].busy && !this.channels[1].busy && !this.channels[2].busy && !this.channels[3].busy ) {
 					for(var i=0;i<4;i++) {
@@ -389,7 +401,7 @@
 		getBattery() {
 			return this._volt()
 			.then( volt => {
-					return parseInt( Math.abs( volt / MAX_VOLT * 100 ) );
+				return parseInt( Math.abs( volt / MAX_VOLT * 100 ) );
 			});
 		}
 
