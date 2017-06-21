@@ -227,6 +227,7 @@
 		}
 
 		getModelNumber() {
+			return this._deviceInfo('aaaaa');
 			return this._deviceInfo(UUID_CHARACTERISTIC_MODELNUMBER);
 			// return this._deviceInfo(UUID_CHARACTERISTIC_MODELNUMBER).then( model => {
 			// 	return model;
