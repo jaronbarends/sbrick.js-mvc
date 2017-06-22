@@ -114,7 +114,7 @@
 
     	/**
     	* connect the SBrick
-    	* @param {string} sbrick_name The name of the sbrick
+    	* @param {string} sbrick_name - The name of the sbrick
     	* @returns {promise returning undefined}
     	*/
 		connect( sbrick_name ) {
@@ -292,10 +292,10 @@
 
 		/**
 		* send drive command
+		* @param {number} channelId - The id (0-3) of the channel to update in the this.channels array
+		* @param {hexadecimal number} direction - The drive direction (0x00, 0x01 - you can use the constants SBrick.CLOCKWISE and SBrick.COUNTERCLOCKWISE)
+		* @param {number} power - The power level for the drive command 0-255
 		* @returns {promise}
-		* @param {number} channelId The id (0-3) of the channel to update in the this.channels array
-		* @param {hexadecimal number} direction The drive direction (0x00, 0x01 - you can use the constants SBrick.CLOCKWISE and SBrick.COUNTERCLOCKWISE)
-		* @param {number} power The power level for the drive command 0-255
 		*/
 		drive( channelId, direction, power ) {
 			return new Promise( (resolve, reject) => {
@@ -328,9 +328,9 @@
 
 		/**
 		* send quickDrive command
+		* @param {array} channelSettings - An array with a settings object {channelId, direction, power} for every channel you want to update
+		* 									in every channel's object, the property channel (SBrick['CHANNEL'+channelId]) is supported for legacy reasons
 		* @returns {undefined}
-		* @param {array} channelSettings An array with a settings object {channelId, direction, power} for every channel you want to update
-		* 	in every channel's object, the property channel (SBrick['CHANNEL'+channelId]) is supported for legacy reasons
 		*/
 		quickDrive(channelSettings) {
 			return new Promise( (resolve, reject) => {
@@ -376,7 +376,7 @@
 
 		/**
 		* stop a channel
-		* @param {number | array} channelIds The number or array of numbers of channels to stop
+		* @param {number | array} channelIds - The number or array of numbers of channels to stop
 		* @returns {promise}
 		*/
 		stop( channelIds ) {
@@ -442,7 +442,7 @@
 
 		/**
 		* get sbrick's temperature in degrees Celsius (default) or Fahrenheit
-		* @param {boolean} isFahrenheit If true, temperature is returned in Fahrenheit
+		* @param {boolean} isFahrenheit - If true, temperature is returned in Fahrenheit
 		* @returns {promise returning number}
 		*/
 		getTemp( isFahrenheit = false) {
@@ -495,14 +495,15 @@
 			} )
 		}
 
+
 		/**
-		* 
-		* @returns {undefined}
+		* get the sbrick's temperature
+		* @returns {number} temperature in °C
 		*/
 		_temp() {
 			return this._adc(CMD_ADC_TEMP).then( temp => {
 				return parseFloat(temp / 118.85795 - 160); // °C;
-			} )
+			} );
 		}
 
 		_error( msg ) {
@@ -518,7 +519,6 @@
 				console.log(msg);
 			}
 		}
-
 
 
 		/**

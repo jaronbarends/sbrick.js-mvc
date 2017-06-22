@@ -56,8 +56,8 @@
 
 	/**
 	* update a set of lights
-	* @param {string} channelId The number (0-3) of the channel this set of lights is attached to
-	* @param {deviceId} string An id for this attached set of lights, corresponding to id's in html to retrieve input values
+	* @param {string} channelId - The number (0-3) of the channel this set of lights is attached to
+	* @param {deviceId} string - An id for this attached set of lights, corresponding to id's in html to retrieve input values
 	* @returns {undefined}
 	*/
 	const updateLights = function(channelId, deviceId) {
@@ -80,8 +80,8 @@
 
 	/**
 	* update a drive motor
-	* @param {string} channelId The number (0-3) of the channel this motor is attached to
-	* @param {deviceId} string An id for this attached motor, corresponding to id's in html to retrieve input values
+	* @param {string} channelId - The number (0-3) of the channel this motor is attached to
+	* @param {deviceId} string - An id for this attached motor, corresponding to id's in html to retrieve input values
 	* @returns {undefined}
 	*/
 	const updateDrive = function(channelId, deviceId) {
@@ -115,8 +115,8 @@
 
 	/**
 	* update a drive motor
-	* @param {string} channelId The number (0-3) of the channel this motor is attached to
-	* @param {deviceId} string An id for this attached motor, corresponding to id's in html to retrieve input values
+	* @param {string} channelId - The number (0-3) of the channel this motor is attached to
+	* @param {deviceId} string - An id for this attached motor, corresponding to id's in html to retrieve input values
 	* @returns {undefined}
 	*/
 	const updateServo = function(channelId, deviceId) {
@@ -191,7 +191,6 @@
 		.then( (value) => {
 			// SBrick now is connected
 			log('SBrick is now Connected');
-			log('typof value:' + typeof value);
 			updateConnectionState();
 		} )
 		.catch( (e) => {
@@ -272,7 +271,7 @@
 
 	/**
 	* initialize all functionality
-	* @param {string} varname Description
+	* @param {string} varname - Description
 	* @returns {undefined}
 	*/
 	const init = function() {
