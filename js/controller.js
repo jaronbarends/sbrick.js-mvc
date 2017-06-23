@@ -43,6 +43,7 @@
 	};
 
 
+
 	/**
 	* check current battery status
 	* @returns {undefined}
@@ -54,6 +55,7 @@
 			});
 	};
 	
+
 
 	/**
 	* update a set of lights
@@ -74,6 +76,7 @@
 			event = new CustomEvent('setlights.sbrick', {detail: data});
 		body.dispatchEvent(event);
 	};
+
 
 
 	/**
@@ -105,31 +108,37 @@
 	};
 
 
+
 	/**
-	* update a drive motor
+	* update a servo motor
 	* @param {string} channelId - The number (0-3) of the channel this motor is attached to
 	* @param {funcId} string - An id for this attached motor, corresponding to id's in html to retrieve input values
 	* @returns {undefined}
 	*/
 	const updateServo = function(channelId, funcId) {
-		const powerRange = SBrick.MAX - MIN_VALUE_BELOW_WHICH_MOTOR_DOES_NOT_WORK;
 		let	power = document.getElementById(funcId + '-power').value,
 			powerNumber = document.getElementById(funcId + '-power-number').value,
-			direction = document.querySelector('[name="' + funcId + '-direction"]:checked').value,
-			channel = SBrick['CHANNEL'+channelId];
-
-
-		// power = Math.round(powerRange * power/100 + MIN_VALUE_BELOW_WHICH_MOTOR_DOES_NOT_WORK);
+			directionStr = document.querySelector('[name="' + funcId + '-direction"]:checked').value,
+			direction = SBrick[directionStr];
+		
+		channelId = parseInt(channelId, 10);
 		power = Math.round(SBrick.MAX * powerNumber/100);
 		power = powerNumber;
-		direction = SBrick[direction];
 
-		console.log(channel, direction, power);
-		log('Drive: ' + channelId + ', ' + direction + ', ' + power);
+		let data = {
+				channelId,
+				direction,
+				power
+			},
+			event = new CustomEvent('setservo.sbrick', {detail: data});
+		body.dispatchEvent(event);
 
-		SBrick.quickDrive([
-			{channel, direction, power}
-		]);
+		// console.log(channel, direction, power);
+		// log('Drive: ' + channelId + ', ' + direction + ', ' + power);
+
+		// SBrick.quickDrive([
+		// 	{channel, direction, power}
+		// ]);
 		// SBrick.drive(channel, direction, power);
 	};
 	
@@ -178,7 +187,7 @@
 	*/
 	const lightschangeHandler = function(e) {
 		let data = e.detail;
-		log('handle chId:' + data.channelId + ' p:' + data.power + ' dir:'+data.direction);
+		log('lights change: chId:' + data.channelId + ' p:' + data.power + ' dir:'+data.direction);
 	};
 
 
@@ -189,11 +198,22 @@
 	const drivechangeHandler = function(e) {
 		let data = e.detail;
 		data.forEach((ch) => {
-			log('handle chId:' + ch.channelId + ' p:' + ch.power + ' dir:'+ch.direction);
+			log('drive change: chId:' + ch.channelId + ' p:' + ch.power + ' dir:'+ch.direction);
 		});
 	};
-	
-	
+
+
+
+	/**
+	* handle when servo have changed
+	* @returns {undefined}
+	*/
+	const servochangeHandler = function(e) {
+		let data = e.detail;
+		data.forEach((ch) => {
+			log('servo change: chId:' + ch.channelId + ' p:' + ch.power + ' dir:'+ch.direction);
+		});
+	};
 	
 
 
@@ -217,6 +237,7 @@
 		// set listeners for sbrick events
 		body.addEventListener('lightschange.sbrick', lightschangeHandler);
 		body.addEventListener('drivechange.sbrick', drivechangeHandler);
+		body.addEventListener('servochange.sbrick', servochangeHandler);
 	};
 
 

@@ -55,6 +55,24 @@
 				body.dispatchEvent(event);
 			});
 	};
+
+
+
+	/**
+	* pass request to change servo to sbrick.js
+	* @returns {undefined}
+	*/
+	const setservoHandler = function(e) {
+		let data = Object.assign({}, defaultDriveData, e.detail);// make sure we always have values to send
+
+		// send drive instructions
+		SBrick.quickDrive([data])
+			.then( (data) => {
+				// all went well, sent an event with the new channel values
+				const event = new CustomEvent('servochange.sbrick', {detail: data});
+				body.dispatchEvent(event);
+			});
+	};
 	
 
 
@@ -65,6 +83,7 @@
 	const addSBrickEventListeners = function() {
 		body.addEventListener('setlights.sbrick', setlightsHandler),
 		body.addEventListener('setdrive.sbrick', setdriveHandler);
+		body.addEventListener('setservo.sbrick', setservoHandler);
 	};
 
 
