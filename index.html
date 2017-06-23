@@ -18,19 +18,19 @@
 
 	<div id="version-number" class="version-number"></div>
 
-	<a href="#" id="setlights">trigger setlights event</a>
+	<a href="#" id="setdrive">trigger drive event</a>
 	
 	<div id="controlPanel" class="is-hidden">
 
 		<div class="channel-controls">
 			<h2 class="channel-title">Channel 0</h2>
-			<button class="btn btn--start" data-channel="0" data-device-type="lights" data-device-id="lights1">Lights</button>
+			<button class="btn btn--start" data-channel="0" data-func-type="lights" data-func-id="lights1">Lights</button>
 			<input id="lights1-power" type="range" min="0" max="100" value="100">
 		</div>
 
 		<div class="channel-controls">
 			<h2 class="channel-title">Channel 1</h2>
-			<button class="btn btn--start" data-channel="1" data-device-type="drive" data-device-id="drive1">Motor</button>
+			<button class="btn btn--start" data-channel="1" data-func-type="drive" data-func-id="drive1">Motor</button>
 			<input id="drive1-power" type="range" min="0" max="100" value="100">
 			<!-- <input type="number" value="80" id="drive1-power-number"> -->
 			<input id="drive1-dir-cw" type="radio" name="drive1-direction" value="CW" checked><label for="drive1-dir-cw"><span class="symbol">&#8635;</span></label>
@@ -39,7 +39,7 @@
 
 		<div class="channel-controls">
 			<h2 class="channel-title">Channel 2</h2>
-			<button class="btn btn--start" data-channel="2" data-device-type="servo" data-device-id="servo1">Servo</button>
+			<button class="btn btn--start" data-channel="2" data-func-type="servo" data-func-id="servo1">Servo</button>
 			<input id="servo1-power" type="range" min="0" max="100" value="50">
 			<input type="number" value="80" id="servo1-power-number">
 			<input id="servo1-dir-cw" type="radio" name="servo1-direction" value="CW" checked><label for="servo1-dir-cw"><span class="symbol">&#8635;</span></label>

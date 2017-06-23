@@ -58,38 +58,35 @@
 	/**
 	* update a set of lights
 	* @param {string} channelId - The number (0-3) of the channel this set of lights is attached to
-	* @param {deviceId} string - An id for this attached set of lights, corresponding to id's in html to retrieve input values
+	* @param {funcId} string - An id for this attached set of lights, corresponding to id's in html to retrieve input values
 	* @returns {undefined}
 	*/
-	const updateLights = function(channelId, deviceId) {
-		let	power = document.getElementById(deviceId + '-power').value,
-			direction = SBrick.CW,// we need a value
-			channel = SBrick['CHANNEL'+channelId];
+	const updateLights = function(channelId, funcId) {
+		let	power = document.getElementById(funcId + '-power').value;
 
+		channelId = parseInt(channelId, 10);
 		power = Math.round(SBrick.MAX * power/100);
 
-		console.log(channel, direction, power);
-		log('Lights: ' + channelId + ', ' + direction + ', ' + power);
-
-		SBrick.drive(channel, direction, power)
-			.then( () => {
-				// const c = SBrick.channel[channel];
-				// console.log( 'channel ' + channelId +': power: ', c.power, 'direction: ', c.direction );
-			});
+		let data = {
+				channelId,
+				power
+			},
+			event = new CustomEvent('setlights.sbrick', {detail: data});
+		body.dispatchEvent(event);
 	};
 
 
 	/**
 	* update a drive motor
 	* @param {string} channelId - The number (0-3) of the channel this motor is attached to
-	* @param {deviceId} string - An id for this attached motor, corresponding to id's in html to retrieve input values
+	* @param {funcId} string - An id for this attached motor, corresponding to id's in html to retrieve input values
 	* @returns {undefined}
 	*/
-	const updateDrive = function(channelId, deviceId) {
+	const updateDrive = function(channelId, funcId) {
 		const powerRange = SBrick.MAX - MIN_VALUE_BELOW_WHICH_MOTOR_DOES_NOT_WORK;
-		let	power = document.getElementById(deviceId + '-power').value,
-			// powerNumber = document.getElementById(deviceId + '-power-number').value,
-			direction = document.querySelector('[name="' + deviceId + '-direction"]:checked').value,
+		let	power = document.getElementById(funcId + '-power').value,
+			// powerNumber = document.getElementById(funcId + '-power-number').value,
+			direction = document.querySelector('[name="' + funcId + '-direction"]:checked').value,
 			channel = SBrick['CHANNEL'+channelId];
 
 
@@ -117,14 +114,14 @@
 	/**
 	* update a drive motor
 	* @param {string} channelId - The number (0-3) of the channel this motor is attached to
-	* @param {deviceId} string - An id for this attached motor, corresponding to id's in html to retrieve input values
+	* @param {funcId} string - An id for this attached motor, corresponding to id's in html to retrieve input values
 	* @returns {undefined}
 	*/
-	const updateServo = function(channelId, deviceId) {
+	const updateServo = function(channelId, funcId) {
 		const powerRange = SBrick.MAX - MIN_VALUE_BELOW_WHICH_MOTOR_DOES_NOT_WORK;
-		let	power = document.getElementById(deviceId + '-power').value,
-			powerNumber = document.getElementById(deviceId + '-power-number').value,
-			direction = document.querySelector('[name="' + deviceId + '-direction"]:checked').value,
+		let	power = document.getElementById(funcId + '-power').value,
+			powerNumber = document.getElementById(funcId + '-power-number').value,
+			direction = document.querySelector('[name="' + funcId + '-direction"]:checked').value,
 			channel = SBrick['CHANNEL'+channelId];
 
 
@@ -136,31 +133,31 @@
 		console.log(channel, direction, power);
 		log('Drive: ' + channelId + ', ' + direction + ', ' + power);
 
-		// SBrick.quickDrive([
-		// 	{channel, direction, power}
-		// ]);
-		SBrick.drive(channel, direction, power);
+		SBrick.quickDrive([
+			{channel, direction, power}
+		]);
+		// SBrick.drive(channel, direction, power);
 	};
 	
 	
 	
 
 	/**
-	* handle click on channel - call function for connected type of device (lights, drive motor, servo, ...)
+	* handle click on channel - call function for connected type of function (lights, drive motor, servo, ...)
 	* @returns {undefined}
 	*/
 	const channelBtnHandler = function(e) {
 		const btn = e.target,
 			channelId = btn.getAttribute('data-channel'),
-			deviceType = btn.getAttribute('data-device-type'),
-			deviceId = btn.getAttribute('data-device-id');
+			funcType = btn.getAttribute('data-func-type'),
+			funcId = btn.getAttribute('data-func-id');
 
-		if (deviceType === 'lights') {
-			updateLights(channelId, deviceId);
-		} else if (deviceType === 'drive') {
-			updateDrive(channelId, deviceId);
-		} else if (deviceType === 'servo') {
-			updateServo(channelId, deviceId);
+		if (funcType === 'lights') {
+			updateLights(channelId, funcId);
+		} else if (funcType === 'drive') {
+			updateDrive(channelId, funcId);
+		} else if (funcType === 'servo') {
+			updateServo(channelId, funcId);
 		}
 	};
 
@@ -169,14 +166,14 @@
 	* set the lights to a new value
 	* @returns {undefined}
 	*/
-	const setLights = function(e) {
+	const setDrive = function(e) {
 		e.preventDefault();
 		let data = {
-				channelId: 0,
+				channelId: 1,
 				direction: 0,
-				power: 100
+				power: 150
 			},
-			event = new CustomEvent('setlights.sbrick', { detail: data});
+			event = new CustomEvent('setdrive.sbrick', {detail: data});
 		body.dispatchEvent(event);
 	};
 
@@ -209,7 +206,7 @@
 		document.getElementById('check-temperature-btn').addEventListener('click', checkTemperature);
 		document.getElementById('check-model-number-btn').addEventListener('click', getModelNumber);
 
-		document.getElementById('setlights').addEventListener('click', setLights);
+		document.getElementById('setdrive').addEventListener('click', setDrive);
 
 		// set listeners for sbrick events
 		body.addEventListener('lightschange.sbrick', lightschangeHandler);

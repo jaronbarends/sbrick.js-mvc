@@ -7,9 +7,9 @@
 
 	let body = document.body,
 		logWin,
-		SBrick;
+		SBrick,
+		defaultDriveData;
 	
-
 
 	/**
 	* log to page's log window
@@ -26,16 +26,34 @@
 	* @returns {undefined}
 	*/
 	const setlightsHandler = function(e) {
-		// console.log('setlightsHandler', e);
-		const data = e.detail;
-		// console.log(data);
+		// make sure we always have values to send
+		let data = Object.assign({}, defaultDriveData, e.detail);
 
+		// send drive instructions
 		SBrick.drive(data.channelId, data.direction, data.power)
 			.then( (data) => {
-				// log('yay! chId:' + obj.channelId + ' p:' + obj.power + ' dir:'+obj.direction);
 				// all went well, sent an event with the new channel values
 				const event = new CustomEvent('lightschange.sbrick', {detail: data});
 				body.dispatchEvent(event);
+			});
+	};
+
+
+	/**
+	* pass setting of lights to sbrick.js
+	* @returns {undefined}
+	*/
+	const setdriveHandler = function(e) {
+		// make sure we always have values to send
+		log('driveHandler');
+		let data = Object.assign({}, defaultDriveData, e.detail);
+
+		// send drive instructions
+		SBrick.drive(data.channelId, data.direction, data.power)
+			.then( (data) => {
+				// all went well, sent an event with the new channel values
+				// const event = new CustomEvent('lightschange.sbrick', {detail: data});
+				// body.dispatchEvent(event);
 			});
 	};
 	
@@ -46,7 +64,8 @@
 	* @returns {undefined}
 	*/
 	const addSBrickEventListeners = function() {
-		body.addEventListener('setlights.sbrick', setlightsHandler);
+		body.addEventListener('setlights.sbrick', setlightsHandler),
+		body.addEventListener('setdrive.sbrick', setdriveHandler);
 	};
 	
 
@@ -67,6 +86,13 @@
 		if (window.location.href.indexOf('http') !== 0) {
 			dummyMode = true;
 		}
+
+		// define default data to send to drive commands
+		defaultDriveData = {
+			channelId: 0,
+			direction: SBrick.CW,
+			power: 0
+		};
 
 		if (dummyMode) {
 			SBrick = window.SBrickDummy;
