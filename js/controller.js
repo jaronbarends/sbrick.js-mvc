@@ -6,7 +6,8 @@
 	const SBRICKNAME = 'SBrick',
 		MIN_VALUE_BELOW_WHICH_MOTOR_DOES_NOT_WORK = 98;// somehow, motor does not seem to work for power values < 98
 
-	let logWin,
+	let body = document.body,
+		logWin,
 		connectBtn,
 		controlPanel,
 		SBrick;
@@ -162,6 +163,34 @@
 			updateServo(channelId, deviceId);
 		}
 	};
+
+
+	/**
+	* set the lights to a new value
+	* @returns {undefined}
+	*/
+	const setLights = function(e) {
+		e.preventDefault();
+		let data = {
+				channelId: 0,
+				direction: 0,
+				power: 100
+			},
+			event = new CustomEvent('setlights.sbrick', { detail: data});
+		body.dispatchEvent(event);
+	};
+
+
+	/**
+	* handle when lights have changed
+	* @returns {undefined}
+	*/
+	const lightschangeHandler = function(e) {
+		let data = e.detail;
+		log('handle chId:' + data.channelId + ' p:' + data.power + ' dir:'+data.direction);
+	};
+	
+	
 	
 
 
@@ -179,6 +208,11 @@
 		document.getElementById('check-battery-btn').addEventListener('click', checkBattery);
 		document.getElementById('check-temperature-btn').addEventListener('click', checkTemperature);
 		document.getElementById('check-model-number-btn').addEventListener('click', getModelNumber);
+
+		document.getElementById('setlights').addEventListener('click', setLights);
+
+		// set listeners for sbrick events
+		body.addEventListener('lightschange.sbrick', lightschangeHandler);
 	};
 
 
@@ -301,7 +335,7 @@
 		// Per the specs, this has to be done IN RESPONSE TO A USER ACTION
 		connectBtn.addEventListener('click', connectHandler);
 
-		log('v0.43');
+		document.getElementById('version-number').textContent = 'v0.43';
 	};
 
 	// kick of the script when all dom content has loaded

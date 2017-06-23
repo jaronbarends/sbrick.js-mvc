@@ -93,3 +93,11 @@ input[type="range"] {
 .footnote {
 	font-size: 1.2rem;
 }
+
+.version-number {
+	position: absolute;
+	top: 0.5em;
+	right: 0.5em;
+	color: #ccc;
+	font-size: 1.2rem;
+}

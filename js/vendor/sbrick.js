@@ -300,11 +300,11 @@
 		drive( channelId, direction, power ) {
 			return new Promise( (resolve, reject) => {
 				if( channelId !== null && direction !== null && power !== null ) {
-					resolve();
+					resolve('nootjes');
 				} else {
 					reject('Wrong input');
 				}
-			} ).then( () => {
+			} ).then( (str) => {
 				let directions = [CLOCKWISE, COUNTERCLOCKWISE];
 				let channel = this.channels[channelId];
 
@@ -319,9 +319,19 @@
 							UUID_CHARACTERISTIC_REMOTECONTROL,
 							new Uint8Array([ CMD_DRIVE, CHANNEL_HEX_IDS[channelId], channel.direction, channel.power ])
 						) }
-					);
+					)
+
 				}
-			} )
+			} ).then( () => {
+				// all went well, return the settings we just applied
+				const channel = this.channels[channelId],
+					returnData = {
+						channelId: channelId,
+						direction: channel.direction,
+						power: channel.power
+					};
+				return returnData;
+			})
 			.catch( e => { this._error(e) } );
 		}
 
