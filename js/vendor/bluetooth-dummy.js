@@ -1,4 +1,15 @@
 /*
+* Dummy implementation for WebBluetooth API
+*
+* This makes it possible to develop without having a real connection
+*
+*/
+
+
+
+
+
+/*
  * Copyright (c) 2016-17 Francesco Marino
  *
  * @author Francesco Marino <francesco@360fun.net>
@@ -49,23 +60,6 @@
 
 
 
-/*
-
-device {
-	id: 'gzura7g89avjakljva',
-	name: 'SBrick',
-	gatt: {
-		device: [object BluetoothDevice],
-		connected: true,
-		connect: function,
-		disconnect: function,
-		getPrimaryService: function,
-		getPrimaryServices: function
-	}
-}
-
-*/
-
 		/**
 		* mimic connecting to a device
 		* @returns {undefined}
@@ -73,20 +67,22 @@ device {
 		connect(options,services) {
 			return new Promise((resolve, reject) => {
 				// give this.device the stuff it needs
-				// todo: set small timeout
-				this.device = {
-					id: 'some-dummy-id',
-					name: 'SBrick',
-					gatt: {
-						// device: [object BluetoothDevice],
-						connected: true,
-						// connect: function,
-						// disconnect: function,
-						// getPrimaryService: function,
-						// getPrimaryServices: function
-					}
-				};
-				resolve();
+				// do with small timeout to briefly mimic waiting effect
+				setTimeout(() => {
+					this.device = {
+						id: 'some-dummy-id',
+						name: 'SBrick',
+						gatt: {
+							// device: [object BluetoothDevice],
+							connected: true,
+							// connect: function,
+							// disconnect: function,
+							// getPrimaryService: function,
+							// getPrimaryServices: function
+						}
+					};
+					resolve();
+				}, 200);
 			});
 		}
 
@@ -96,7 +92,6 @@ device {
 		* @returns {undefined}
 		*/
 		disconnect() {
-			console.log('disconnect');
 			return new Promise( (resolve, reject) =>	{
 					if( this.isConnected() ) {
 						this.device.gatt.connected = false;

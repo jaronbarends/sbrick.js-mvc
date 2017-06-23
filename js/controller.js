@@ -83,30 +83,25 @@
 	* @returns {undefined}
 	*/
 	const updateDrive = function(channelId, funcId) {
+		// drive does not seem to work below some power level
+		// define the power range within which the drive does work
 		const powerRange = SBrick.MAX - MIN_VALUE_BELOW_WHICH_MOTOR_DOES_NOT_WORK;
+
 		let	power = document.getElementById(funcId + '-power').value,
-			// powerNumber = document.getElementById(funcId + '-power-number').value,
-			direction = document.querySelector('[name="' + funcId + '-direction"]:checked').value,
-			channel = SBrick['CHANNEL'+channelId];
+			directionStr = document.querySelector('[name="' + funcId + '-direction"]:checked').value,
+			direction = SBrick[directionStr];
 
-
+		channelId = parseInt(channelId, 10);
 		power = Math.round(powerRange * power/100 + MIN_VALUE_BELOW_WHICH_MOTOR_DOES_NOT_WORK);
-		// power = Math.round(SBrick.MAX * power/100);
-		direction = SBrick[direction];
 
-		log('Drive: ', channelId, direction, power);
-
-		SBrick.quickDrive([
-				{
-					channelId,
-					direction,
-					power
-				}
-			])
-			.then( () => {
-				// log('quickdrive worked');
-			});
-		// SBrick.drive(channel, direction, power);
+		// define data to send
+		let data = {
+				channelId,
+				direction,
+				power
+			},
+			event = new CustomEvent('setdrive.sbrick', {detail: data});
+		body.dispatchEvent(event);
 	};
 
 
@@ -234,13 +229,6 @@
 		.then( (value) => {
 			// SBrick now is connected
 			log('SBrick is now Connected');
-			log('device:' + WebBluetooth.device);
-			for (const key in WebBluetooth.device) {
-				log(key + ' ' + WebBluetooth.device[key]);
-			}
-			for (const gkey in WebBluetooth.device.gatt) {
-				log('g:' + gkey + ' ' + WebBluetooth.device.gatt[gkey]);
-			}
 			updateConnectionState();
 		} )
 		.catch( (e) => {
@@ -324,10 +312,9 @@
 	* @returns {undefined}
 	*/
 	const checkDummyMode = function() {
-		// check if we're on http; if so, use the real sbrick
+		// check if we're on http; if so, use the real webbluetooth api
 		// otherwise, talk against the dummy
 		if (window.location.href.indexOf('http') !== 0) {
-			// SBrick = window.SBrickDummy;
 			window.WebBluetooth = window.WebBluetoothDummy;
 			log = console.log;
 		}

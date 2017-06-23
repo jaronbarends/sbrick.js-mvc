@@ -22,7 +22,7 @@
 
 
 	/**
-	* pass setting of lights to sbrick.js
+	* pass request to change lights to sbrick.js
 	* @returns {undefined}
 	*/
 	const setlightsHandler = function(e) {
@@ -39,8 +39,9 @@
 	};
 
 
+
 	/**
-	* pass setting of lights to sbrick.js
+	* pass request to change drive to sbrick.js
 	* @returns {undefined}
 	*/
 	const setdriveHandler = function(e) {

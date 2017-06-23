@@ -183,7 +183,8 @@
 						} else {
 							this._log("Firmware not compatible: please update your SBrick.");
 							// temp code to provide for dummy
-							if (WebBluetooth !== WebBluetoothDummy) {
+							// BluetoothDummy does not return any value, and we don't want it to disconnect
+							if (typeof WebBluetoothDummy === 'undefined' || WebBluetooth !== WebBluetoothDummy) {
 								this.disconnect();
 							}
 						}
