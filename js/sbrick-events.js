@@ -44,16 +44,14 @@
 	* @returns {undefined}
 	*/
 	const setdriveHandler = function(e) {
-		// make sure we always have values to send
-		log('driveHandler');
-		let data = Object.assign({}, defaultDriveData, e.detail);
+		let data = Object.assign({}, defaultDriveData, e.detail);// make sure we always have values to send
 
 		// send drive instructions
-		SBrick.drive(data.channelId, data.direction, data.power)
+		SBrick.quickDrive([data])
 			.then( (data) => {
 				// all went well, sent an event with the new channel values
-				// const event = new CustomEvent('lightschange.sbrick', {detail: data});
-				// body.dispatchEvent(event);
+				const event = new CustomEvent('drivechange.sbrick', {detail: data});
+				body.dispatchEvent(event);
 			});
 	};
 	
@@ -67,9 +65,8 @@
 		body.addEventListener('setlights.sbrick', setlightsHandler),
 		body.addEventListener('setdrive.sbrick', setdriveHandler);
 	};
-	
 
-	
+
 
 	/**
 	* initialize all functionality
@@ -78,14 +75,7 @@
 	*/
 	const init = function() {
 		SBrick = window.SBrick;
-
-		let dummyMode = false;
-
-		// check if we're on http; if so, use the real sbrick
-		// otherwise, talk against the dummy
-		if (window.location.href.indexOf('http') !== 0) {
-			dummyMode = true;
-		}
+		logWin = document.getElementById('log-window');
 
 		// define default data to send to drive commands
 		defaultDriveData = {
@@ -93,14 +83,6 @@
 			direction: SBrick.CW,
 			power: 0
 		};
-
-		if (dummyMode) {
-			SBrick = window.SBrickDummy;
-			log = console.log;
-		}
-
-		logWin = document.getElementById('log-window');
-
 		addSBrickEventListeners();
 	};
 

@@ -94,7 +94,6 @@
 		// power = Math.round(SBrick.MAX * power/100);
 		direction = SBrick[direction];
 
-		// console.log(channel, direction, power);
 		log('Drive: ', channelId, direction, power);
 
 		SBrick.quickDrive([
@@ -186,6 +185,18 @@
 		let data = e.detail;
 		log('handle chId:' + data.channelId + ' p:' + data.power + ' dir:'+data.direction);
 	};
+
+
+	/**
+	* handle when drive have changed
+	* @returns {undefined}
+	*/
+	const drivechangeHandler = function(e) {
+		let data = e.detail;
+		data.forEach((ch) => {
+			log('handle chId:' + ch.channelId + ' p:' + ch.power + ' dir:'+ch.direction);
+		});
+	};
 	
 	
 	
@@ -210,6 +221,7 @@
 
 		// set listeners for sbrick events
 		body.addEventListener('lightschange.sbrick', lightschangeHandler);
+		body.addEventListener('drivechange.sbrick', drivechangeHandler);
 	};
 
 
@@ -222,6 +234,13 @@
 		.then( (value) => {
 			// SBrick now is connected
 			log('SBrick is now Connected');
+			log('device:' + WebBluetooth.device);
+			for (const key in WebBluetooth.device) {
+				log(key + ' ' + WebBluetooth.device[key]);
+			}
+			for (const gkey in WebBluetooth.device.gatt) {
+				log('g:' + gkey + ' ' + WebBluetooth.device.gatt[gkey]);
+			}
 			updateConnectionState();
 		} )
 		.catch( (e) => {
@@ -298,6 +317,22 @@
 		logWin.innerHTML += '<p>' + msg + '</p>';
 	};
 
+
+	/**
+	* check if we want to run in dummy-mode
+	* that's meant for developing when you do not need to have an actual bluetooth device
+	* @returns {undefined}
+	*/
+	const checkDummyMode = function() {
+		// check if we're on http; if so, use the real sbrick
+		// otherwise, talk against the dummy
+		if (window.location.href.indexOf('http') !== 0) {
+			// SBrick = window.SBrickDummy;
+			window.WebBluetooth = window.WebBluetoothDummy;
+			log = console.log;
+		}
+	};
+
 	
 
 	/**
@@ -307,26 +342,14 @@
 	*/
 	const init = function() {
 		SBrick = window.SBrick;
-
-		let dummyMode = false;
-
-		// check if we're on http; if so, use the real sbrick
-		// otherwise, talk against the dummy
-		if (window.location.href.indexOf('http') !== 0) {
-			dummyMode = true;
-		}
-
-		if (dummyMode) {
-			// SBrick = window.SBrickDummy;
-			// log = console.log;
-		}
-
 		logWin = document.getElementById('log-window');
 		connectBtn = document.getElementById('connect-btn');
 		controlPanel = document.getElementById('controlPanel');
 
 		// initialize controlPanel - they'll remain hidden until connection is made
 		initControlPanel();
+
+		checkDummyMode();
 
 		// Connect to SBrick via bluetooth.
 		// Per the specs, this has to be done IN RESPONSE TO A USER ACTION

@@ -182,7 +182,10 @@
 							this.keepalive = this._keepalive(this);
 						} else {
 							this._log("Firmware not compatible: please update your SBrick.");
-							this.disconnect();
+							// temp code to provide for dummy
+							if (WebBluetooth !== WebBluetoothDummy) {
+								this.disconnect();
+							}
 						}
 					});
 				}
@@ -304,7 +307,7 @@
 				} else {
 					reject('Wrong input');
 				}
-			} ).then( (str) => {
+			} ).then( () => {
 				let directions = [CLOCKWISE, COUNTERCLOCKWISE];
 				let channel = this.channels[channelId];
 
@@ -324,13 +327,7 @@
 				}
 			} ).then( () => {
 				// all went well, return the settings we just applied
-				const channel = this.channels[channelId],
-					returnData = {
-						channelId: channelId,
-						direction: channel.direction,
-						power: channel.power
-					};
-				return returnData;
+				return this._getChannelData(channelId);
 			})
 			.catch( e => { this._error(e) } );
 		}
@@ -379,6 +376,20 @@
 						) }
 					);
 				}
+			})
+			.then( () => {
+				// all went well, return an array with the channels and the settings we just applied
+				let returnData = [];
+
+				channelSettings.forEach((setting) => {
+					let channelId = setting.channelId;
+					if (setting.channel) {
+						// it uses the old syntax
+						channelId = parseInt( setting.channel );
+					}
+					returnData.push(this._getChannelData(channelId));
+				});
+				return returnData;
 			})
 			.catch( e => { this._error(e) } );
 		}
@@ -577,6 +588,20 @@
 				channel.busy = false;
 			});
 		};
+
+		/**
+		* get the settings of a specific channel
+		* @returns {undefined}
+		*/
+		_getChannelData(channelId) {
+			const channel = this.channels[channelId],
+				data = {
+					channelId: channelId,
+					direction: channel.direction,
+					power: channel.power
+				};
+			return data;
+		}
 		
 
   }
