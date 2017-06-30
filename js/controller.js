@@ -10,7 +10,7 @@
 		logWin,
 		connectBtn,
 		controlPanel,
-		SBrick;
+		mySBrick;
 
 
 
@@ -19,7 +19,7 @@
 	* @returns {undefined}
 	*/
 	var checkTemperature = function() {
-		SBrick.getTemp()
+		mySBrick.getTemp()
 			.then( (value) => {
 				value = Math.round(10*value)/10;
 				log('Temperature: ' + value + '°C');
@@ -32,7 +32,7 @@
 	* @returns {undefined}
 	*/
 	var getModelNumber = function() {
-		SBrick.getModelNumber()
+		mySBrick.getModelNumber()
 			.then( (value) => {
 				// value = Math.round(10*value)/10;
 				log('Model number: ' + value);
@@ -49,7 +49,7 @@
 	* @returns {undefined}
 	*/
 	var checkBattery = function() {
-		SBrick.getBattery()
+		mySBrick.getBattery()
 			.then( (value) => {
 				log('Battery: ' + value + '%');			
 			});
@@ -67,7 +67,7 @@
 		let	power = document.getElementById(funcId + '-power').value;
 
 		channelId = parseInt(channelId, 10);
-		power = Math.round(SBrick.MAX * power/100);
+		power = Math.round(mySBrick.MAX * power/100);
 
 		let data = {
 				channelId,
@@ -88,11 +88,11 @@
 	const updateDrive = function(channelId, funcId) {
 		// drive does not seem to work below some power level
 		// define the power range within which the drive does work
-		const powerRange = SBrick.MAX - MIN_VALUE_BELOW_WHICH_MOTOR_DOES_NOT_WORK;
+		const powerRange = mySBrick.MAX - MIN_VALUE_BELOW_WHICH_MOTOR_DOES_NOT_WORK;
 
 		let	power = document.getElementById(funcId + '-power').value,
 			directionStr = document.querySelector('[name="' + funcId + '-direction"]:checked').value,
-			direction = SBrick[directionStr];
+			direction = mySBrick[directionStr];
 
 		channelId = parseInt(channelId, 10);
 		power = Math.round(powerRange * power/100 + MIN_VALUE_BELOW_WHICH_MOTOR_DOES_NOT_WORK);
@@ -119,10 +119,10 @@
 		let	power = document.getElementById(funcId + '-power').value,
 			powerNumber = document.getElementById(funcId + '-power-number').value,
 			directionStr = document.querySelector('[name="' + funcId + '-direction"]:checked').value,
-			direction = SBrick[directionStr];
+			direction = mySBrick[directionStr];
 		
 		channelId = parseInt(channelId, 10);
-		power = Math.round(SBrick.MAX * powerNumber/100);
+		power = Math.round(mySBrick.MAX * powerNumber/100);
 		power = powerNumber;
 
 		let data = {
@@ -136,10 +136,10 @@
 		// console.log(channel, direction, power);
 		// log('Drive: ' + channelId + ', ' + direction + ', ' + power);
 
-		// SBrick.quickDrive([
+		// mySBrick.quickDrive([
 		// 	{channel, direction, power}
 		// ]);
-		// SBrick.drive(channel, direction, power);
+		// mySBrick.drive(channel, direction, power);
 	};
 	
 	
@@ -246,7 +246,7 @@
 	* @returns {undefined}
 	*/
 	var connectSBrick = function() {
-		SBrick.connect(SBRICKNAME)
+		mySBrick.connect(SBRICKNAME)
 		.then( (value) => {
 			// SBrick now is connected
 			log('SBrick is now Connected');
@@ -264,7 +264,7 @@
 	* @returns {undefined}
 	*/
 	var disconnectSBrick = function() {
-		SBrick.disconnect(SBRICKNAME)
+		mySBrick.disconnect(SBRICKNAME)
 		.then( (value) => {
 			// SBrick now is disconnected
 			log('SBrick is now disconnected', value);
@@ -284,7 +284,7 @@
 	* @returns {undefined}
 	*/
 	const updateConnectionState = function() {
-		if (SBrick.isConnected()) {
+		if (mySBrick.isConnected()) {
 			connectBtn.classList.remove('btn--is-busy', 'btn--start');
 			connectBtn.classList.add('btn--stop');
 			connectBtn.innerHTML = 'Disconnect';
@@ -308,7 +308,7 @@
 	const connectHandler = function() {
 		connectBtn.classList.add('btn--is-busy');
 
-		if (SBrick.isConnected()) {
+		if (mySBrick.isConnected()) {
 			disconnectSBrick();
 		} else {
 			connectSBrick();
@@ -349,7 +349,10 @@
 	* @returns {undefined}
 	*/
 	const init = function() {
-		SBrick = window.SBrick;
+		// mySBrick = window.SBrick;
+		// mySBrick = new SBrick();
+		window.mySBrick = window.mySBrick || new SBrick();
+		mySBrick = window.mySBrick;
 		logWin = document.getElementById('log-window');
 		connectBtn = document.getElementById('connect-btn');
 		controlPanel = document.getElementById('controlPanel');

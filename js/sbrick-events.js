@@ -7,7 +7,7 @@
 
 	let body = document.body,
 		logWin,
-		SBrick,
+		mySBrick,
 		defaultDriveData;
 	
 
@@ -30,7 +30,7 @@
 		let data = Object.assign({}, defaultDriveData, e.detail);
 
 		// send drive instructions
-		SBrick.drive(data.channelId, data.direction, data.power)
+		mySBrick.drive(data.channelId, data.direction, data.power)
 			.then( (data) => {
 				// all went well, sent an event with the new channel values
 				const event = new CustomEvent('lightschange.sbrick', {detail: data});
@@ -48,7 +48,7 @@
 		let data = Object.assign({}, defaultDriveData, e.detail);// make sure we always have values to send
 
 		// send drive instructions
-		SBrick.quickDrive([data])
+		mySBrick.quickDrive([data])
 			.then( (data) => {
 				// all went well, sent an event with the new channel values
 				const event = new CustomEvent('drivechange.sbrick', {detail: data});
@@ -66,7 +66,7 @@
 		let data = Object.assign({}, defaultDriveData, e.detail);// make sure we always have values to send
 
 		// send drive instructions
-		SBrick.quickDrive([data])
+		mySBrick.quickDrive([data])
 			.then( (data) => {
 				// all went well, sent an event with the new channel values
 				const event = new CustomEvent('servochange.sbrick', {detail: data});
@@ -94,13 +94,16 @@
 	* @returns {undefined}
 	*/
 	const init = function() {
-		SBrick = window.SBrick;
+		// console.log('s:', window.SBrick);
+		// mySBrick = window.SBrick;
+		window.mySBrick = window.mySBrick || new SBrick();
+		mySBrick = window.mySBrick;
 		logWin = document.getElementById('log-window');
 
 		// define default data to send to drive commands
 		defaultDriveData = {
 			channelId: 0,
-			direction: SBrick.CW,
+			direction: mySBrick.CW,
 			power: 0
 		};
 		addSBrickEventListeners();

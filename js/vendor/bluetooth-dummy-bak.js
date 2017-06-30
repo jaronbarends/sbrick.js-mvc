@@ -33,7 +33,7 @@
  */
 
 
-let WebBluetoothDummy = (function() {
+(function() {
 	'use strict';
 
 	// UTF-8
@@ -165,7 +165,6 @@ let WebBluetoothDummy = (function() {
 		}
 	}
 
-	// window.WebBluetoothDummy = new WebBluetoothDummy();
-	return WebBluetoothDummy;
+	window.WebBluetoothDummy = new WebBluetoothDummy();
 
 })();
