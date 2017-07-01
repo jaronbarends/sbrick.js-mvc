@@ -304,7 +304,7 @@
 		drive( channelId, direction, power ) {
 			return new Promise( (resolve, reject) => {
 				if( channelId !== null && direction !== null && power !== null ) {
-					resolve('nootjes');
+					resolve();
 				} else {
 					reject('Wrong input');
 				}

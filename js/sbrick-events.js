@@ -30,9 +30,10 @@
 		let data = Object.assign({}, defaultDriveData, e.detail);
 
 		// send drive instructions
-		mySBrick.drive(data.channelId, data.direction, data.power)
+		mySBrick.drive(data.portId, data.direction, data.power)
 			.then( (data) => {
-				// all went well, sent an event with the new channel values
+				console.log(data);
+				// all went well, sent an event with the new port values
 				const event = new CustomEvent('lightschange.sbrick', {detail: data});
 				body.dispatchEvent(event);
 			});
@@ -50,7 +51,7 @@
 		// send drive instructions
 		mySBrick.quickDrive([data])
 			.then( (data) => {
-				// all went well, sent an event with the new channel values
+				// all went well, sent an event with the new port values
 				const event = new CustomEvent('drivechange.sbrick', {detail: data});
 				body.dispatchEvent(event);
 			});
@@ -68,7 +69,7 @@
 		// send drive instructions
 		mySBrick.quickDrive([data])
 			.then( (data) => {
-				// all went well, sent an event with the new channel values
+				// all went well, sent an event with the new port values
 				const event = new CustomEvent('servochange.sbrick', {detail: data});
 				body.dispatchEvent(event);
 			});
@@ -102,7 +103,7 @@
 
 		// define default data to send to drive commands
 		defaultDriveData = {
-			channelId: 0,
+			port: 0,// TODO: renamen naar portId?
 			direction: mySBrick.CW,
 			power: 0
 		};

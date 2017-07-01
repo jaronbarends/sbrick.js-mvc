@@ -12,7 +12,7 @@ a {
 	color: royalblue;
 }
 
-.channel-title {
+.port-title {
 	font-size: 1.2rem;
 }
 
@@ -73,6 +73,13 @@ label {
 input[type="range"] {
 	width: 8em;
 	vertical-align: middle;
+}
+
+output {
+	display: inline-block;
+	border: 1px solid;
+	width: 3em;
+	padding: 0.5em;
 }
 
 .log-window {
