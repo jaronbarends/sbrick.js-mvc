@@ -13,11 +13,12 @@
 </head>
 <body>
 
+	<div class="overlay">
+	</div>
+
 	<button id="connect-btn" class="btn btn--start">
 		Connect
 	</button>
-
-	<a href="#" id="watch-tilt">Watch tilt</a>
 
 	<div class="sbrick-icon">
 		<div class="sbrick-icon__face sbrick-icon__face--side-top"></div>
@@ -31,14 +32,8 @@
 	</div>
 	
 	<div id="controlPanel" class="is-hidden">
-	<style>
-	output {
-		display: inline-block;
-		height: 1em;
-		width: 5em;
-		border: 1px solid;
-	}
-	</style>
+
+		<a href="#" id="watch-tilt">Watch tilt</a>
 
 		<div class="port-controls">
 			<h2 class="port-title">Port 3 - Tilt</h2>
@@ -77,9 +72,9 @@
 		<button id="check-model-number-btn" class="btn btn--info">Model#</button>
 	</div>
 
-	<p>
+	<!-- <p>
 		<a href="javascript:location.reload(true)">refresh</a> 
-	</p>
+	</p> -->
 	<div id="log-window" class="log-window">
 	</div>
 

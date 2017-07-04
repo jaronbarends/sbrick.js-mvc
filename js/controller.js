@@ -265,6 +265,25 @@
 
 		getSensorData();		
 	};
+
+
+	/**
+	* set the page to busy state
+	* @returns {undefined}
+	*/
+	const setPageBusy = function() {
+		body.classList.add('page--is-busy');
+	};
+
+
+	/**
+	* set the page to busy state
+	* @returns {undefined}
+	*/
+	const setPageIdle = function() {
+		body.classList.remove('page--is-busy');
+	};
+	
 	
 	
 
@@ -298,13 +317,16 @@
 	* @returns {undefined}
 	*/
 	var connectSBrick = function() {
+		setPageBusy();
 		mySBrick.connect(SBRICKNAME)
 		.then( (value) => {
 			// SBrick now is connected
+			setPageIdle();
 			log('SBrick is now Connected');
 			updateConnectionState();
 		} )
 		.catch( (e) => {
+			setPageIdle();
 			log('Caught error in SBrick.connect: ' + e);
 			updateConnectionState();
 		});
@@ -316,14 +338,17 @@
 	* @returns {undefined}
 	*/
 	var disconnectSBrick = function() {
+		setPageBusy();
 		mySBrick.disconnect(SBRICKNAME)
 		.then( (value) => {
 			// SBrick now is disconnected
+			setPageIdle();
 			log('SBrick is now disconnected', value);
 			updateConnectionState();
 		} )
 		.catch( (e) => {
 			// something went wrong
+			setPageIdle();
 			log('Caught error in SBrick.disconnect: ' + e);
 			updateConnectionState();
 		});

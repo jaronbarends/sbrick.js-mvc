@@ -46,6 +46,7 @@
 .sbrick-icon__face--front-bottom::after {
 	left: auto;
 	right: 100%;
+	width: 18px;
 	color: white;
 }
 
