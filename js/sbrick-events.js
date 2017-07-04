@@ -49,6 +49,7 @@
 		let data = Object.assign({}, defaultDriveData, e.detail);// make sure we always have values to send
 
 		// send drive instructions
+		console.log(data);
 		mySBrick.quickDrive([data])
 			.then( (data) => {
 				// all went well, sent an event with the new port values
@@ -103,7 +104,8 @@
 
 		// define default data to send to drive commands
 		defaultDriveData = {
-			port: 0,// TODO: renamen naar portId?
+			port: 0,
+			// portId: 0,
 			direction: mySBrick.CW,
 			power: 0
 		};

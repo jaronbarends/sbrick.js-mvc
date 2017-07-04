@@ -99,11 +99,13 @@
 
 		// define data to send
 		let data = {
-				port: portId,// TODO: renoame port to portId in sbrick.js
+				port: portId,
+				// portId: portId,
 				direction,
 				power
 			},
 			event = new CustomEvent('setdrive.sbrick', {detail: data});
+			console.log(data);
 		body.dispatchEvent(event);
 	};
 
@@ -127,6 +129,7 @@
 
 		let data = {
 				port: portId,
+				// portId: portId,
 				direction,
 				power
 			},
@@ -172,7 +175,8 @@
 	const setDrive = function(e) {
 		e.preventDefault();
 		let data = {
-				portId: 1,
+				port: 1,
+				// portId: 1,
 				direction: 0,
 				power: 150
 			},
@@ -426,8 +430,6 @@
 		// Connect to SBrick via bluetooth.
 		// Per the specs, this has to be done IN RESPONSE TO A USER ACTION
 		connectBtn.addEventListener('click', connectHandler);
-
-		document.getElementById('version-number').textContent = 'v0.43';
 	};
 
 	// kick of the script when all dom content has loaded

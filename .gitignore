@@ -46,6 +46,8 @@ sftp-config.json
 node_modules/
 bower_components/
 frontend/libs/
+gulpfile.js
+package.json
 dist/
 *.sublime-project
 *.sublime-workspace

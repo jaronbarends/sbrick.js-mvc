@@ -22,7 +22,7 @@ let SBrick = (function() {
 	const FIRMWARE_COMPATIBILITY                = 4.17;
 
 	const UUID_SERVICE_DEVICEINFORMATION        = "device_information";
-	const UUID_CHARACTERISTIC_MODELNUMBER       = "model_number_string";
+  const UUID_CHARACTERISTIC_MODELNUMBER       = "model_number_string";
 	const UUID_CHARACTERISTIC_FIRMWAREREVISION  = "firmware_revision_string";
 	const UUID_CHARACTERISTIC_HARDWAREREVISION  = "hardware_revision_string";
 	const UUID_CHARACTERISTIC_SOFTWAREREVISION  = "software_revision_string";
@@ -57,11 +57,17 @@ let SBrick = (function() {
 	const CMD_PVM       = 0x2C; // Periodic Voltage Measurements
 
 	// SBrick Ports / Channels
-	const PORTS = [
-		{ hexId: 0x00, channelHexIds: [ 0x00, 0x01 ]},
-		{ hexId: 0x01, channelHexIds: [ 0x02, 0x03 ]},
-		{ hexId: 0x02, channelHexIds: [ 0x04, 0x05 ]},
-		{ hexId: 0x03, channelHexIds: [ 0x06, 0x07 ]}
+  const PORT    = [
+			0x00, // PORT0 (top-left)
+			0x01, // PORT1 (bottom-left)
+			0x02, // PORT2 (top-right)
+			0x03  // PORT3 (bottom-right)
+	];
+	const CHANNEL = [
+		0x00, 0x01, // PORT0 channels
+		0x02, 0x03, // PORT1 channels
+		0x04, 0x05, // PORT2 channels
+		0x06, 0x07  // PORT3 channels
 	];
 
 	// Port Mode
@@ -84,25 +90,25 @@ let SBrick = (function() {
 		// CONSTRUCTOR
 
 		/**
-		* Create a new instance of the SBrick class (and accordingly also WebBluetooth)
-		* @param {string} sbrick_name - The name of the sbrick
-		*/
+  	* Create a new instance of the SBrick class (and accordingly also WebBluetooth)
+  	* @param {string} sbrick_name - The name of the sbrick
+  	*/
 		constructor( sbrick_name ) {
 			this.webbluetooth = new WebBluetooth();
 
 			// export constants
 			this.NAME     = sbrick_name || "";
-			this.PORT0    = PORTS[0].hexId;
-			this.PORT1    = PORTS[1].hexId;
-			this.PORT2    = PORTS[2].hexId;
-			this.PORT3    = PORTS[3].hexId;
+			this.PORT0    = PORT[0];
+			this.PORT1    = PORT[1];
+			this.PORT2    = PORT[2];
+			this.PORT3    = PORT[3];
 			this.CW       = CLOCKWISE;
 			this.CCW      = COUNTERCLOCKWISE;
 			this.MAX      = MAX;
 			this.SERVICES = {}
 
 			// status
-			this.keepalive = null;
+      this.keepalive = null;
 			this.ports     = [
 				{ power: MIN, direction: CLOCKWISE, mode: OUTPUT, busy: false },
 				{ power: MIN, direction: CLOCKWISE, mode: OUTPUT, busy: false },
@@ -117,14 +123,13 @@ let SBrick = (function() {
 
 			// debug
 			this._debug         = false;
-		}
+    }
 
 
 		// PUBLIC FUNCTIONS
 
 		/**
 		* Open the Web Bluetooth popup to search and connect the SBrick (filtered by name if previously specified)
-		* @returns {promise returning undefined}
 		*/
 		connect() {
 			this.SERVICES = {
@@ -186,7 +191,6 @@ let SBrick = (function() {
 					// Firmware Compatibility Check
 					this.getFirmwareVersion()
 					.then( version => {
-						// version = FIRMWARE_COMPATIBILITY;
 						if( parseFloat(version) >= FIRMWARE_COMPATIBILITY ) {
 							this.keepalive = this._keepalive(this);
 						} else {
@@ -197,19 +201,18 @@ let SBrick = (function() {
 				}
 			})
 			.catch( e => { this._error(e) } );
-		}
+    }
 
 		/**
 		* Disconnect the SBrick
-		* @returns {promise returning undefined}
 		*/
 		disconnect() {
 			return new Promise( (resolve, reject) => {
-				if( this.isConnected() ) {
-					resolve();
-				} else {
-					reject('Not connected');
-				}
+					if( this.isConnected() ) {
+						resolve();
+					} else {
+						reject('Not connected');
+					}
 			} ).then( ()=> {
 				return this.stopAll().then( ()=>{
 					clearInterval( this.keepalive );
@@ -220,86 +223,53 @@ let SBrick = (function() {
 		}
 
 
-		/**
-		* check if the SBrick is connected to the browser
-		* @returns {boolean}
-		*/
 		isConnected() {
 			return this.webbluetooth && this.webbluetooth.isConnected();
 		}
 
-		/**
-		* get the SBrick's model number
-		* @returns {promise returning string}
-		*/
 		getModelNumber() {
 			return this._deviceInfo(UUID_CHARACTERISTIC_MODELNUMBER);
 		}
 
-		/**
-		* get the SBrick's firmware version
-		* @returns {promise returning string}
-		*/
 		getFirmwareVersion() {
 			return this._deviceInfo(UUID_CHARACTERISTIC_FIRMWAREREVISION);
 		}
 
-		/**
-		* get the SBrick's hardware version
-		* @returns {promise returning string}
-		*/
 		getHardwareVersion() {
 			return this._deviceInfo(UUID_CHARACTERISTIC_HARDWAREREVISION);
 		}
 
-		/**
-		* get the SBrick's software version
-		* @returns {promise returning string}
-		*/
 		getSoftwareVersion() {
 			return this._deviceInfo(UUID_CHARACTERISTIC_SOFTWAREREVISION);
 		}
 
-		/**
-		* get the SBrick's manufacturer's name
-		* @returns {promise returning string}
-		*/
 		getManufacturerName() {
 			return this._deviceInfo(UUID_CHARACTERISTIC_MANUFACTURERNAME);
 		}
 
 
-		/**
-		* send drive command
-		* @param {number} portId - The index (0-3) of the port to update in the this.ports array
-		* @param {hexadecimal number} direction - The drive direction (0x00, 0x01 - you can use the constants SBrick.CLOCKWISE and SBrick.COUNTERCLOCKWISE)
-		* @param {number} power - The power level for the drive command 0-255
-		* @returns {promise}
-		*/
-		drive( portId, direction, power ) {
+		drive( port, direction, power ) {
 			return new Promise( (resolve, reject) => {
-				if( portId !== null && direction !== null && power !== null ) {
+				if( PORT.indexOf(port)!=-1 && direction!=null && power!=null ) {
 					resolve();
 				} else {
 					reject('Wrong input');
 				}
 			} )
 			.then( ()=> {
-				return this._pvm( { portId:portId, mode:OUTPUT } );
+				return this._pvm( { port:port, mode:OUTPUT } );
 			})
 			.then( () => {
-				let port = this.ports[portId];
+				this.ports[port].power     = Math.min(Math.max(parseInt(Math.abs(power)), MIN), MAX);
+				this.ports[port].direction = direction ? COUNTERCLOCKWISE : CLOCKWISE;
 
-				port.power     = Math.min(Math.max(parseInt(Math.abs(power)), MIN), MAX);
-				port.direction = direction ? COUNTERCLOCKWISE : CLOCKWISE;
-
-				if( !port.busy ) {
-					port.busy = true;
+				if( !this.ports[port].busy ) {
+					this.ports[port].busy = true;
 					this.queue.add( () => {
-						port.busy = false;
+						this.ports[port].busy = false;
 						return this.webbluetooth.writeCharacteristicValue(
 							UUID_CHARACTERISTIC_REMOTECONTROL,
-							new Uint8Array([ CMD_DRIVE, PORTS[portId].hexId, port.direction, port.power ])
+							new Uint8Array([ CMD_DRIVE, PORT[port], this.ports[port].direction, this.ports[port].power ])
 						) }
 					);
 				}
@@ -308,65 +278,60 @@ let SBrick = (function() {
 		}
 
 
-		/**
-		* send quickDrive command
-		* @param {array} portObjs - An array with a setting objects {port, direction, power}
-									for every port you want to update
-		* @returns {undefined}
-		*/
-		quickDrive( portObjs ) {
+		quickDrive( array_ports ) {
 			return new Promise( (resolve, reject) => {
-				if( Array.isArray(portObjs) ) {
+				if( array_ports!=null || Array.isArray(array_ports) ) {
 					resolve();
 				} else {
 					reject('Wrong input');
 				}
 			} )
 			.then( ()=> {
-				portObjs.forEach( (portObj) => {
-					let portId = parseInt( portObj.portId );
-					if (isNaN(portId)) {
-						// the old version with port instead of portId was used
-						portId = parseInt( portObj.port );
+				let array = [];
+				for(let i=0;i<4;i++) {
+					if( typeof array_ports[i] !== 'undefined' ) {
+						let port = array_ports[i].port;
+						array.push( { port: port, mode: OUTPUT } );
 					}
-					let port = this.ports[portId];
-					port.power     = Math.min(Math.max(parseInt(Math.abs(portObj.power)), MIN), MAX);
-					port.direction = portObj.direction ? COUNTERCLOCKWISE : CLOCKWISE;
-				});
-				
-				if(this._allPortsAreIdle()) {
-					this._setAllPortsBusy();
-
+				}
+				return this._pvm( array );
+			})
+			.then( ()=> {
+				for(let i=0;i<4;i++) {
+					if( typeof array_ports[i] !== 'undefined' ) {
+						let port = parseInt( array_ports[i].port );
+						this.ports[port].power     = Math.min(Math.max(parseInt(Math.abs(array_ports[i].power)), MIN), MAX);
+						this.ports[port].direction = array_ports[i].direction ? COUNTERCLOCKWISE : CLOCKWISE;
+					}
+				}
+				if( !this.ports[0].busy && !this.ports[1].busy && !this.ports[2].busy && !this.ports[3].busy ) {
+					for(let i=0;i<4;i++) {
+						this.ports[i].busy = true;
+					}
 					this.queue.add( () => {
 						let command = [];
-						this.ports.forEach( (port) => {
-							port.busy = false;
-							if( port.mode===OUTPUT ) {
-								command.push( parseInt( parseInt(port.power/MAX*MAX_QD).toString(2) + port.direction, 2 ) );
+						for(let i=0;i<4;i++) {
+							this.ports[i].busy = false;
+							if( this.ports[i].mode==OUTPUT ) {
+								command.push( parseInt( parseInt(this.ports[i].power/MAX*MAX_QD).toString(2) + this.ports[i].direction, 2 ) );
 							} else {
 								command.push( null );
 							}
-						});
-						
+						}
 						return this.webbluetooth.writeCharacteristicValue(
 							UUID_CHARACTERISTIC_QUICKDRIVE,
 							new Uint8Array( command )
-						);
-					});
+						) }
+					);
 				}
 			})
 			.catch( e => { this._error(e) } );
 		}
 
 
-		/**
-		* stop a port
-		* @param {number | array} portIds - The number or array of numbers of channels to stop
-		* @returns {promise}
-		*/
-		stop( portIds ) {
+		stop( array_ports ) {
 			return new Promise( (resolve, reject) => {
-				if( portIds!==null ) {
+				if( array_ports!=null ) {
 					resolve();
 				} else {
 					reject('wrong input');
@@ -374,24 +339,24 @@ let SBrick = (function() {
 			} )
 			.then( ()=> {
 				let array = [];
-				portIds.forEach( (portId) => {
+				for(let i=0;i<array_ports.length;i++) {
 					array.push( {
-						portId: portId,
+						port: array_ports[i],
 						mode: OUTPUT
 					} );
-				});
+				}
 				return this._pvm( array );
 			})
 			.then( ()=> {
-				if( !Array.isArray(portIds) ) {
-					portIds = [ portIds ];
+				if( !Array.isArray(array_ports) ) {
+					array_ports = [ array_ports ];
 				}
 				let command = [ CMD_BREAK ];
 				// update object values and build the command
-				portIds.forEach( (portId) => {
-					this.ports[portId.power] = 0;
-					command.push(portId);
-				});
+				for(let i=0;i<array_ports.length;i++) {
+					this.ports[array_ports[i]].power = 0;
+					command.push(array_ports[i]);
+				}
 				this.queue.add( () => {
 					return this.webbluetooth.writeCharacteristicValue(
 						UUID_CHARACTERISTIC_REMOTECONTROL,
@@ -403,33 +368,20 @@ let SBrick = (function() {
 		}
 
 
-		/**
-		* stop all ports
-		* @returns {promise}
-		*/
 		stopAll() {
-			return this.stop([0, 1, 2, 3])
+			return this.stop([ PORT[0], PORT[1], PORT[2], PORT[3] ]);
 		}
 
 
-		/**
-		* get battery percentage
-		* @returns {promise returning number}
-		*/
 		getBattery() {
 			return this._volt()
 			.then( volt => {
-				return parseInt( Math.abs( volt / MAX_VOLT * 100 ) );
+					return parseInt( Math.abs( volt / MAX_VOLT * 100 ) );
 			});
 		}
 
 
-		/**
-		* get sbrick's temperature in degrees Celsius (default) or Fahrenheit
-		* @param {boolean} fahrenheit - If true, temperature is returned in Fahrenheit
-		* @returns {promise returning number}
-		*/
-		getTemp( fahrenheit = false) {
+		getTemp( fahrenheit ) {
 			return this._temp()
 			.then( temp => {
 				let result = 0;
@@ -445,21 +397,21 @@ let SBrick = (function() {
 
 		/**
 		* Read sensor data on a specific PORT
-		* @param {hexadecimal} portId - The index of the port in the this.ports array
+		* @param {hexadecimal} port - PORT[0-3]
 		* @param {string} type - not implemented yet - in the future it will manage different sensor types (distance, tilt ...)
 		* @returns {promise} - sensor measurement Object (structure depends on the sensor type)
 		*/
-		getSensor( portId, type ) {
+		getSensor( port, type ) {
 			return new Promise( (resolve, reject) => {
-				if( portId!==null ) {
+				if( port!=null ) {
 					resolve();
 				} else {
 					reject('wrong input');
 				}
 			} ).then( ()=> {
-				return this._pvm( { portId:portId, mode:INPUT } );
+				return this._pvm( { port:port, mode:INPUT } );
 			}).then( ()=> {
-				let channels = this._getPortChannels(portId);
+				let channels = this._getPortChannels(port);
 				return this._adc(channels).then( data => {
 					let arrayData = [];
 					for (let i = 0; i < data.byteLength; i+=2) {
@@ -563,43 +515,42 @@ let SBrick = (function() {
 		/**
 		* Enable "Power Voltage Measurements" (five times a second) on a specific PORT (on both CHANNELS)
 		* the values are stored in internal SBrick variables, to read them use _adc()
-		* @param {array} portObjs - an array of port status objects { portId, mode: INPUT-OUTPUT}
+		* @param {array} array_ports - an array of port status objects { port: PORT[0-3], mode: INPUT-OUTPUT}
 		* @returns {promise} - undefined
 		*/
-		_pvm( portObjs ) {
+		_pvm( array_ports ) {
 			return new Promise( (resolve, reject) => {
-				if( portObjs !== null ) {
+				if( array_ports!=null ) {
 					resolve();
 				} else {
 					reject('wrong input');
 				}
 			} ).then( ()=> {
-				if( !Array.isArray(portObjs) ) {
-					portObjs = [ portObjs ];
+				if( !Array.isArray(array_ports) ) {
+					array_ports = [ array_ports ];
 				}
-
 				let update_pvm = false;
-				portObjs.forEach( (portObj) => {
-					let portId = portObj.portId;
-					let mode = portObj.mode;
-					if( this.ports[portId].mode != mode ) {
-						this.ports[portId].mode = mode;
-						update_pvm = true;
+				for(let i=0;i<4;i++) {
+					if( typeof array_ports[i] !== 'undefined' ) {
+						let port = array_ports[i].port;
+						let mode = array_ports[i].mode;
+						if( this.ports[port].mode != mode ) {
+							this.ports[port].mode = mode;
+							update_pvm = true;
+						}
 					}
-				});
-
+				}
 				if(update_pvm) {
 					let command = [CMD_PVM];
 					let srt = "";
-					this.ports.forEach( (port, i) => {
-						if(port.mode==INPUT) {
+					for(let i=0;i<4;i++) {
+						if(this.ports[i].mode==INPUT) {
 							let channels = this._getPortChannels(i);
 							command.push(channels[0]);
 							command.push(channels[1]);
 							srt += " PORT"+ i + " (CH" + channels[0] + " CH" + channels[1]+")";
 						}
-					});
-
+					}
 					return this.queue.add( () => {
 						return this.webbluetooth.writeCharacteristicValue(
 							UUID_CHARACTERISTIC_REMOTECONTROL,
@@ -620,8 +571,8 @@ let SBrick = (function() {
 		*/
 		_volt() {
 			return this._adc(CMD_ADC_VOLT).then( data => {
-				let volt = data.getInt16( 0, true );
-				return parseFloat( volt * 0.83875 / 2047.0 ); // V;
+					let volt = data.getInt16( 0, true );
+					return parseFloat( volt * 0.83875 / 2047.0 ); // V;
 			} );
 		}
 
@@ -631,18 +582,18 @@ let SBrick = (function() {
 		*/
 		_temp() {
 			return this._adc(CMD_ADC_TEMP).then( data => {
-				let temp = data.getInt16( 0, true );
-				return parseFloat(temp / 118.85795 - 160); // °C;
+					let temp = data.getInt16( 0, true );
+					return parseFloat(temp / 118.85795 - 160); // °C;
 			} );
 		}
 
 		/**
 		* Helper function to find a port channel numbers
-		* @param {number} portId - The index of the port in the this.ports array
+		* @param {hexadecimal} port
 		* @returns {array} - hexadecimal numbers of both channels
 		*/
-		_getPortChannels( portId ) {
-			return PORTS[portId].channelHexIds;
+		_getPortChannels( port ) {
+			return [ CHANNEL[port*2], CHANNEL[port*2+1] ];
 		}
 
 		/**
@@ -667,35 +618,7 @@ let SBrick = (function() {
 			}
 		}
 
-		/**
-		* check if no port is busy
-		* @returns {boolean}
-		*/
-		_allPortsAreIdle() {
-			let allAreIdle = true;
-			this.ports.forEach((port) => {
-				if (port.busy) {
-					allAreIdle = false;
-				}
-			});
-			
-			return allAreIdle;
-		}
-
-
-		/**
-		* set all ports to busy
-		* @returns {undefined}
-		*/
-		_setAllPortsBusy() {
-			this.ports.forEach((port) => {
-				port.busy = true;
-			});
-		};
-
-
-
-	}
+  }
 
 	return SBrick;
 
