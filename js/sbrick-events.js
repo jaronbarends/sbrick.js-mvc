@@ -3,8 +3,6 @@
 	// (optional) tell jshint about globals (they should remain commented out)
 	/* globals SBrick */ //Tell jshint someGlobalVar exists as global var
 
-	const SBRICKNAME = 'SBrick';
-
 	let body = document.body,
 		logWin,
 		mySBrick,
@@ -21,24 +19,37 @@
 	};
 
 
+
+	/**
+	* send event after a function (motor, servo, lights) has changed
+	* @param {string} eventName - The name of the event to send
+	* @param {object} returnedData - The data returned from the bluetooth call
+	* @returns {undefined}
+	*/
+	const sendChangeEvent = function(eventName, returnedData) {
+		// all went well, sent an event with the newly returned port values
+		const event = new CustomEvent(eventName, {detail: returnedData});
+		body.dispatchEvent(event);
+	};
+
+
 	/**
 	* pass request to change lights to sbrick.js
 	* @returns {undefined}
 	*/
 	const setlightsHandler = function(e) {
 		// make sure we always have values to send
-		let data = Object.assign({}, defaultDriveData, e.detail);
+		let data = Object.assign({}, defaultDriveData, e.detail),
+			eventName = 'lightschange.sbrick';
 
 		// send drive instructions
 		mySBrick.drive(data.portId, data.direction, data.power)
-			.then( (data) => {
-				console.log(data);
+			.then( (returnedData) => {
 				// all went well, sent an event with the new port values
-				const event = new CustomEvent('lightschange.sbrick', {detail: data});
-				body.dispatchEvent(event);
+				sendChangeEvent(eventName, returnedData);
 			});
 	};
-
+	
 
 
 	/**
@@ -46,15 +57,14 @@
 	* @returns {undefined}
 	*/
 	const setdriveHandler = function(e) {
-		let data = Object.assign({}, defaultDriveData, e.detail);// make sure we always have values to send
+		let data = Object.assign({}, defaultDriveData, e.detail),// make sure we always have values to send
+			eventName = 'drivechange.sbrick';
 
 		// send drive instructions
-		console.log(data);
 		mySBrick.quickDrive([data])
-			.then( (data) => {
-				// all went well, sent an event with the new port values
-				const event = new CustomEvent('drivechange.sbrick', {detail: data});
-				body.dispatchEvent(event);
+			.then( (returnedData) => {
+				// all went well, sent an event with the newly returned port values
+				sendChangeEvent(eventName, returnedData);
 			});
 	};
 
@@ -65,14 +75,14 @@
 	* @returns {undefined}
 	*/
 	const setservoHandler = function(e) {
-		let data = Object.assign({}, defaultDriveData, e.detail);// make sure we always have values to send
+		let data = Object.assign({}, defaultDriveData, e.detail),// make sure we always have values to send
+			eventName = 'servochange.sbrick';
 
 		// send drive instructions
 		mySBrick.quickDrive([data])
-			.then( (data) => {
+			.then( (returnedData) => {
 				// all went well, sent an event with the new port values
-				const event = new CustomEvent('servochange.sbrick', {detail: data});
-				body.dispatchEvent(event);
+				sendChangeEvent(eventName, returnedData);
 			});
 	};
 	

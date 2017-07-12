@@ -105,7 +105,6 @@
 				power
 			},
 			event = new CustomEvent('setdrive.sbrick', {detail: data});
-			console.log(data);
 		body.dispatchEvent(event);
 	};
 
@@ -135,16 +134,7 @@
 			},
 			event = new CustomEvent('setservo.sbrick', {detail: data});
 		body.dispatchEvent(event);
-
-		// console.log(port, direction, power);
-		// log('Drive: ' + portId + ', ' + direction + ', ' + power);
-
-		// mySBrick.quickDrive([
-		// 	{port, direction, power}
-		// ]);
-		// mySBrick.drive(port, direction, power);
 	};
-	
 	
 	
 
@@ -168,6 +158,7 @@
 	};
 
 
+
 	/**
 	* set the lights to a new value
 	* @returns {undefined}
@@ -185,49 +176,46 @@
 	};
 
 
+
 	/**
 	* handle when lights have changed
+	* @param {event} e - change event sent by sbrick-events.js
 	* @returns {undefined}
 	*/
 	const lightschangeHandler = function(e) {
-		// TODO: make sbrick.js return port info as last then()
-		// so we receive it here when data is sent by events
 		let data = e.detail;
-		log('lightschangeHandler');
-		// log('lights change: chId:' + data.portId + ' p:' + data.power + ' dir:'+data.direction);
+		log('lightschangeHandler:', data);
 	};
+
 
 
 	/**
 	* handle when drive have changed
+	* @param {event} e - change event sent by sbrick-events.js
 	* @returns {undefined}
 	*/
 	const drivechangeHandler = function(e) {
-		// TODO: make sbrick.js return port info as last then()
-		// so we receive it here when data is sent by events
 		let data = e.detail;
+		console.log(e);
 		log('drivechangeHandler');
-		// TODO: re-enable when sbrick.js returns port info
-		// data.forEach((ch) => {
-		// 	log('drive change: chId:' + ch.portId + ' p:' + ch.power + ' dir:'+ch.direction);
-		// });
+		data.forEach((ch) => {
+			log('drive change: chId:' + ch.portId + ' p:' + ch.power + ' dir:'+ch.direction);
+		});
 	};
 
 
 
 	/**
 	* handle when servo have changed
+	* @param {event} e - change event sent by sbrick-events.js
 	* @returns {undefined}
 	*/
 	const servochangeHandler = function(e) {
-		// TODO: make sbrick.js return port info as last then()
-		// so we receive it here when data is sent by events
 		let data = e.detail;
 		log('servochangeHandler');
-		// TODO: re-enable when sbrick.js returns port info
-		// data.forEach((ch) => {
-		// 	log('servo change: chId:' + ch.portId + ' p:' + ch.power + ' dir:'+ch.direction);
-		// });
+		data.forEach((ch) => {
+			log('servo change: chId:' + ch.portId + ' p:' + ch.power + ' dir:'+ch.direction);
+		});
 	};
 
 
