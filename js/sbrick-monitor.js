@@ -13,9 +13,7 @@
 	* @returns {undefined}
 	*/
 	const showState = function(portObj) {
-		window.util.log('showState', portObj);
 		tds = elms[portObj.portId];
-		window.util.log('tds.power:', tds.power);
 		tds.power.textContent = portObj.power;
 		tds.direction.textContent = portObj.direction;
 	};
@@ -28,22 +26,11 @@
 	*/
 	const changeHandler = function(e) {
 		let portObjs = e.detail;
-				window.util.log('det:', e.detail);
-
-			for (let prop in e.detail) {
-				window.util.log(prop);
-			}
-
-
 		if (!Array.isArray(portObjs)) {
 			portObjs = [portObjs];
 		}
 
 		portObjs.forEach((portObj) => {
-			window.util.log('list:');
-			for (let prop in portObj) {
-				window.util.log(prop);
-			}
 			showState(portObj);
 		});
 
@@ -55,11 +42,9 @@
 	* @returns {undefined}
 	*/
 	const addEventListeners = function() {
-		// body.addEventListener('lightschange.sbrick', changeHandler);
-		// body.addEventListener('drivechange.sbrick', changeHandler);
-		// body.addEventListener('servochange.sbrick', changeHandler);
-		// body.addEventListener('drivechange.sbrick', drivechangeHandler);
-		// body.addEventListener('servochange.sbrick', servochangeHandler);	
+		body.addEventListener('lightschange.sbrick', changeHandler);
+		body.addEventListener('drivechange.sbrick', changeHandler);
+		body.addEventListener('servochange.sbrick', changeHandler);	
 	};
 	
 
