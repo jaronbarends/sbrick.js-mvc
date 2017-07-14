@@ -22,39 +22,44 @@
 	};
 
 
+	// generic way of sending commands can be used when drive method accepts param
+	// in same format as quickDrive.
+	// now: drive(portId, direction, power)
+	// 		quickDrive( [{portId, direction, power}, {portId, direction, power}])
+	// you would want the drive method to be passed an object as well.
+
 	/**
 	* send a command to the sbrick
 	* @returns {undefined}
 	*/
-	const sendCommand = function(eventName, command, data) {
-		// make sure we always have values to send
-		// define default data to send to drive commands
-		let defaultDriveData = {
-			portId: 0,
-			direction: mySBrick.CW,
-			power: 0
-		};
+	// const sendCommand = function(eventName, command, data) {
+	// 	// make sure we always have values to send
+	// 	// define default data to send to drive commands
+	// 	let defaultDriveData = {
+	// 		portId: 0,
+	// 		direction: mySBrick.CW,
+	// 		power: 0
+	// 	};
 
-		let dataToSend = Object.assign({}, defaultDriveData, e.detail);
+	// 	let dataToSend = Object.assign({}, defaultDriveData, data);
 
-		// send drive instructions
-		mySBrick.drive(dataToSend.portId, dataToSend.direction, dataToSend.power)
-			.then( (returnedData) => {
-				// all went well, sent an event with the new port values
-				sendChangeEvent(eventName, returnedData);
-			});
-	};
+	// 	// send drive instructions
+	// 	mySBrick.drive(dataToSend.portId, dataToSend.direction, dataToSend.power)
+	// 		.then( (returnedData) => {
+	// 			// all went well, sent an event with the new port values
+	// 			sendChangeEvent(eventName, returnedData);
+	// 		});
+	// };
 	
-
 
 
 	/**
 	* pass request to change lights to sbrick.js
 	* @returns {undefined}
 	*/
-	const setlightsHandler1 = function(e) {
-		sendCommand('lightschange.sbrick', 'drive', e.detail);
-	};
+	// const setlightsHandlerGeneric = function(e) {
+	// 	sendCommand('lightschange.sbrick', 'drive', e.detail);
+	// };
 
 
 
