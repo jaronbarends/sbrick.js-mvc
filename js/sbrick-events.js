@@ -4,20 +4,9 @@
 	/* globals SBrick */ //Tell jshint someGlobalVar exists as global var
 
 	let body = document.body,
-		logWin,
 		mySBrick,
 		defaultDriveData;
 	
-
-	/**
-	* log to page's log window
-	* @returns {undefined}
-	*/
-	let log = function(...msg) {// use let instead of const so we can reassign to console.log
-		msg = msg.join(', ');
-		logWin.innerHTML += '<p>' + msg + '</p>';
-	};
-
 
 
 	/**
@@ -31,6 +20,42 @@
 		const event = new CustomEvent(eventName, {detail: returnedData});
 		body.dispatchEvent(event);
 	};
+
+
+	/**
+	* send a command to the sbrick
+	* @returns {undefined}
+	*/
+	const sendCommand = function(eventName, command, data) {
+		// make sure we always have values to send
+		// define default data to send to drive commands
+		let defaultDriveData = {
+			portId: 0,
+			direction: mySBrick.CW,
+			power: 0
+		};
+
+		let dataToSend = Object.assign({}, defaultDriveData, e.detail);
+
+		// send drive instructions
+		mySBrick.drive(dataToSend.portId, dataToSend.direction, dataToSend.power)
+			.then( (returnedData) => {
+				// all went well, sent an event with the new port values
+				sendChangeEvent(eventName, returnedData);
+			});
+	};
+	
+
+
+
+	/**
+	* pass request to change lights to sbrick.js
+	* @returns {undefined}
+	*/
+	const setlightsHandler1 = function(e) {
+		sendCommand('lightschange.sbrick', 'drive', e.detail);
+	};
+
 
 
 	/**
@@ -106,21 +131,21 @@
 	* @returns {undefined}
 	*/
 	const init = function() {
-		// console.log('s:', window.SBrick);
-		// mySBrick = window.SBrick;
 		window.mySBrick = window.mySBrick || new SBrick();
 		mySBrick = window.mySBrick;
-		logWin = document.getElementById('log-window');
 
 		// define default data to send to drive commands
 		defaultDriveData = {
-			port: 0,
-			// portId: 0,
+			portId: 0,
 			direction: mySBrick.CW,
 			power: 0
 		};
 		addSBrickEventListeners();
 	};
+
+
+
+
 
 	// kick of the script when all dom content has loaded
 	document.addEventListener('DOMContentLoaded', init);

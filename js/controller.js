@@ -7,7 +7,6 @@
 		MIN_VALUE_BELOW_WHICH_MOTOR_DOES_NOT_WORK = 98;// somehow, motor does not seem to work for power values < 98
 
 	let body = document.body,
-		logWin,
 		connectBtn,
 		controlPanel,
 		mySBrick;
@@ -22,7 +21,7 @@
 		mySBrick.getTemp()
 			.then( (value) => {
 				value = Math.round(10*value)/10;
-				log('Temperature: ' + value + '°C');
+				window.util.log('Temperature: ' + value + '°C');
 			});
 	};
 
@@ -35,10 +34,10 @@
 		mySBrick.getModelNumber()
 			.then( (value) => {
 				// value = Math.round(10*value)/10;
-				log('Model number: ' + value);
+				window.util.log('Model number: ' + value);
 			})
 			.catch( (e) => {
-				log(e);
+				window.util.log(e);
 			});
 	};
 
@@ -51,7 +50,7 @@
 	var checkBattery = function() {
 		mySBrick.getBattery()
 			.then( (value) => {
-				log('Battery: ' + value + '%');			
+				window.util.log('Battery: ' + value + '%');			
 			});
 	};
 	
@@ -99,8 +98,8 @@
 
 		// define data to send
 		let data = {
-				port: portId,
-				// portId: portId,
+				// port: portId,
+				portId: portId,
 				direction,
 				power
 			},
@@ -127,8 +126,8 @@
 		power = powerNumber;
 
 		let data = {
-				port: portId,
-				// portId: portId,
+				// port: portId,
+				portId: portId,
 				direction,
 				power
 			},
@@ -166,8 +165,8 @@
 	const setDrive = function(e) {
 		e.preventDefault();
 		let data = {
-				port: 1,
-				// portId: 1,
+				// port: 1,
+				portId: 1,
 				direction: 0,
 				power: 150
 			},
@@ -184,7 +183,7 @@
 	*/
 	const lightschangeHandler = function(e) {
 		let data = e.detail;
-		log('lightschangeHandler:', data);
+		window.util.log('lightschangeHandler:', data);
 	};
 
 
@@ -196,10 +195,8 @@
 	*/
 	const drivechangeHandler = function(e) {
 		let data = e.detail;
-		console.log(e);
-		log('drivechangeHandler');
 		data.forEach((ch) => {
-			log('drive change: chId:' + ch.portId + ' p:' + ch.power + ' dir:'+ch.direction);
+			window.util.log('drive change: chId:' + ch.portId + ' p:' + ch.power + ' dir:'+ch.direction);
 		});
 	};
 
@@ -212,9 +209,8 @@
 	*/
 	const servochangeHandler = function(e) {
 		let data = e.detail;
-		log('servochangeHandler');
 		data.forEach((ch) => {
-			log('servo change: chId:' + ch.portId + ' p:' + ch.power + ' dir:'+ch.direction);
+			window.util.log('servo change: chId:' + ch.portId + ' p:' + ch.power + ' dir:'+ch.direction);
 		});
 	};
 
@@ -227,7 +223,6 @@
 	* @returns {undefined}
 	*/
 	const watchTilt = function() {
-		log('watch');
 		let outputElm = document.getElementById('output--tilt1'),
 			portId = 3;
 		
@@ -310,12 +305,12 @@
 		.then( (value) => {
 			// SBrick now is connected
 			setPageIdle();
-			log('SBrick is now Connected');
+			window.util.log('SBrick is now Connected');
 			updateConnectionState();
 		} )
 		.catch( (e) => {
 			setPageIdle();
-			log('Caught error in SBrick.connect: ' + e);
+			window.util.log('Caught error in SBrick.connect: ' + e);
 			updateConnectionState();
 		});
 	};
@@ -331,13 +326,13 @@
 		.then( (value) => {
 			// SBrick now is disconnected
 			setPageIdle();
-			log('SBrick is now disconnected', value);
+			window.util.log('SBrick is now disconnected', value);
 			updateConnectionState();
 		} )
 		.catch( (e) => {
 			// something went wrong
 			setPageIdle();
-			log('Caught error in SBrick.disconnect: ' + e);
+			window.util.log('Caught error in SBrick.disconnect: ' + e);
 			updateConnectionState();
 		});
 	};
@@ -383,16 +378,6 @@
 
 
 	/**
-	* log to page's log window
-	* @returns {undefined}
-	*/
-	let log = function(...msg) {// use let instead of const so we can reassign to console.log
-		msg = msg.join(', ');
-		logWin.innerHTML += '<p>' + msg + '</p>';
-	};
-
-
-	/**
 	* make the app run in dummy mode - webbluetooth calls will be handled by dummy code that always resolves the call
 	* @returns {undefined}
 	*/
@@ -403,7 +388,7 @@
 				resolve(4.17);
 			});
 		};
-		log = console.log;
+		window.util.log = console.log;
 	};
 	
 
@@ -431,7 +416,6 @@
 	const init = function() {
 		window.mySBrick = window.mySBrick || new SBrick();
 		mySBrick = window.mySBrick;
-		logWin = document.getElementById('log-window');
 		connectBtn = document.getElementById('connect-btn');
 		controlPanel = document.getElementById('controlPanel');
 
