@@ -33,6 +33,8 @@
 				// all went well, sent an event with the new port values
 				const event = new CustomEvent(eventName, {detail: returnedData});
 				body.dispatchEvent(event);
+				console.log('ret:', returnedData);
+				console.log('id:', returnedData.portId);
 			});
 	};
 	
