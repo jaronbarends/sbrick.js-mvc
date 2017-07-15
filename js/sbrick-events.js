@@ -31,10 +31,25 @@
 		mySBrick[command](dataToSend)
 			.then( (returnedData) => {
 				// all went well, sent an event with the new port values
-				const event = new CustomEvent(eventName, {detail: returnedData});
-				body.dispatchEvent(event);
-				console.log('ret:', returnedData);
-				console.log('id:', returnedData.portId);
+				if (command !== 'stop' && command !== 'stopAll') {
+					const event = new CustomEvent(eventName, {detail: returnedData});
+					body.dispatchEvent(event);
+					// console.log('ret:', returnedData);
+				} else {
+					// console.log('ret:', returnedData);
+					// in case of stop, we don't know what kind of function was stopped
+					if (!Array.isArray(returnedData)) {
+						returnedData = [returnedData];
+					}
+					returnedData.forEach( (portObj) => {
+						const lightschangeEvent = new CustomEvent('lightschange.sbrick', {detail: returnedData}),
+							drivechangeEvent = new CustomEvent('drivechange.sbrick', {detail: returnedData}),
+							servochangeEvent = new CustomEvent('servochange.sbrick', {detail: returnedData});
+						body.dispatchEvent(lightschangeEvent);
+						body.dispatchEvent(drivechangeEvent);
+						body.dispatchEvent(drivechangeEvent);
+					});
+				}
 			});
 	};
 	
@@ -71,6 +86,18 @@
 
 
 	/**
+	* pass request to stop all ports to sbrick.js
+	* @returns {undefined}
+	*/
+	const setstopallHandler = function(e) {
+		sendCommand('allstopped.sbrick', 'stopAll', e.detail);
+	};
+
+
+	
+
+
+	/**
 	* add listeners for sbrick events
 	* @returns {undefined}
 	*/
@@ -78,6 +105,8 @@
 		body.addEventListener('setlights.sbrick', setlightsHandler),
 		body.addEventListener('setdrive.sbrick', setdriveHandler);
 		body.addEventListener('setservo.sbrick', setservoHandler);
+		// body.addEventListener('stop.sbrick', setstopHandler);
+		body.addEventListener('stopall.sbrick', setstopallHandler);
 	};
 
 

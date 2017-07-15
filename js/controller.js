@@ -159,6 +159,17 @@
 
 
 	/**
+	* 
+	* @returns {undefined}
+	*/
+	const stopallHandler = function() {
+		const event = new CustomEvent('stopall.sbrick');
+		body.dispatchEvent(event);
+	};
+	
+
+
+	/**
 	* set the lights to a new value
 	* @returns {undefined}
 	*/
@@ -281,12 +292,14 @@
 			btn.addEventListener('click', portBtnHandler);
 		});
 
-		document.getElementById('stop-all').addEventListener('click', () => {
-			mySBrick.stopAll()
-				.then((returnData) => {
-					console.log(returnData);
-				});
-		});
+		document.getElementById('stop-all').addEventListener('click', stopallHandler);
+		// document.getElementById('stop-all').addEventListener('click', () => {
+			// mySBrick.stopAll()
+			// 	.then((returnData) => {
+			// 		console.log(returnData);
+			// 	});
+
+		// });
 		document.getElementById('check-battery-btn').addEventListener('click', checkBattery);
 		document.getElementById('check-temperature-btn').addEventListener('click', checkTemperature);
 		document.getElementById('check-model-number-btn').addEventListener('click', getModelNumber);
@@ -297,6 +310,7 @@
 		body.addEventListener('lightschange.sbrick', lightschangeHandler);
 		body.addEventListener('drivechange.sbrick', drivechangeHandler);
 		body.addEventListener('servochange.sbrick', servochangeHandler);
+		// body.addEventListener('stop.sbrick', stopHandler);
 	};
 
 

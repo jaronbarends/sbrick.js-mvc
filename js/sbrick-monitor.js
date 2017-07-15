@@ -45,6 +45,7 @@
 		body.addEventListener('lightschange.sbrick', changeHandler);
 		body.addEventListener('drivechange.sbrick', changeHandler);
 		body.addEventListener('servochange.sbrick', changeHandler);	
+		// body.addEventListener('allstopped.sbrick', changeHandler);
 	};
 	
 
