@@ -281,7 +281,12 @@
 			btn.addEventListener('click', portBtnHandler);
 		});
 
-		document.getElementById('stop-all').addEventListener('click', () => { mySBrick.stopAll(); });
+		document.getElementById('stop-all').addEventListener('click', () => {
+			mySBrick.stopAll()
+				.then((returnData) => {
+					console.log(returnData);
+				});
+		});
 		document.getElementById('check-battery-btn').addEventListener('click', checkBattery);
 		document.getElementById('check-temperature-btn').addEventListener('click', checkTemperature);
 		document.getElementById('check-model-number-btn').addEventListener('click', getModelNumber);
