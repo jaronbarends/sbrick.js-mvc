@@ -15,7 +15,13 @@
 	const showState = function(portObj) {
 		tds = elms[portObj.portId];
 		tds.power.textContent = portObj.power;
-		tds.direction.textContent = portObj.direction;
+		if (tds.direction) {
+			let dir = '';
+			if (portObj.power !== 0) {
+				dir = (portObj.direction === 0 ? 'cw' : 'ccw');
+			}
+			tds.direction.textContent = dir;
+		}
 	};
 	
 

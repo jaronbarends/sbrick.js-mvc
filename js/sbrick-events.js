@@ -12,7 +12,7 @@
 	* send a command to the sbrick
 	* @returns {undefined}
 	*/
-	const sendCommand = function(eventName, command, data) {
+	const sendCommand = function(command, data, succesEventName) {
 		// make sure we always have values to send
 		// define default data to send to drive commands
 		let defaultDriveData = {
@@ -32,7 +32,7 @@
 			.then( (returnedData) => {
 				// all went well, sent an event with the new port values
 				if (command !== 'stop' && command !== 'stopAll') {
-					const event = new CustomEvent(eventName, {detail: returnedData});
+					const event = new CustomEvent(succesEventName, {detail: returnedData});
 					body.dispatchEvent(event);
 					// console.log('ret:', returnedData);
 				} else {
@@ -60,7 +60,7 @@
 	* @returns {undefined}
 	*/
 	const setlightsHandler = function(e) {
-		sendCommand('lightschange.sbrick', 'drive', e.detail);
+		sendCommand('drive', e.detail, 'lightschange.sbrick');
 	};
 	
 
@@ -70,7 +70,7 @@
 	* @returns {undefined}
 	*/
 	const setdriveHandler = function(e) {
-		sendCommand('drivechange.sbrick', 'quickDrive', e.detail);
+		sendCommand('quickDrive', e.detail, 'drivechange.sbrick');
 	};
 	
 
@@ -80,7 +80,7 @@
 	* @returns {undefined}
 	*/
 	const setservoHandler = function(e) {
-		sendCommand('servochange.sbrick', 'quickDrive', e.detail);
+		sendCommand('quickDrive', e.detail, 'servochange.sbrick');
 	};
 	
 
@@ -90,7 +90,7 @@
 	* @returns {undefined}
 	*/
 	const setstopallHandler = function(e) {
-		sendCommand('allstopped.sbrick', 'stopAll', e.detail);
+		sendCommand('stopAll', e.detail, 'allstopped.sbrick');
 	};
 
 
