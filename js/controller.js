@@ -35,9 +35,6 @@
 			.then( (value) => {
 				// value = Math.round(10*value)/10;
 				window.util.log('Model number: ' + value);
-			})
-			.catch( (e) => {
-				window.util.log(e);
 			});
 	};
 
@@ -71,9 +68,9 @@
 		let data = {
 				portId,
 				power
-			},
-			event = new CustomEvent('setlights.sbrick', {detail: data});
-		body.dispatchEvent(event);
+			};
+
+		mySBrick.drive(data);
 	};
 
 
@@ -169,49 +166,20 @@
 				portId: 1,
 				direction: 0,
 				power: 150
-			},
-			event = new CustomEvent('setdrive.sbrick', {detail: data});
-		body.dispatchEvent(event);
+			};
+		mySBrick.quickDrive([data]);
 	};
 
 
 
 	/**
-	* handle when lights have changed
-	* @param {event} e - change event sent by sbrick-events.js
+	* handle when port has changed
+	* @param {event} e - change event sent by sbrick.js
 	* @returns {undefined}
 	*/
-	const lightschangeHandler = function(e) {
+	const portchangeHandler = function(e) {
 		let data = e.detail;
-		window.util.log('lightschangeHandler:', data);
-	};
-
-
-
-	/**
-	* handle when drive have changed
-	* @param {event} e - change event sent by sbrick-events.js
-	* @returns {undefined}
-	*/
-	const drivechangeHandler = function(e) {
-		let data = e.detail;
-		data.forEach((ch) => {
-			window.util.log('drive change: chId:' + ch.portId + ' p:' + ch.power + ' dir:'+ch.direction);
-		});
-	};
-
-
-
-	/**
-	* handle when servo have changed
-	* @param {event} e - change event sent by sbrick-events.js
-	* @returns {undefined}
-	*/
-	const servochangeHandler = function(e) {
-		let data = e.detail;
-		data.forEach((ch) => {
-			window.util.log('servo change: chId:' + ch.portId + ' p:' + ch.power + ' dir:'+ch.direction);
-		});
+		// window.util.log('port change: portId:' + data.portId + ' pwr:' + data.power + ' dir:'+data.direction);
 	};
 
 
@@ -282,10 +250,7 @@
 		});
 
 		document.getElementById('stop-all').addEventListener('click', () => {
-			mySBrick.stopAll()
-				.then((returnData) => {
-					console.log(returnData);
-				});
+			mySBrick.stopAll();
 		});
 		document.getElementById('check-battery-btn').addEventListener('click', checkBattery);
 		document.getElementById('check-temperature-btn').addEventListener('click', checkTemperature);
@@ -293,10 +258,8 @@
 
 		document.getElementById('watch-tilt').addEventListener('click', watchTilt);
 
-		// set listeners for sbrick events
-		body.addEventListener('lightschange.sbrick', lightschangeHandler);
-		body.addEventListener('drivechange.sbrick', drivechangeHandler);
-		body.addEventListener('servochange.sbrick', servochangeHandler);
+		// set listeners for port events
+		body.addEventListener('portchange.sbrick', portchangeHandler);
 	};
 
 
@@ -310,7 +273,6 @@
 		.then( (value) => {
 			// SBrick now is connected
 			setPageIdle();
-			window.util.log('SBrick is now Connected');
 			updateConnectionState();
 		} )
 		.catch( (e) => {
@@ -331,7 +293,6 @@
 		.then( (value) => {
 			// SBrick now is disconnected
 			setPageIdle();
-			window.util.log('SBrick is now disconnected', value);
 			updateConnectionState();
 		} )
 		.catch( (e) => {

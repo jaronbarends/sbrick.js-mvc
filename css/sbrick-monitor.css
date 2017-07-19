@@ -1,0 +1,15 @@
+.monitor-table {
+	border-collapse: collapse;
+}
+
+.monitor th,
+.monitor td {
+	border: 1px solid #ccc;
+	padding: 0.2em 0.5em;
+	width: 3em;
+	text-align: right;
+}
+
+.monitor th {
+	font-weight: normal;
+}

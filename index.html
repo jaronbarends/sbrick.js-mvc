@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="nl-nl">
 <head>
@@ -7,6 +8,7 @@
 	<title>SBrick test</title>
 	<link rel="stylesheet" href="css/demo.css">
 	<link rel="stylesheet" href="css/sbrick-icon.css?a=0">
+	<link rel="stylesheet" href="css/sbrick-monitor.css">
 	
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	
@@ -69,6 +71,40 @@
 		<button id="check-model-number-btn" class="btn btn--info">Model#</button>
 	</div>
 
+	<div id="monitor" class="monitor">
+		<table class="monitor-table">
+			<thead>
+				<tr>
+					<th>port</th>
+					<th>pwr</th>
+					<th>dir</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<th>0</th>
+					<td id="monitor-port-0-power">0</td>
+					<td></td>
+				</tr>
+				<tr>
+					<th>1</th>
+					<td id="monitor-port-1-power">0</td>
+					<td id="monitor-port-1-direction"></td>
+				</tr>
+				<tr>
+					<th>2</th>
+					<td id="monitor-port-2-power">0</td>
+					<td id="monitor-port-2-direction"></td>
+				</tr>
+				<tr>
+					<th>3</th>
+					<td id="monitor-port-3-power">0</td>
+					<td id="monitor-port-3-direction"></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+
 	<!-- <p>
 		<a href="javascript:location.reload(true)">refresh</a> 
 	</p> -->
@@ -81,6 +117,7 @@
 	<script src="js/vendor/sbrick.js?a=0"></script>
 	<script src="js/util.js"></script>
 	<script src="js/sbrick-events.js"></script>
+	<script src="js/sbrick-monitor.js"></script>
 
 	<script src="js/controller.js"></script>
 </body>
