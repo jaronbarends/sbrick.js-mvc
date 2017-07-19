@@ -83,7 +83,7 @@
 				return;
 			}
 
-			console.log(event);
+			// console.log(event);
 
 			for (var i = event.resultIndex; i < event.results.length; ++i) {
 				if (event.results[i].isFinal) {
@@ -99,14 +99,14 @@
 				// there is a result - but we're not done yet
 			}
 
-			if (final_transcript === 'start motor') {
-				let data = {
-					portId: 1,
-					power: 255,
-					direction: 0
+			if (final_transcript) {
+				const eventData = {
+					command: final_transcript
 				};
-				mySBrick.drive(data);
+				const event = new CustomEvent('voicecommand', {detail: eventData});
+				document.body.dispatchEvent(event);
 			}
+
 		};
 
 		return recognition;
@@ -179,18 +179,6 @@
 
 
 	/**
-	* initialize sbrick stuff
-	* @returns {undefined}
-	*/
-	var initSBrick = function() {
-		window.mySBrick = window.mySBrick || new SBrick();
-		mySBrick = window.mySBrick;
-		
-	};
-
-
-
-	/**
 	* initialize all
 	* @returns {undefined}
 	*/
@@ -202,9 +190,8 @@
 			start_button.addEventListener('click', startButton);
 		}
 
-		addEventLogging();
+		// addEventLogging();
 
-		initSBrick();
 	};
 
 	// kick of the script when all dom content has loaded
