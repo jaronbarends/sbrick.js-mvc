@@ -367,7 +367,8 @@
 	const checkDummyMode = function() {
 		// check if we're on http; if so, use the real webbluetooth api
 		// otherwise, talk against the dummy
-		if (window.location.href.indexOf('http') !== 0) {
+		const url = window.location.href;
+		if (url.indexOf('http') !== 0 || url.indexOf('localhost') > -1) {
 			enableDummyMode();
 		}
 	};
