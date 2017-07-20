@@ -79,7 +79,7 @@
 			if (typeof(event.results) === 'undefined') {
 				recognition.onend = null;
 				recognition.stop();
-				upgrade();
+				showNotSupportedMessage();
 				return;
 			}
 
@@ -96,14 +96,22 @@
 			final_span.innerHTML = final_transcript;
 			interim_span.innerHTML = interim_transcript;
 			if (final_transcript || interim_transcript) {
-				// there is a result - but we're not done yet
-			}
+				// there is a result - but we may not done be yet
 
-			if (final_transcript) {
-				const eventData = {
-					command: final_transcript
-				};
-				const event = new CustomEvent('voicecommand', {detail: eventData});
+				let eventName,
+					eventData;
+				if (final_transcript) {
+					eventName = 'final.speech';
+					eventData = {
+						command: final_transcript
+					};
+				} else {
+					eventName = 'interim.speech';
+					eventData = {
+						command: interim_transcript
+					};
+				}
+				const event = new CustomEvent(eventName, {detail: eventData});
 				document.body.dispatchEvent(event);
 			}
 
@@ -112,7 +120,7 @@
 		return recognition;
 	};
 
-	function upgrade() {
+	function showNotSupportedMessage() {
 		alert('Sorry, your browser does not support all functionality we need. Please update your browser');
 	}
 
@@ -184,7 +192,7 @@
 	*/
 	var init = function() {
 		if (!('webkitSpeechRecognition' in window)) {
-			upgrade();
+			showNotSupportedMessage();
 		} else {
 			recognition = initRecognition();
 			start_button.addEventListener('click', startButton);

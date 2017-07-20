@@ -4,7 +4,9 @@
 	/* globals SBrick */ //Tell jshint someGlobalVar exists as global var
 
 	let body = document.body,
-		mySBrick;
+		lastInterimMatch = "",// last interim result that matched a command
+		mySBrick,
+		commands = [];
 
 
 	/**
@@ -65,23 +67,57 @@
 
 
 	/**
-	* handle a voice command
+	* handle a speech command
 	* @returns {undefined}
 	*/
-	const voicecommandHandler = function(e) {
-		let command = e.detail.command;
+	const speechcommandHandler = function(e) {
+		let command = e.detail.command,
+			commandFound = false,
+			executeCommand = false;
 
+		// loop through defined commands, and check if we've got a match
+		// we'll check interim results as they come in, and check with final result
+		commands.forEach((cmdObj) => {
+			if (cmdObj.command === command) {
+				commandFound = true;
 
+				if (e.type === 'final.speech') {
+					// we've got the final result
+					// see if its the same as interim match
+					if (command !== lastInterimMatch) {
+						executeCommand = true;
+					}
+					// reset the interim match for next time
+					lastInterimMatch = '';
+				} else if (lastInterimMatch === '') {
+					// we've got an interim result, but there is an interim match already
+					// (in case this matching command is a different from the precvious matched command,
+					// it's apparently unclear. Do nothing new, and wait for the final command)
+					lastInterimMatch = command;
+					executeCommand = true;
+				}
+
+				if (executeCommand) {
+					// we've got a command that hasn't been executed yet
+					cmdObj.fn();
+				}
+			}
+		});
 		
-		if (command === 'start motor') {
-			startDrive();
-		} else if (command === 'stop motor') {
-			stopDrive();
-		} else if (command === 'lights on') {
-			lightsOn();
-		} else if (command === 'lights off') {
-			lightsOff();
-		} 
+		// if (command === 'motor start') {
+		// 	commandFound = true;
+		// 	startDrive();
+		// } else if (command === 'motor stop') {
+		// 	commandFound = true;
+		// 	stopDrive();
+		// } else if (command === 'lights on') {
+		// 	commandFound = true;
+		// 	lightsOn();
+		// } else if (command === 'lights off') {
+		// 	commandFound = true;
+		// 	lightsOff();
+		// }
+
 	};
 	
 
@@ -90,9 +126,25 @@
 	* add listeners for sbrick events
 	* @returns {undefined}
 	*/
-	const addVoiceCommandListeners = function() {
-		body.addEventListener('voicecommand', voicecommandHandler);
+	const addSpeechCommandListeners = function() {
+		body.addEventListener('interim.speech', speechcommandHandler);
+		body.addEventListener('final.speech', speechcommandHandler);
 	};
+
+
+	/**
+	* define speech commands
+	* @returns {undefined}
+	*/
+	const defineCommands = function() {
+		commands = [
+			{ command: 'start motor', fn: startDrive },
+			{ command: 'stop motor', fn: stopDrive },
+			{ command: 'lights on', fn: lightsOn },
+			{ command: 'lights off', fn: lightsOff }
+		];
+	};
+	
 
 
 
@@ -104,9 +156,9 @@
 	const init = function() {
 		window.mySBrick = window.mySBrick || new SBrick();
 		mySBrick = window.mySBrick;
-		addVoiceCommandListeners();
+		defineCommands();
+		addSpeechCommandListeners();
 	};
-console.log('do');
 
 
 
