@@ -1,15 +1,14 @@
 (() => {
 
-	var create_email = false;
-	var final_transcript = '';
+	var finalTranscript = '';
 	var isRecording = false;
-	var ignore_onend;
-	var start_timestamp;
+	var ignoreOnend;
+	var startTimestamp;
 	var recognition;
-	var start_button = document.getElementById('start_button');
-	var start_img = document.getElementById('start_img');
-	var final_span = document.getElementById('final_span');
-	var interim_span = document.getElementById('interim_span');
+	var startButton = document.getElementById('start_button');
+	var startImg = document.getElementById('start_img');
+	var finalSpan = document.getElementById('final_span');
+	var interimSpan = document.getElementById('interim_span');
 	var info = document.getElementById('info');
 	var mySBrick;
 
@@ -19,7 +18,7 @@
 	* @returns {undefined}
 	*/
 	var initRecognition = function() {
-		start_button.style.display = 'inline-block';
+		startButton.style.display = 'inline-block';
 		var recognition = new webkitSpeechRecognition();
 
 		// recognition.continuous = true;// when set to true, accepts multiple results - Does not seem to work well on Android
@@ -31,29 +30,29 @@
 
 		recognition.onstart = function() {
 			isRecording = true;
-			start_img.src = 'img/mic-animate.gif';
+			startImg.src = 'img/mic-animate.gif';
 		};
 
 
 
 		recognition.onerror = function(event) {
 			if (event.error === 'no-speech') {
-				start_img.src = 'img/mic.gif';
+				startImg.src = 'img/mic.gif';
 				showInfo('info_no_speech');
-				ignore_onend = true;
+				ignoreOnend = true;
 			}
 			if (event.error === 'audio-capture') {
-				start_img.src = 'img/mic.gif';
+				startImg.src = 'img/mic.gif';
 				showInfo('info_no_microphone');
-				ignore_onend = true;
+				ignoreOnend = true;
 			}
 			if (event.error === 'not-allowed') {
-				if (event.timeStamp - start_timestamp < 100) {
+				if (event.timeStamp - startTimestamp < 100) {
 					showInfo('info_blocked');
 				} else {
 					showInfo('info_denied');
 				}
-				ignore_onend = true;
+				ignoreOnend = true;
 			}
 		};
 
@@ -61,11 +60,11 @@
 
 		recognition.onend = function() {
 			isRecording = false;
-			if (ignore_onend) {
+			if (ignoreOnend) {
 				return;
 			}
-			start_img.src = 'img/mic.gif';
-			if (!final_transcript) {
+			startImg.src = 'img/mic.gif';
+			if (!finalTranscript) {
 				showInfo('info_start');
 				return;
 			}
@@ -73,7 +72,7 @@
 
 
 		recognition.onresult = function(event) {
-			var interim_transcript = '';
+			var interimTranscript = '';
 
 			// error checking
 			if (typeof(event.results) === 'undefined') {
@@ -83,32 +82,32 @@
 				return;
 			}
 
-			// console.log(event);
-
 			for (var i = event.resultIndex; i < event.results.length; ++i) {
 				if (event.results[i].isFinal) {
-					final_transcript += event.results[i][0].transcript;
+					finalTranscript += event.results[i][0].transcript;
 				} else {
-					interim_transcript += event.results[i][0].transcript;
+					interimTranscript += event.results[i][0].transcript;
 				}
 			}
 
-			final_span.innerHTML = final_transcript;
-			interim_span.innerHTML = interim_transcript;
-			if (final_transcript || interim_transcript) {
+			finalSpan.innerHTML = finalTranscript;
+			interimSpan.innerHTML = interimTranscript;
+			if (finalTranscript || interimTranscript) {
 				// there is a result - but we may not done be yet
 
 				let eventName,
 					eventData;
-				if (final_transcript) {
+				if (finalTranscript) {
 					eventName = 'final.speech';
 					eventData = {
-						command: final_transcript
+						command: finalTranscript,
+						recognition: recognition
 					};
 				} else {
 					eventName = 'interim.speech';
 					eventData = {
-						command: interim_transcript
+						command: interimTranscript,
+						recognition: recognition
 					};
 				}
 				const event = new CustomEvent(eventName, {detail: eventData});
@@ -125,19 +124,19 @@
 	}
 
 
-	function startButton(event) {
+	function startHandler(event) {
 		if (isRecording) {
 			recognition.stop();
 			return;
 		}
-		final_transcript = '';
+		finalTranscript = '';
 
 		recognition.start();
-		ignore_onend = false;
-		final_span.innerHTML = '';
-		interim_span.innerHTML = '';
-		start_img.src = 'img/mic-slash.gif';
-		start_timestamp = event.timeStamp;
+		ignoreOnend = false;
+		finalSpan.innerHTML = '';
+		interimSpan.innerHTML = '';
+		startImg.src = 'img/mic-slash.gif';
+		startTimestamp = event.timeStamp;
 	}
 
 
@@ -195,7 +194,7 @@
 			showNotSupportedMessage();
 		} else {
 			recognition = initRecognition();
-			start_button.addEventListener('click', startButton);
+			startButton.addEventListener('click', startHandler);
 		}
 
 		// addEventLogging();

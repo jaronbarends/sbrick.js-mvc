@@ -76,48 +76,14 @@
 			executeCommand = false;
 
 		// loop through defined commands, and check if we've got a match
-		// we'll check interim results as they come in, and check with final result
+		// we'll check interim results as they come in, and abort recognition as soon as we have a match
 		commands.forEach((cmdObj) => {
 			if (cmdObj.command === command) {
-				commandFound = true;
-
-				if (e.type === 'final.speech') {
-					// we've got the final result
-					// see if its the same as interim match
-					if (command !== lastInterimMatch) {
-						executeCommand = true;
-					}
-					// reset the interim match for next time
-					lastInterimMatch = '';
-				} else if (lastInterimMatch === '') {
-					// we've got an interim result, but there is an interim match already
-					// (in case this matching command is a different from the precvious matched command,
-					// it's apparently unclear. Do nothing new, and wait for the final command)
-					lastInterimMatch = command;
-					executeCommand = true;
-				}
-
-				if (executeCommand) {
-					// we've got a command that hasn't been executed yet
-					cmdObj.fn();
-				}
+				cmdObj.fn();
+				e.detail.recognition.abort();
 			}
 		});
 		
-		// if (command === 'motor start') {
-		// 	commandFound = true;
-		// 	startDrive();
-		// } else if (command === 'motor stop') {
-		// 	commandFound = true;
-		// 	stopDrive();
-		// } else if (command === 'lights on') {
-		// 	commandFound = true;
-		// 	lightsOn();
-		// } else if (command === 'lights off') {
-		// 	commandFound = true;
-		// 	lightsOff();
-		// }
-
 	};
 	
 
