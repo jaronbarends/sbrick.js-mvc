@@ -98,13 +98,15 @@
 
 		// define data to send
 		let data = {
-				// port: portId,
+				port: portId,
 				portId: portId,
 				direction,
 				power
 			},
 			event = new CustomEvent('setdrive.sbrick', {detail: data});
 		body.dispatchEvent(event);
+
+		window.util.log('zup');
 	};
 
 
@@ -126,7 +128,7 @@
 		power = powerNumber;
 
 		let data = {
-				// port: portId,
+				port: portId,
 				portId: portId,
 				direction,
 				power
@@ -195,9 +197,11 @@
 	*/
 	const drivechangeHandler = function(e) {
 		let data = e.detail;
-		data.forEach((ch) => {
-			window.util.log('drive change: chId:' + ch.portId + ' p:' + ch.power + ' dir:'+ch.direction);
-		});
+		if (data) {
+			data.forEach((ch) => {
+				window.util.log('drive change: chId:' + ch.portId + ' p:' + ch.power + ' dir:'+ch.direction);
+			});
+		}
 	};
 
 
@@ -209,9 +213,11 @@
 	*/
 	const servochangeHandler = function(e) {
 		let data = e.detail;
-		data.forEach((ch) => {
-			window.util.log('servo change: chId:' + ch.portId + ' p:' + ch.power + ' dir:'+ch.direction);
-		});
+		if (data) {
+			data.forEach((ch) => {
+				window.util.log('servo change: chId:' + ch.portId + ' p:' + ch.power + ' dir:'+ch.direction);
+			});
+		}
 	};
 
 
