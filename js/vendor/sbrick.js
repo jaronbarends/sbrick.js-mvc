@@ -505,22 +505,22 @@ let SBrick = (function() {
 
 		/**
 		* Read sensor data on a specific PORT
-		* @param {hexadecimal} port - PORT[0-3]
+		* @param {hexadecimal} portId - The index of the port in the this.ports array
 		* @param {string} type - not implemented yet - in the future it will manage different sensor types (distance, tilt ...)
 		* @returns {promise} - sensor measurement Object (structure depends on the sensor type)
 		*/
-		getSensor( port, type ) {
+		getSensor( portId, type ) {
 			return new Promise( (resolve, reject) => {
-				if( port !== null ) {
+				if( portId !== null ) {
 					resolve();
 				} else {
 					reject('wrong input');
 				}
 			}).then( ()=> {
 				// return this._pvm( { port:port, mode:INPUT } );
-				return this._pvm( { port:port, portId: port, mode:INPUT } );
+				return this._pvm( { portId: portId, mode:INPUT } );
 			}).then( ()=> {
-				let channels = this._getPortChannels(port);
+				let channels = this._getPortChannels(portId);
 				return this._adc([CMD_ADC_VOLT].concat(channels)).then( data => {
 					let arrayData = [];
 					for (let i = 0; i < data.byteLength; i+=2) {
@@ -687,10 +687,8 @@ let SBrick = (function() {
 
 				let update_pvm = false;
 				portObjs.forEach( (portObj) => {
-					console.log(portObj);
 					let portId = portObj.portId;
 					let mode = portObj.mode;
-					console.log(portId, this.ports[portId]);
 					if( this.ports[portId].mode != mode ) {
 						this.ports[portId].mode = mode;
 						update_pvm = true;
