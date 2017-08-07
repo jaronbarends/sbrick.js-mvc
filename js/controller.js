@@ -123,7 +123,7 @@
 		power = powerNumber;
 
 		let data = {
-				// port: portId,
+				port: portId,
 				portId: portId,
 				direction,
 				power
@@ -162,7 +162,7 @@
 	const setDrive = function(e) {
 		e.preventDefault();
 		let data = {
-				// port: 1,
+				port: 1,
 				portId: 1,
 				direction: 0,
 				power: 150
@@ -182,6 +182,44 @@
 		// window.util.log('port change: portId:' + data.portId + ' pwr:' + data.power + ' dir:'+data.direction);
 	};
 
+	
+
+	/**
+	* watch tilt sensor
+	* @returns {undefined}
+	*/
+	const watchTilt = function() {
+		let outputElm = document.getElementById('output--tilt1'),
+			portId = 3;
+		
+		let counter = 0,
+			sensorTimer,
+			ch0 = document.getElementById('output-tilt-ch0'),
+			ch1 = document.getElementById('output-tilt-ch1'),
+			tiltVal = document.getElementById('output-tilt-val'),
+			measureInterval = 20,// interval between tilt measurements
+			maxMeasureTime = 50,// number of seconds we'll check tilt
+			maxMeasurementCount = 1000 * maxMeasureTime / measureInterval;
+
+		const getSensorData = function() {
+			clearTimeout(sensorTimer);
+
+			mySBrick.getSensor(3, 'wedo')
+				.then((m) => {
+					ch0.textContent = m.ch0_raw;
+					ch1.textContent = m.ch1_raw;
+					tiltVal.textContent = m.value;
+
+					counter++;
+					if (counter < maxMeasurementCount) {
+						sensorTimer = setTimeout(getSensorData, 20);
+					}
+				});
+		}
+
+		getSensorData();		
+	};
+
 
 	
 
@@ -190,7 +228,7 @@
 	* watch tilt sensor
 	* @returns {undefined}
 	*/
-	const watchTilt = function() {
+	const watchTilt_bak = function() {
 		let outputElm = document.getElementById('output--tilt1'),
 			portId = 3;
 		

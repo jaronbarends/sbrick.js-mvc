@@ -505,11 +505,58 @@ let SBrick = (function() {
 
 		/**
 		* Read sensor data on a specific PORT
+		* @param {hexadecimal} port - PORT[0-3]
+		* @param {string} type - not implemented yet - in the future it will manage different sensor types (distance, tilt ...)
+		* @returns {promise} - sensor measurement Object (structure depends on the sensor type)
+		*/
+		getSensor( port, type ) {
+			return new Promise( (resolve, reject) => {
+				if( port !== null ) {
+					resolve();
+				} else {
+					reject('wrong input');
+				}
+			}).then( ()=> {
+				// return this._pvm( { port:port, mode:INPUT } );
+				return this._pvm( { port:port, portId: port, mode:INPUT } );
+			}).then( ()=> {
+				let channels = this._getPortChannels(port);
+				return this._adc([CMD_ADC_VOLT].concat(channels)).then( data => {
+					let arrayData = [];
+					for (let i = 0; i < data.byteLength; i+=2) {
+						arrayData.push( data.getUint16(i, true) );
+					}
+					let sensorData = {
+						type: 'unknown',
+						voltage: arrayData[0] >> 4,
+						ch0_raw: arrayData[1] >> 4,
+						ch1_raw: arrayData[2] >> 4
+					};
+
+					// Sensor Type Management
+					switch(type) {
+						case "wedo":
+							let type  = Math.round( ( sensorData.ch0_raw / sensorData.voltage ) * 255 );
+							let value = Math.round( ( sensorData.ch1_raw / sensorData.voltage ) * 255 );
+							sensorData.type  = ( type >= 48 && type <= 50 ) ? "tilt" : "motion";
+							sensorData.value = value;
+							break;
+
+						default:
+							sensorData.value = sensorData.ch1_raw / sensorData.voltage;
+					}
+					return sensorData;
+				} );
+			});
+		}
+
+		/**
+		* Read sensor data on a specific PORT
 		* @param {hexadecimal} portId - The index of the port in the this.ports array
 		* @param {string} type - not implemented yet - in the future it will manage different sensor types (distance, tilt ...)
 		* @returns {promise} - sensor measurement Object (structure depends on the sensor type)
 		*/
-		getSensor( portId, type ) {
+		getSensor_bak( portId, type ) {
 			return new Promise( (resolve, reject) => {
 				if( portId!==null ) {
 					resolve();
@@ -640,8 +687,10 @@ let SBrick = (function() {
 
 				let update_pvm = false;
 				portObjs.forEach( (portObj) => {
+					console.log(portObj);
 					let portId = portObj.portId;
 					let mode = portObj.mode;
+					console.log(portId, this.ports[portId]);
 					if( this.ports[portId].mode != mode ) {
 						this.ports[portId].mode = mode;
 						update_pvm = true;
@@ -670,6 +719,7 @@ let SBrick = (function() {
 						});
 					});
 				}
+				return false;
 			});
 		}
 
