@@ -234,19 +234,24 @@
 		
 		let counter = 0,
 			sensorTimer,
-			ch0 = document.getElementById('output-tilt-ch0');
-			ch1 = document.getElementById('output-tilt-ch1');
+			ch0 = document.getElementById('output-tilt-ch0'),
+			ch1 = document.getElementById('output-tilt-ch1'),
+			tiltVal = document.getElementById('output-tilt-val'),
+			measureInterval = 20,// interval between tilt measurements
+			maxMeasureTime = 50,// number of seconds we'll check tilt
+			maxMeasurementCount = 1000 * maxMeasureTime / measureInterval;
 
 		const getSensorData = function() {
 			clearTimeout(sensorTimer);
 
-			mySBrick.getSensor(3)
+			mySBrick.getSensor(3, 'wedo')
 				.then((m) => {
-					ch0.textContent = m.ch0;
-					ch1.textContent = m.ch1;
+					ch0.textContent = m.ch0_raw;
+					ch1.textContent = m.ch1_raw;
+					tiltVal.textContent = m.value;
 
 					counter++;
-					if (counter < 2000) {
+					if (counter < maxMeasurementCount) {
 						sensorTimer = setTimeout(getSensorData, 20);
 					}
 				});

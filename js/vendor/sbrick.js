@@ -487,6 +487,7 @@ let SBrick = (function() {
 						case "wedo":
 							let type  = Math.round( ( sensorData.ch0_raw / sensorData.voltage ) * 255 );
 							let value = Math.round( ( sensorData.ch1_raw / sensorData.voltage ) * 255 );
+							window.util.log('type:'+ type);
 							sensorData.type  = ( type >= 48 && type <= 50 ) ? "tilt" : "motion";
 							sensorData.value = value;
 							break;
