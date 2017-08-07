@@ -123,7 +123,7 @@
 		power = powerNumber;
 
 		let data = {
-				port: portId,
+				// port: portId,
 				portId: portId,
 				direction,
 				power
@@ -162,7 +162,7 @@
 	const setDrive = function(e) {
 		e.preventDefault();
 		let data = {
-				port: 1,
+				// port: 1,
 				portId: 1,
 				direction: 0,
 				power: 150
