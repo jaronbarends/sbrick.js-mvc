@@ -193,6 +193,11 @@
 		if (!('webkitSpeechRecognition' in window)) {
 			showNotSupportedMessage();
 		} else {
+			// speech recognition requires a webserver - make sure we're on one
+			if (window.location.href.indexOf('http') !== 0) {
+				console.error('Speech recognition only works when run on a webserver');
+				return;
+			}
 			recognition = initRecognition();
 			startButton.addEventListener('click', startHandler);
 		}
