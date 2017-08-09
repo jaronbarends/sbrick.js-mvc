@@ -53,7 +53,8 @@
 	* @returns {undefined}
 	*/
 	const setdriveHandler = function(e) {
-		sendCommand('drivechange.sbrick', 'quickDrive', e.detail);
+		// sendCommand('drivechange.sbrick', 'quickDrive', e.detail);
+		sendCommand('drivechange.sbrick', 'drive', e.detail);
 	};
 	
 
@@ -63,7 +64,8 @@
 	* @returns {undefined}
 	*/
 	const setservoHandler = function(e) {
-		sendCommand('servochange.sbrick', 'quickDrive', e.detail);
+		// sendCommand('servochange.sbrick', 'quickDrive', e.detail);
+		sendCommand('servochange.sbrick', 'drive', e.detail);
 	};
 	
 

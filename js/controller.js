@@ -114,13 +114,13 @@
 	*/
 	const updateServo = function(portId, funcId) {
 		let	power = document.getElementById(funcId + '-power').value,
-			powerNumber = document.getElementById(funcId + '-power-number').value,
+			// powerNumber = document.getElementById(funcId + '-power-number').value,
 			directionStr = document.querySelector('[name="' + funcId + '-direction"]:checked').value,
 			direction = mySBrick[directionStr];
 		
 		portId = parseInt(portId, 10);
-		power = Math.round(mySBrick.MAX * powerNumber/100);
-		power = powerNumber;
+		power = Math.round(mySBrick.MAX * power/100);
+		// power = powerNumber;
 
 		let data = {
 				// port: portId,
