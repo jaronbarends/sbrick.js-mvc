@@ -10,15 +10,18 @@
 
 	/**
 	* send a command to the sbrick
+	* @param {string} command - The name of the command to send
+	* @param {object} data - Data to send ({portId, power [, direction]})
+	* @param {string} successEventName - The name of the event to send upon success
 	* @returns {undefined}
 	*/
-	const sendCommand = function(eventName, command, data) {
+	const sendCommand = function(command, data, successEventName) {
 		// make sure we always have values to send
 		// define default data to send to drive commands
 		let defaultDriveData = {
 			portId: 0,
-			direction: mySBrick.CW,
-			power: 0
+			power: 0,
+			direction: mySBrick.CW
 		};
 
 		let dataToSend = Object.assign({}, defaultDriveData, data);
@@ -43,29 +46,31 @@
 	* @returns {undefined}
 	*/
 	const setlightsHandler = function(e) {
-		sendCommand('lightschange.sbrick', 'drive', e.detail);
+		sendCommand('drive', e.detail, 'lightschange.sbrick');
 	};
 	
 
 
 	/**
 	* pass request to change drive to sbrick.js
+	* @param {event} e - Custom event, with detail object containing portId, power, direction
 	* @returns {undefined}
 	*/
 	const setdriveHandler = function(e) {
 		// sendCommand('drivechange.sbrick', 'quickDrive', e.detail);
-		sendCommand('drivechange.sbrick', 'drive', e.detail);
+		sendCommand('drive', e.detail, 'drivechange.sbrick');
 	};
 	
 
 
 	/**
 	* pass request to change servo to sbrick.js
+	* @param {event} e - Custom event, with detail object containing portId, power, direction
 	* @returns {undefined}
 	*/
 	const setservoHandler = function(e) {
 		// sendCommand('servochange.sbrick', 'quickDrive', e.detail);
-		sendCommand('servochange.sbrick', 'drive', e.detail);
+		sendCommand('drive', e.detail, 'servochange.sbrick');
 	};
 	
 

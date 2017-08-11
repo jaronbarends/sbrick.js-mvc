@@ -6,7 +6,7 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	
 	<title>SBrick MVC</title>
-	<link rel="stylesheet" href="css/demo.css">
+	<link rel="stylesheet" href="css/demo.css?a=0">
 	<link rel="stylesheet" href="css/sbrick-icon.css?a=0">
 	<link rel="stylesheet" href="css/sbrick-monitor.css">
 	
@@ -14,6 +14,8 @@
 	
 </head>
 <body>
+
+	<div class="viewport"></div>
 
 	<button id="connect-btn" class="btn btn--start btn--connect">
 		Connect
@@ -28,6 +30,36 @@
 		<div class="sbrick-icon__port sbrick-icon__port--top-right"></div>
 		<div class="sbrick-icon__port sbrick-icon__port--bottom-left"></div>
 		<div class="sbrick-icon__port sbrick-icon__port--bottom-right"></div>
+	</div>
+
+	<div class="servo-buttons-container">
+		<a href="#" class="servo-button" data-angle="-90"></a>
+		<a href="#" class="servo-button" data-angle="-78"></a>
+		<a href="#" class="servo-button" data-angle="-65"></a>
+		<a href="#" class="servo-button" data-angle="-52"></a>
+		<a href="#" class="servo-button" data-angle="-39"></a>
+		<a href="#" class="servo-button" data-angle="-26"></a>
+		<a href="#" class="servo-button" data-angle="-13"></a>
+		<a href="#" class="servo-button" data-angle="0"></a>
+		<a href="#" class="servo-button" data-angle="13"></a>
+		<a href="#" class="servo-button" data-angle="26"></a>
+		<a href="#" class="servo-button" data-angle="39"></a>
+		<a href="#" class="servo-button" data-angle="52"></a>
+		<a href="#" class="servo-button" data-angle="65"></a>
+		<a href="#" class="servo-button" data-angle="78"></a>
+		<a href="#" class="servo-button" data-angle="90"></a>
+	</div>
+
+	<div class="drive-buttons-container">
+		<a href="#" class="drive-button">100</a>
+		<a href="#" class="drive-button">75</a>
+		<a href="#" class="drive-button">50</a>
+		<a href="#" class="drive-button">25</a>
+		<a href="#" class="drive-button">0</a>
+		<a href="#" class="drive-button">25</a>
+		<a href="#" class="drive-button">50</a>
+		<a href="#" class="drive-button">75</a>
+		<a href="#" class="drive-button">100</a>
 	</div>
 	
 	<div id="controlPanel" class="is-hidden">
@@ -69,7 +101,7 @@
 			<h2 class="port-title">Port 2</h2>
 			<button class="btn btn--start" data-port="2" data-func-type="servo" data-func-id="servo1">Servo</button>
 			<input id="servo1-power" type="range" min="0" max="100" value="50">
-			<!-- <input type="number" value="80" id="servo1-power-number"> -->
+			<input type="number" value="80" id="servo1-power-number">
 			<input id="servo1-dir-cw" type="radio" name="servo1-direction" value="CW" checked><label for="servo1-dir-cw"><span class="symbol">&#8635;</span></label>
 			<input id="servo1-dir-ccw" type="radio" name="servo1-direction" value="CCW"><label for="servo1-dir-ccw"><span class="symbol">&#8634;</span></label>
 		</div>

@@ -97,8 +97,8 @@
 		let data = {
 				// port: portId,
 				portId: portId,
-				direction,
-				power
+				power,
+				direction
 			},
 			event = new CustomEvent('setdrive.sbrick', {detail: data});
 		body.dispatchEvent(event);
@@ -114,19 +114,19 @@
 	*/
 	const updateServo = function(portId, funcId) {
 		let	power = document.getElementById(funcId + '-power').value,
-			// powerNumber = document.getElementById(funcId + '-power-number').value,
+			powerNumber = document.getElementById(funcId + '-power-number').value,
 			directionStr = document.querySelector('[name="' + funcId + '-direction"]:checked').value,
 			direction = mySBrick[directionStr];
 		
 		portId = parseInt(portId, 10);
 		power = Math.round(mySBrick.MAX * power/100);
-		// power = powerNumber;
+		power = powerNumber;
 
 		let data = {
 				// port: portId,
 				portId: portId,
-				direction,
-				power
+				power,
+				direction
 			},
 			event = new CustomEvent('setservo.sbrick', {detail: data});
 		body.dispatchEvent(event);
