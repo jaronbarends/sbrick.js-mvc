@@ -13,51 +13,8 @@
 		PORT_BOTTOM_RIGHT: 3
 	};
 
-	let body = document.body,
-		connectBtn,
-		controlPanel,
-		mySBrick;
+	let mySBrick;
 
-
-
-	/**
-	* 
-	* @returns {undefined}
-	*/
-	var checkTemperature = function() {
-		mySBrick.getTemp()
-			.then( (value) => {
-				value = Math.round(10*value)/10;
-				window.util.log('Temperature: ' + value + '°C');
-			});
-	};
-
-
-	/**
-	* 
-	* @returns {undefined}
-	*/
-	var getModelNumber = function() {
-		mySBrick.getModelNumber()
-			.then( (value) => {
-				// value = Math.round(10*value)/10;
-				window.util.log('Model number: ' + value);
-			});
-	};
-
-
-
-	/**
-	* check current battery status
-	* @returns {undefined}
-	*/
-	var checkBattery = function() {
-		mySBrick.getBattery()
-			.then( (value) => {
-				window.util.log('Battery: ' + value + '%');			
-			});
-	};
-	
 
 
 	/**
@@ -66,7 +23,7 @@
 	* @param {funcId} string - An id for this attached set of lights, corresponding to id's in html to retrieve input values
 	* @returns {undefined}
 	*/
-	const setLights2 = function(data) {
+	const setLights = function(data) {
 		data.power = Math.round(mySBrick.MAX * data.power/100);
 		mySBrick.drive(data);
 	};
@@ -79,7 +36,7 @@
 	* @param {funcId} string - An id for this attached motor, corresponding to id's in html to retrieve input values
 	* @returns {undefined}
 	*/
-	const setDrive2 = function(data) {
+	const setDrive = function(data) {
 		if (data.power !== 0) {
 			// drive does not seem to work below some power level
 			// define the power range within which the drive does work
@@ -97,8 +54,9 @@
 	* @param {funcId} string - An id for this attached motor, corresponding to id's in html to retrieve input values
 	* @returns {undefined}
 	*/
-	const setServo2 = function(data) {
-		data.power = Math.round(mySBrick.MAX * data.power/100);
+	const setServo = function(data) {
+		// data.power = Math.round(mySBrick.MAX * data.power/100);
+		data.power = window.sbrickUtil.servoAngleToPower(data.power);
 		mySBrick.drive(data);
 	};
 
@@ -157,24 +115,6 @@
 
 	
 	/**
-	* set the page to busy state
-	* @returns {undefined}
-	*/
-	const setPageBusy = function() {
-		body.classList.add('page--is-busy');
-	};
-
-
-	/**
-	* set the page to busy state
-	* @returns {undefined}
-	*/
-	const setPageIdle = function() {
-		body.classList.remove('page--is-busy');
-	};
-
-
-	/**
 	* initialize control buttons for ports
 	* @returns {undefined}
 	*/
@@ -195,16 +135,15 @@
 
 					switch (func) {
 						case 'lights':
-							setLights2(data);
+							setLights(data);
 							break;
 						case 'drive':
-							setDrive2(data);
+							setDrive(data);
 							break;
 						case 'servo':
-							setServo2(data);
+							setServo(data);
 							break;
 					}
-					console.log(valueStr, data);
 
 				});// eventListener
 			});// forEach(btn)
@@ -216,138 +155,19 @@
 	};
 	
 
-	
-	
-
 
 	/**
 	* initialize controlPanel
 	* @returns {undefined}
 	*/
 	const initInfoControls = function() {
-
-		document.getElementById('check-battery-btn').addEventListener('click', checkBattery);
-		document.getElementById('check-temperature-btn').addEventListener('click', checkTemperature);
-		document.getElementById('check-model-number-btn').addEventListener('click', getModelNumber);
-
 		document.getElementById('watch-tilt').addEventListener('click', watchTilt);
 
 		// set listeners for port events
-		body.addEventListener('portchange.sbrick', portchangeHandler);
+		document.body.addEventListener('portchange.sbrick', portchangeHandler);
 	};
 
 
-	/**
-	* connect the sbrick
-	* @returns {undefined}
-	*/
-	var connectSBrick = function() {
-		setPageBusy();
-		mySBrick.connect(SBRICKNAME)
-		.then( (value) => {
-			// SBrick now is connected
-			setPageIdle();
-			updateConnectionState();
-		} )
-		.catch( (e) => {
-			setPageIdle();
-			window.util.log('Caught error in SBrick.connect: ' + e);
-			updateConnectionState();
-		});
-	};
-
-
-	/**
-	* disconnect the sbrick
-	* @returns {undefined}
-	*/
-	var disconnectSBrick = function() {
-		setPageBusy();
-		mySBrick.disconnect(SBRICKNAME)
-		.then( (value) => {
-			// SBrick now is disconnected
-			setPageIdle();
-			updateConnectionState();
-		} )
-		.catch( (e) => {
-			// something went wrong
-			setPageIdle();
-			window.util.log('Caught error in SBrick.disconnect: ' + e);
-			updateConnectionState();
-		});
-	};
-	
-
-
-	/**
-	* update the connect button and control panel
-	* @returns {undefined}
-	*/
-	const updateConnectionState = function() {
-		if (mySBrick.isConnected()) {
-			connectBtn.classList.remove('btn--is-busy', 'btn--start');
-			connectBtn.classList.add('btn--stop');
-			connectBtn.innerHTML = 'Disconnect';
-			controlPanel.classList.remove('is-hidden');
-		} else {
-			// disconnected
-			connectBtn.classList.remove('btn--is-busy', 'btn--stop');
-			connectBtn.classList.add('btn--start');
-			connectBtn.innerHTML = 'Connect';
-			controlPanel.classList.add('is-hidden');
-		}
-	};
-	
-	
-
-
-	/**
-	* connect or disconnect the SBrick
-	* @returns {undefined}
-	*/
-	const connectHandler = function() {
-		connectBtn.classList.add('btn--is-busy');
-
-		if (mySBrick.isConnected()) {
-			disconnectSBrick();
-		} else {
-			connectSBrick();
-		}
-	};
-	
-
-
-	/**
-	* make the app run in dummy mode - webbluetooth calls will be handled by dummy code that always resolves the call
-	* @returns {undefined}
-	*/
-	const enableDummyMode = function() {
-		mySBrick.webbluetooth = new WebBluetoothDummy();
-		mySBrick.getFirmwareVersion = function() {
-			return new Promise( (resolve, reject) => {
-				resolve(4.17);
-			});
-		};
-		window.util.log = console.log;
-	};
-	
-
-
-	/**
-	* check if we want to run in dummy-mode
-	* that's meant for developing when you do not need to have an actual bluetooth device
-	* @returns {undefined}
-	*/
-	const checkDummyMode = function() {
-		// check if we're on http (and not on localhost); if so, use the real webbluetooth api
-		// otherwise, talk against the dummy
-		const url = window.location.href;
-		if (url.indexOf('http') !== 0 || url.indexOf('localhost') > -1) {
-			enableDummyMode();
-		}
-	};
-
-	
 
 	/**
 	* initialize all functionality
@@ -357,18 +177,9 @@
 	const init = function() {
 		window.mySBrick = window.mySBrick || new SBrick();
 		mySBrick = window.mySBrick;
-		connectBtn = document.getElementById('connect-btn');
-		controlPanel = document.getElementById('controlPanel');
 
-		// initialize controlPanel - they'll remain hidden until connection is made
 		initInfoControls();
 		initPortControls();
-
-		checkDummyMode();
-
-		// Connect to SBrick via bluetooth.
-		// Per the specs, this has to be done IN RESPONSE TO A USER ACTION
-		connectBtn.addEventListener('click', connectHandler);
 	};
 
 	// kick of the script when all dom content has loaded

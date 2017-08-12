@@ -7,9 +7,12 @@
 	
 	<title>SBrick MVC</title>
 	<link rel="stylesheet" href="css/base.css">
-	<link rel="stylesheet" href="css/button-controller.css">
+	<link rel="stylesheet" href="css/interface.css">
+	<link rel="stylesheet" href="css/buttons.css">
+	<link rel="stylesheet" href="css/button-controller.css?a=2">
 	<link rel="stylesheet" href="css/sbrick-icon-view.css">
-	<link rel="stylesheet" href="css/sbrick-monitor.css">
+	<link rel="stylesheet" href="css/sbrick-table-view.css">
+	<link rel="stylesheet" href="css/log-window.css">
 	
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	
@@ -18,23 +21,40 @@
 
 	<div class="viewport">
 
-		<button id="connect-btn" class="btn btn--start btn--connect">
-			Connect
-		</button>
+		<div id="connect-screen" class="connect-screen">
 
-		<div class="sbrick-icon">
-			<div class="sbrick-icon__face sbrick-icon__face--side-top"></div>
-			<div class="sbrick-icon__face sbrick-icon__face--front-top"></div>
-			<div class="sbrick-icon__face sbrick-icon__face--side-bottom"></div>
-			<div class="sbrick-icon__face sbrick-icon__face--front-bottom"></div>
-			<div class="sbrick-icon__port sbrick-icon__port--top-left"></div>
-			<div class="sbrick-icon__port sbrick-icon__port--top-right"></div>
-			<div class="sbrick-icon__port sbrick-icon__port--bottom-left"></div>
-			<div class="sbrick-icon__port sbrick-icon__port--bottom-right"></div>
+			<div class="sbrick-icon">
+				<div class="sbrick-icon__face sbrick-icon__face--side-top"></div>
+				<div class="sbrick-icon__face sbrick-icon__face--front-top"></div>
+				<div class="sbrick-icon__face sbrick-icon__face--side-bottom"></div>
+				<div class="sbrick-icon__face sbrick-icon__face--front-bottom"></div>
+				<div class="sbrick-icon__port sbrick-icon__port--top-left"></div>
+				<div class="sbrick-icon__port sbrick-icon__port--top-right"></div>
+				<div class="sbrick-icon__port sbrick-icon__port--bottom-left"></div>
+				<div class="sbrick-icon__port sbrick-icon__port--bottom-right"></div>
+			</div>
+
+			<div class="busy-indicator"></div>
+
+			<button id="connect-btn" class="btn btn--start btn--connect">
+				Connect
+			</button>
+
 		</div>
 
 		
-		<div id="controlPanel" class="is-hidden">
+		<div id="controlPanel" class="control-panel is-hidden">
+
+			<div class="sbrick-icon">
+				<div class="sbrick-icon__face sbrick-icon__face--side-top"></div>
+				<div class="sbrick-icon__face sbrick-icon__face--front-top"></div>
+				<div class="sbrick-icon__face sbrick-icon__face--side-bottom"></div>
+				<div class="sbrick-icon__face sbrick-icon__face--front-bottom"></div>
+				<div class="sbrick-icon__port sbrick-icon__port--top-left"></div>
+				<div class="sbrick-icon__port sbrick-icon__port--top-right"></div>
+				<div class="sbrick-icon__port sbrick-icon__port--bottom-left"></div>
+				<div class="sbrick-icon__port sbrick-icon__port--bottom-right"></div>
+			</div>
 
 			<div class="buttons-list lights-buttons-container" data-port="PORT_TOP_LEFT" data-function="lights">
 				<a href="0" class="lights-button">0</a>
@@ -56,31 +76,103 @@
 				<a href="100" class="drive-button">100</a>
 			</div>
 
+			<!-- motors can handle only -->
 			<div class="buttons-list servo-buttons-container" data-port="PORT_TOP_RIGHT" data-function="servo">
-				<a href="-90" class="servo-button"></a>
-				<a href="-78" class="servo-button"></a>
-				<a href="-65" class="servo-button"></a>
-				<a href="-52" class="servo-button"></a>
-				<a href="-39" class="servo-button"></a>
-				<a href="-26" class="servo-button"></a>
-				<a href="-13" class="servo-button"></a>
-				<a href="0" class="servo-button"></a>
-				<a href="13" class="servo-button"></a>
-				<a href="26" class="servo-button"></a>
-				<a href="39" class="servo-button"></a>
-				<a href="52" class="servo-button"></a>
-				<a href="65" class="servo-button"></a>
-				<a href="78" class="servo-button"></a>
-				<a href="90" class="servo-button"></a>
+				<a href="-90" class="servo-button" data-angle="-90"></a>
+				<a href="-78" class="servo-button" data-angle="-78"></a>
+				<a href="-65" class="servo-button" data-angle="-65"></a>
+				<a href="-52" class="servo-button" data-angle="-52"></a>
+				<a href="-39" class="servo-button" data-angle="-39"></a>
+				<a href="-26" class="servo-button" data-angle="-26"></a>
+				<a href="-13" class="servo-button" data-angle="-13"></a>
+				<a href="0" class="servo-button" data-angle="0"></a>
+				<a href="13" class="servo-button" data-angle="13"></a>
+				<a href="26" class="servo-button" data-angle="26"></a>
+				<a href="39" class="servo-button" data-angle="39"></a>
+				<a href="52" class="servo-button" data-angle="52"></a>
+				<a href="65" class="servo-button" data-angle="65"></a>
+				<a href="78" class="servo-button" data-angle="78"></a>
+				<a href="90" class="servo-button" data-angle="90"></a>
+			</div>
+
+
+
+
+
+			<div id="table-view" class="monitor table-view">
+				<table class="table-view__table">
+					<tbody>
+						<tr>
+							<td class="table-view__function" id="table-view__port-0-function">Lights</td>
+							<td class="table-view__power" id="table-view__power--port-0">0</td>
+							<td class="table-view__direction" id="table-view__direction--port-0"></td>
+							<td class="table-view__function" id="table-view__port-2-function">Servo</td>
+							<td class="table-view__power" id="table-view__power--port-2">0</td>
+							<td class="table-view__direction" id="table-view__direction--port-2"></td>
+
+							<td class="table-view__function">Batt</td>
+							<td class="table-view__value" id="table-view__value--battery"></td>
+						</tr>
+						<tr>
+
+							<td class="table-view__function" id="table-view__port-1-function">Drive</td>
+							<td class="table-view__power" id="table-view__power--port-1">0</td>
+							<td class="table-view__direction" id="table-view__direction--port-1"></td>
+
+							<td class="table-view__function" id="table-view__port-3-function">Sensor</td>
+							<td class="table-view__power" id="table-view__power--port-3">0</td>
+							<td class="table-view__direction" id="table-view__direction--port-3"></td>
+
+							<td class="table-view__function">Tmp</td>
+							<td class="table-view__value" id="table-view__value--temperature"></td>
+						</tr>
+					</tbody>
+				</table>
 			</div>
 			
 
+			<div class="speech-controller">
+				<div id="div_start">
+				  <button id="start_button"><img alt="Start" id="start_img"
+				  src="img/mic.gif"></button>
+				  <!-- Possible Speech commands: <em>start motor</em>, <em>stop motor</em>, <em>lights on</em>, <em>lights off</em> -->
+				</div>
 
 
-			<div id="div_start">
-			  <button id="start_button"><img alt="Start" id="start_img"
-			  src="img/mic.gif"></button>
-			  Possible Speech commands: <em>start motor</em>, <em>stop motor</em>, <em>lights on</em>, <em>lights off</em>
+				<div id="info">
+				  <p id="info_speak_now" style="display:none">
+				    Speak now.
+				  </p>
+				  <p id="info_no_speech" style="display:none">
+				    No speech was detected. You may need to adjust your <a href=
+				    "//support.google.com/chrome/bin/answer.py?hl=en&amp;answer=1407892">microphone
+				    settings</a>.
+				  </p>
+				  <p id="info_no_microphone" style="display:none">
+				    No microphone was found. Ensure that a microphone is installed and that
+				    <a href="//support.google.com/chrome/bin/answer.py?hl=en&amp;answer=1407892">
+				    microphone settings</a> are configured correctly.
+				  </p>
+				  <p id="info_allow" style="display:none">
+				    Click the "Allow" button above to enable your microphone.
+				  </p>
+				  <p id="info_denied" style="display:none">
+				    Permission to use microphone was denied.
+				  </p>
+				  <p id="info_blocked" style="display:none">
+				    Permission to use microphone is blocked. To change, go to
+				    chrome://settings/contentExceptions#media-stream
+				  </p>
+				  <p id="info_upgrade" style="display:none">
+				    Web Speech API is not supported by this browser. Upgrade to <a href=
+				    "//www.google.com/chrome">Chrome</a> version 25 or later.
+				  </p>
+				</div>
+
+				<div id="results" class="results">
+				  <span class="final" id="final_span"></span> <span class="interim" id=
+				  "interim_span"></span>
+				</div>
 			</div>
 
 			<a href="#" id="watch-tilt">Watch tilt</a>
@@ -94,82 +186,12 @@
 			</div>
 
 			<button id="stop-all" class="btn btn--stop">stop all</button>
-			<button id="check-battery-btn" class="btn btn--info">Check battery</button>
-			<button id="check-temperature-btn" class="btn btn--info">Check temperature</button>
-			<button id="check-model-number-btn" class="btn btn--info">Model#</button>
+
+
+
+			<button id="disconnect-btn" class="btn btn--disconnect">Disconnect</button>
 		</div>
 
-		<div id="monitor" class="monitor">
-			<table class="monitor-table">
-				<thead>
-					<tr>
-						<th>port</th>
-						<th>pwr</th>
-						<th>dir</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<th>0</th>
-						<td id="monitor-port-0-power">0</td>
-						<td></td>
-					</tr>
-					<tr>
-						<th>1</th>
-						<td id="monitor-port-1-power">0</td>
-						<td id="monitor-port-1-direction"></td>
-					</tr>
-					<tr>
-						<th>2</th>
-						<td id="monitor-port-2-power">0</td>
-						<td id="monitor-port-2-direction"></td>
-					</tr>
-					<tr>
-						<th>3</th>
-						<td id="monitor-port-3-power">0</td>
-						<td id="monitor-port-3-direction"></td>
-					</tr>
-				</tbody>
-			</table>
-		</div>
-
-
-		<!-- Start speech recognition -->
-			<div id="info">
-			  <p id="info_speak_now" style="display:none">
-			    Speak now.
-			  </p>
-			  <p id="info_no_speech" style="display:none">
-			    No speech was detected. You may need to adjust your <a href=
-			    "//support.google.com/chrome/bin/answer.py?hl=en&amp;answer=1407892">microphone
-			    settings</a>.
-			  </p>
-			  <p id="info_no_microphone" style="display:none">
-			    No microphone was found. Ensure that a microphone is installed and that
-			    <a href="//support.google.com/chrome/bin/answer.py?hl=en&amp;answer=1407892">
-			    microphone settings</a> are configured correctly.
-			  </p>
-			  <p id="info_allow" style="display:none">
-			    Click the "Allow" button above to enable your microphone.
-			  </p>
-			  <p id="info_denied" style="display:none">
-			    Permission to use microphone was denied.
-			  </p>
-			  <p id="info_blocked" style="display:none">
-			    Permission to use microphone is blocked. To change, go to
-			    chrome://settings/contentExceptions#media-stream
-			  </p>
-			  <p id="info_upgrade" style="display:none">
-			    Web Speech API is not supported by this browser. Upgrade to <a href=
-			    "//www.google.com/chrome">Chrome</a> version 25 or later.
-			  </p>
-			</div>
-
-			<div id="results" class="results">
-			  <span class="final" id="final_span"></span> <span class="interim" id=
-			  "interim_span"></span>
-			</div>
-		<!-- End speech recognition -->
 
 
 		<div id="log-window" class="log-window"></div>
@@ -179,13 +201,15 @@
 	<script src="js/vendor/promise-queue.js"></script>
 	<script src="js/vendor/bluetooth.js"></script>
 	<script src="js/vendor/bluetooth-dummy.js"></script>
-	<script src="js/vendor/sbrick.js?a=0"></script>
+	<script src="js/vendor/sbrick.js"></script>
+	<script src="js/sbrick-util.js"></script>
 	<script src="js/util.js"></script>
 	<!-- <script src="js/sbrick-events.js"></script> -->
-	<script src="js/sbrick-monitor.js"></script>
+	<script src="js/sbrick-table-view.js"></script>
 
 	<script src="js/controller.js"></script>
 	<script src="js/speech-recognition.js"></script>
 	<script src="js/speech-commands.js"></script>
+	<script src="js/interface.js"></script>
 </body>
 </html>

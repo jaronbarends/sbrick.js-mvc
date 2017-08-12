@@ -22,90 +22,6 @@ a {
 	color: royalblue;
 }
 
-.viewport {
-	position: relative;
-	border: 1px solid #000;
-	width: 360px;
-	height: 640px;
-}
-
-.page--is-busy::before,
-.page--is-busy::after {
-	display: block;
-	content: '';
-	z-index: 1;
-}
-
-.page--is-busy::before {
-	position: fixed;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	background: rgba(0,0,0,0.8);
-}
-
-.page--is-busy::after {
-	position: fixed;
-	content: 'Connecting...';
-	display: inline-block;
-	top: 40%;
-	left: 50%;
-	padding: 1em;
-	background: rgba(255,255,255,0.5);
-	color: white;
-	transform: translateX(-50%);
-}
-
-/*-- Start buttons --*/
-
-	.btn {
-		display: inline-block;
-		margin: 0 1em 1em 0;
-		border: none;
-		padding: 0.8em;
-		background: #999;
-		color: white;
-		font: inherit;
-		cursor: pointer;
-	}
-
-	.btn--start {
-		background: seagreen;
-	}
-	.btn--start:hover,
-	.btn--start:focus {
-		background: #20603b;
-	}
-
-	.btn--connect {
-		width: 10em;
-	}
-
-	.btn--stop {
-		background: crimson;
-	}
-	.btn--stop:hover,
-	.btn--stop:focus {
-		background: #bb1133;
-	}
-
-
-	.btn--info {
-		background: royalblue;
-	}
-	.btn--info:hover,
-	.btn--info:focus {
-		background: #1f49c7;
-	}
-
-	.btn--is-busy {
-		opacity: 0.5;
-		cursor: wait;
-	}
-
-/*-- End buttons --*/
-
 
 output {
 	display: inline-block;
@@ -113,16 +29,6 @@ output {
 	padding: 0.5em;
 	height: 1em;
 	width: 5em;
-}
-
-.log-window {
-	padding: 0.5em;
-	font-size: 1.2rem;
-	background: beige;
-}
-
-.log-window p {
-	margin: 0 0 0.3em;
 }
 
 .is-hidden {

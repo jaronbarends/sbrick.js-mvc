@@ -82,7 +82,8 @@ let WebBluetoothDummy = (function() {
 						}
 					};
 					resolve();
-				}, 200);
+				// }, 200);
+				}, 2000);
 			});
 		}
 
