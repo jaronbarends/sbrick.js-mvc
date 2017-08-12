@@ -6,8 +6,9 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	
 	<title>SBrick MVC</title>
-	<link rel="stylesheet" href="css/demo.css?a=0">
-	<link rel="stylesheet" href="css/sbrick-icon.css?a=0">
+	<link rel="stylesheet" href="css/base.css">
+	<link rel="stylesheet" href="css/button-controller.css">
+	<link rel="stylesheet" href="css/sbrick-icon-view.css">
 	<link rel="stylesheet" href="css/sbrick-monitor.css">
 	
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -32,34 +33,42 @@
 		<div class="sbrick-icon__port sbrick-icon__port--bottom-right"></div>
 	</div>
 
-	<div class="servo-buttons-container">
-		<a href="#" class="servo-button" data-angle="-90"></a>
-		<a href="#" class="servo-button" data-angle="-78"></a>
-		<a href="#" class="servo-button" data-angle="-65"></a>
-		<a href="#" class="servo-button" data-angle="-52"></a>
-		<a href="#" class="servo-button" data-angle="-39"></a>
-		<a href="#" class="servo-button" data-angle="-26"></a>
-		<a href="#" class="servo-button" data-angle="-13"></a>
-		<a href="#" class="servo-button" data-angle="0"></a>
-		<a href="#" class="servo-button" data-angle="13"></a>
-		<a href="#" class="servo-button" data-angle="26"></a>
-		<a href="#" class="servo-button" data-angle="39"></a>
-		<a href="#" class="servo-button" data-angle="52"></a>
-		<a href="#" class="servo-button" data-angle="65"></a>
-		<a href="#" class="servo-button" data-angle="78"></a>
-		<a href="#" class="servo-button" data-angle="90"></a>
+	<div class="buttons-list lights-buttons-container" data-port="PORT_TOP_LEFT" data-function="lights">
+		<a href="0" class="lights-button">0</a>
+		<a href="25" class="lights-button">25</a>
+		<a href="50" class="lights-button">50</a>
+		<a href="75" class="lights-button">75</a>
+		<a href="100" class="lights-button">100</a>
 	</div>
 
-	<div class="drive-buttons-container">
-		<a href="#" class="drive-button">100</a>
-		<a href="#" class="drive-button">75</a>
-		<a href="#" class="drive-button">50</a>
-		<a href="#" class="drive-button">25</a>
-		<a href="#" class="drive-button">0</a>
-		<a href="#" class="drive-button">25</a>
-		<a href="#" class="drive-button">50</a>
-		<a href="#" class="drive-button">75</a>
-		<a href="#" class="drive-button">100</a>
+	<div class="buttons-list drive-buttons-container" data-port="PORT_BOTTOM_LEFT" data-function="drive">
+		<a href="-100" class="drive-button">100</a>
+		<a href="-75" class="drive-button">75</a>
+		<a href="-50" class="drive-button">50</a>
+		<a href="-25" class="drive-button">25</a>
+		<a href="0" class="drive-button">0</a>
+		<a href="25" class="drive-button">25</a>
+		<a href="50" class="drive-button">50</a>
+		<a href="75" class="drive-button">75</a>
+		<a href="100" class="drive-button">100</a>
+	</div>
+
+	<div class="buttons-list servo-buttons-container" data-port="PORT_TOP_RIGHT" data-function="servo">
+		<a href="-90" class="servo-button"></a>
+		<a href="-78" class="servo-button"></a>
+		<a href="-65" class="servo-button"></a>
+		<a href="-52" class="servo-button"></a>
+		<a href="-39" class="servo-button"></a>
+		<a href="-26" class="servo-button"></a>
+		<a href="-13" class="servo-button"></a>
+		<a href="0" class="servo-button"></a>
+		<a href="13" class="servo-button"></a>
+		<a href="26" class="servo-button"></a>
+		<a href="39" class="servo-button"></a>
+		<a href="52" class="servo-button"></a>
+		<a href="65" class="servo-button"></a>
+		<a href="78" class="servo-button"></a>
+		<a href="90" class="servo-button"></a>
 	</div>
 	
 	<div id="controlPanel" class="is-hidden">
@@ -195,7 +204,7 @@
 	<script src="js/vendor/bluetooth-dummy.js"></script>
 	<script src="js/vendor/sbrick.js?a=0"></script>
 	<script src="js/util.js"></script>
-	<script src="js/sbrick-events.js"></script>
+	<!-- <script src="js/sbrick-events.js"></script> -->
 	<script src="js/sbrick-monitor.js"></script>
 
 	<script src="js/controller.js"></script>

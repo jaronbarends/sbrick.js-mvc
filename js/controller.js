@@ -6,6 +6,13 @@
 	const SBRICKNAME = 'SBrick',
 		MIN_VALUE_BELOW_WHICH_MOTOR_DOES_NOT_WORK = 98;// somehow, motor does not seem to work for power values < 98
 
+	const PORTS = {
+		PORT_TOP_LEFT: 0,
+		PORT_BOTTOM_LEFT: 1,
+		PORT_TOP_RIGHT: 2,
+		PORT_BOTTOM_RIGHT: 3
+	};
+
 	let body = document.body,
 		connectBtn,
 		controlPanel,
@@ -59,7 +66,7 @@
 	* @param {funcId} string - An id for this attached set of lights, corresponding to id's in html to retrieve input values
 	* @returns {undefined}
 	*/
-	const updateLights = function(portId, funcId) {
+	const setLights = function(portId, funcId) {
 		let	power = document.getElementById(funcId + '-power').value;
 
 		portId = parseInt(portId, 10);
@@ -69,7 +76,6 @@
 				portId,
 				power
 			};
-
 		mySBrick.drive(data);
 	};
 
@@ -81,7 +87,7 @@
 	* @param {funcId} string - An id for this attached motor, corresponding to id's in html to retrieve input values
 	* @returns {undefined}
 	*/
-	const updateDrive = function(portId, funcId) {
+	const setDrive = function(portId, funcId) {
 		// drive does not seem to work below some power level
 		// define the power range within which the drive does work
 		const powerRange = mySBrick.MAX - MIN_VALUE_BELOW_WHICH_MOTOR_DOES_NOT_WORK;
@@ -99,9 +105,8 @@
 				portId: portId,
 				power,
 				direction
-			},
-			event = new CustomEvent('setdrive.sbrick', {detail: data});
-		body.dispatchEvent(event);
+			};
+		mySBrick.drive(data);
 	};
 
 
@@ -112,7 +117,7 @@
 	* @param {funcId} string - An id for this attached motor, corresponding to id's in html to retrieve input values
 	* @returns {undefined}
 	*/
-	const updateServo = function(portId, funcId) {
+	const setServo = function(portId, funcId) {
 		let	power = document.getElementById(funcId + '-power').value,
 			powerNumber = document.getElementById(funcId + '-power-number').value,
 			directionStr = document.querySelector('[name="' + funcId + '-direction"]:checked').value,
@@ -127,9 +132,8 @@
 				portId: portId,
 				power,
 				direction
-			},
-			event = new CustomEvent('setservo.sbrick', {detail: data});
-		body.dispatchEvent(event);
+			};
+		mySBrick.drive(data);
 	};
 	
 	
@@ -145,29 +149,12 @@
 			funcId = btn.getAttribute('data-func-id');
 
 		if (funcType === 'lights') {
-			updateLights(portId, funcId);
+			setLights(portId, funcId);
 		} else if (funcType === 'drive') {
-			updateDrive(portId, funcId);
+			setDrive(portId, funcId);
 		} else if (funcType === 'servo') {
-			updateServo(portId, funcId);
+			setServo(portId, funcId);
 		}
-	};
-
-
-
-	/**
-	* set the lights to a new value
-	* @returns {undefined}
-	*/
-	const setDrive = function(e) {
-		e.preventDefault();
-		let data = {
-				// port: 1,
-				portId: 1,
-				direction: 0,
-				power: 150
-			};
-		mySBrick.quickDrive([data]);
 	};
 
 
@@ -179,6 +166,8 @@
 	*/
 	const portchangeHandler = function(e) {
 		let data = e.detail;
+		// we should update the controller when another the values change
+		// i.e. set active state here
 		// window.util.log('port change: portId:' + data.portId + ' pwr:' + data.power + ' dir:'+data.direction);
 	};
 
@@ -222,40 +211,6 @@
 
 
 	
-
-
-	/**
-	* watch tilt sensor
-	* @returns {undefined}
-	*/
-	const watchTilt_bak = function() {
-		let outputElm = document.getElementById('output--tilt1'),
-			portId = 3;
-		
-		let counter = 0,
-			sensorTimer,
-			ch0 = document.getElementById('output-tilt-ch0');
-			ch1 = document.getElementById('output-tilt-ch1');
-
-		const getSensorData = function() {
-			clearTimeout(sensorTimer);
-
-			mySBrick.getSensor(3)
-				.then((m) => {
-					ch0.textContent = m.ch0;
-					ch1.textContent = m.ch1;
-
-					counter++;
-					if (counter < 2000) {
-						sensorTimer = setTimeout(getSensorData, 20);
-					}
-				});
-		}
-
-		getSensorData();		
-	};
-
-
 	/**
 	* set the page to busy state
 	* @returns {undefined}
@@ -272,6 +227,40 @@
 	const setPageIdle = function() {
 		body.classList.remove('page--is-busy');
 	};
+
+
+	/**
+	* initialize buttons for lights
+	* @returns {undefined}
+	*/
+	const initControlButtons = function() {
+		document.querySelectorAll('.buttons-list').forEach((list) => {
+			const portName = list.getAttribute('data-port'),
+				func = list.getAttribute('data-function');
+
+			list.querySelectorAll('a').forEach((button) => {
+				button.addEventListener('click', function(e) {
+					e.preventDefault();
+					const valueStr = this.getAttribute('href'),
+						power = parseInt(valueStr, 10),
+						portId = PORTS[portName];
+						dir = valueStr.indexOf('-') === 0 ? mySBrick.CCW : mySBrick.CW;
+
+					console.log(valueStr, power, portId, dir);
+
+				});// eventListener
+			});// forEach(btn)
+		});// forEach(list)
+	};
+	
+
+	/**
+	* initialize the buttons
+	* @returns {undefined}
+	*/
+	// const initControlButtons = function() {
+	// 	initLightControlButtons();
+	// }
 	
 	
 	
@@ -426,6 +415,7 @@
 
 		// initialize controlPanel - they'll remain hidden until connection is made
 		initControlPanel();
+		initControlButtons();
 
 		checkDummyMode();
 
