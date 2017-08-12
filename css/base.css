@@ -5,11 +5,15 @@
 }
 
 html {
+	margin: 0;
+	padding: 0;
 	font-family: arial, sans-serif;
 	font-size: 62.5%;
 }
 
 body {
+	margin: 0;
+	padding: 0;
 	position: relative;
 	font-size: 1.6rem;
 }
@@ -19,15 +23,10 @@ a {
 }
 
 .viewport {
-	position: absolute;
+	position: relative;
 	border: 1px solid #000;
 	width: 360px;
 	height: 640px;
-	pointer-events: none;
-}
-
-.port-title {
-	font-size: 1.2rem;
 }
 
 .page--is-busy::before,
@@ -56,17 +55,6 @@ a {
 	background: rgba(255,255,255,0.5);
 	color: white;
 	transform: translateX(-50%);
-}
-
-.page--is-busy::after {
-	/*position: absolute;
-	top: 50%;
-	left: 50%;
-	border: 4px solid rgba(255, 255, 255, 0.5);
-	border-radius: 50%;
-	width: 40px;
-	height: 40px;
-	z-index: 2;*/
 }
 
 /*-- Start buttons --*/
@@ -118,19 +106,6 @@ a {
 
 /*-- End buttons --*/
 
-label {
-	margin-left: 0.5em;
-}
-
-.symbol {
-	font-weight: bold;
-	font-size: larger;
-}
-
-input[type="range"] {
-	width: 8em;
-	vertical-align: middle;
-}
 
 output {
 	display: inline-block;
@@ -154,93 +129,3 @@ output {
 	/*visibility: hidden;*/
 	opacity: 0;
 }
-
-.footnote {
-	font-size: 1.2rem;
-}
-
-
-.servo-buttons-container {
-	position: relative;
-	margin: 0 auto;
-	width: 300px;
-	height: 150px;
-	/*border: 1px solid #ccc;*/
-}
-
-.servo-button {
-	display: block;
-	position: absolute;
-	width: 0;
-	height: 0;
-	top: 0;
-	left: 50%;
-	transform-origin: 0px 150px;
-}
-
-.servo-button::after {
-	content: '';
-	position: absolute;
-	box-sizing: border-box;
-	display: block;
-	top: -16px;
-	left: -16px;
-	width: 32px;
-	height: 32px;
-	border: 2px solid rgba(0,0,0,0.1);
-	border-radius: 50%;
-	background: rgba(0, 0, 0, 0.05);
-}
-
-.drive-buttons-container,
-.lights-buttons-container {
-	margin: 2em auto;
-	text-align: center;
-}
-
-.drive-button,
-.lights-button {
-	display: inline-block;
-	border: 2px solid rgba(0,0,0,0.1);
-	border-radius: 5px;
-	width: 32px;
-	height: 32px;
-	line-height: 1.7;
-	color: rgba(0, 0, 0, 0.3);
-	text-decoration: none;
-}
-
-
-/* lights rgba(255,255,205,0.1) 0.2 - 0.4 - 0.6 */
-.lights-button[href="25"]  { background: rgba(255, 255, 205, 0.1); }
-.lights-button[href="50"]  { background: rgba(255, 255, 205, 0.2); }
-.lights-button[href="75"]  { background: rgba(255, 255, 205, 0.4); }
-.lights-button[href="100"] { background: rgba(255, 255, 205, 0.6); }
-
-/* drive rgba's 32 - 0.2 - 0.15 - 0.1 - 0.05 */
-.drive-button[href="0"]		{ background: rgba(0, 0, 0, 0.05); }
-.drive-button[href*="25"]	{ background: rgba(0, 0, 0, 0.10); }
-.drive-button[href*="50"]	{ background: rgba(0, 0, 0, 0.15); }
-.drive-button[href*="75"]	{ background: rgba(0, 0, 0, 0.20); }
-.drive-button[href*="100"]	{ background: rgba(0, 0, 0, 0.32); }
-
-
-.lights-button {
-	width: 60px;
-}
-
-.servo-button[data-angle="-90"] { transform: rotate(-90deg) translateX(-3px); }/* this angle differs 12 deg with next, so adjust a bit */
-.servo-button[data-angle="-78"] { transform: rotate(-78deg); }
-.servo-button[data-angle="-65"] { transform: rotate(-65deg); }
-.servo-button[data-angle="-52"] { transform: rotate(-52deg); }
-.servo-button[data-angle="-39"] { transform: rotate(-39deg); }
-.servo-button[data-angle="-26"] { transform: rotate(-26deg); }
-.servo-button[data-angle="-13"] { transform: rotate(-13deg); }
-
-.servo-button[data-angle="13"] { transform: rotate(13deg); }
-.servo-button[data-angle="26"] { transform: rotate(26deg); }
-.servo-button[data-angle="39"] { transform: rotate(39deg); }
-.servo-button[data-angle="52"] { transform: rotate(52deg); }
-.servo-button[data-angle="65"] { transform: rotate(65deg); }
-.servo-button[data-angle="78"] { transform: rotate(78deg); }
-.servo-button[data-angle="90"] { transform: rotate(90deg) translateX(3px); }/* this angle differs 12 deg with previous, so adjust a bit */

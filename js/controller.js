@@ -104,110 +104,6 @@
 
 
 
-
-
-	
-
-
-	/**
-	* update a set of lights
-	* @param {string} portId - The number (0-3) of the port this set of lights is attached to
-	* @param {funcId} string - An id for this attached set of lights, corresponding to id's in html to retrieve input values
-	* @returns {undefined}
-	*/
-	const setLights = function(portId, funcId) {
-		let	power = document.getElementById(funcId + '-power').value;
-
-		portId = parseInt(portId, 10);
-		power = Math.round(mySBrick.MAX * power/100);
-
-		let data = {
-				portId,
-				power
-			};
-		mySBrick.drive(data);
-	};
-
-
-
-	/**
-	* update a drive motor
-	* @param {string} portId - The number (0-3) of the port this motor is attached to
-	* @param {funcId} string - An id for this attached motor, corresponding to id's in html to retrieve input values
-	* @returns {undefined}
-	*/
-	const setDrive = function(portId, funcId) {
-		// drive does not seem to work below some power level
-		// define the power range within which the drive does work
-		const powerRange = mySBrick.MAX - MIN_VALUE_BELOW_WHICH_MOTOR_DOES_NOT_WORK;
-
-		let	power = document.getElementById(funcId + '-power').value,
-			directionStr = document.querySelector('[name="' + funcId + '-direction"]:checked').value,
-			direction = mySBrick[directionStr];
-
-		portId = parseInt(portId, 10);
-		power = Math.round(powerRange * power/100 + MIN_VALUE_BELOW_WHICH_MOTOR_DOES_NOT_WORK);
-
-		// define data to send
-		let data = {
-				// port: portId,
-				portId: portId,
-				power,
-				direction
-			};
-		mySBrick.drive(data);
-	};
-
-
-
-	/**
-	* update a servo motor
-	* @param {string} portId - The number (0-3) of the port this motor is attached to
-	* @param {funcId} string - An id for this attached motor, corresponding to id's in html to retrieve input values
-	* @returns {undefined}
-	*/
-	const setServo = function(portId, funcId) {
-		let	power = document.getElementById(funcId + '-power').value,
-			powerNumber = document.getElementById(funcId + '-power-number').value,
-			directionStr = document.querySelector('[name="' + funcId + '-direction"]:checked').value,
-			direction = mySBrick[directionStr];
-		
-		portId = parseInt(portId, 10);
-		power = Math.round(mySBrick.MAX * power/100);
-		power = powerNumber;
-
-		let data = {
-				// port: portId,
-				portId: portId,
-				power,
-				direction
-			};
-		mySBrick.drive(data);
-	};
-	
-	
-
-	/**
-	* handle click on port-button - call function for connected type of function (lights, drive motor, servo, ...)
-	* @returns {undefined}
-	*/
-	const portBtnHandler = function(e) {
-		const btn = e.target,
-			portId = btn.getAttribute('data-port'),
-			funcType = btn.getAttribute('data-func-type'),
-			funcId = btn.getAttribute('data-func-id');
-
-		if (funcType === 'lights') {
-			setLights(portId, funcId);
-		} else if (funcType === 'drive') {
-			setDrive(portId, funcId);
-		} else if (funcType === 'servo') {
-			setServo(portId, funcId);
-		}
-	};
-
-
-
 	/**
 	* handle when port has changed
 	* @param {event} e - change event sent by sbrick.js
@@ -279,10 +175,10 @@
 
 
 	/**
-	* initialize buttons for lights
+	* initialize control buttons for ports
 	* @returns {undefined}
 	*/
-	const initControlButtons = function() {
+	const initPortControls = function() {
 		document.querySelectorAll('.buttons-list').forEach((list) => {
 			const portName = list.getAttribute('data-port'),
 				func = list.getAttribute('data-function');
@@ -313,17 +209,13 @@
 				});// eventListener
 			});// forEach(btn)
 		});// forEach(list)
+
+		document.getElementById('stop-all').addEventListener('click', () => {
+			mySBrick.stopAll();
+		});
 	};
 	
 
-	/**
-	* initialize the buttons
-	* @returns {undefined}
-	*/
-	// const initControlButtons = function() {
-	// 	initLightControlButtons();
-	// }
-	
 	
 	
 
@@ -332,15 +224,8 @@
 	* initialize controlPanel
 	* @returns {undefined}
 	*/
-	const initControlPanel = function() {
-		const portBtns = Array.from(document.querySelectorAll('button[data-port]'));
-		portBtns.forEach( (btn) => {
-			btn.addEventListener('click', portBtnHandler);
-		});
+	const initInfoControls = function() {
 
-		document.getElementById('stop-all').addEventListener('click', () => {
-			mySBrick.stopAll();
-		});
 		document.getElementById('check-battery-btn').addEventListener('click', checkBattery);
 		document.getElementById('check-temperature-btn').addEventListener('click', checkTemperature);
 		document.getElementById('check-model-number-btn').addEventListener('click', getModelNumber);
@@ -476,8 +361,8 @@
 		controlPanel = document.getElementById('controlPanel');
 
 		// initialize controlPanel - they'll remain hidden until connection is made
-		initControlPanel();
-		initControlButtons();
+		initInfoControls();
+		initPortControls();
 
 		checkDummyMode();
 
