@@ -66,6 +66,55 @@
 	* @param {funcId} string - An id for this attached set of lights, corresponding to id's in html to retrieve input values
 	* @returns {undefined}
 	*/
+	const setLights2 = function(data) {
+		data.power = Math.round(mySBrick.MAX * data.power/100);
+		mySBrick.drive(data);
+	};
+
+
+
+	/**
+	* update a drive motor
+	* @param {string} portId - The number (0-3) of the port this motor is attached to
+	* @param {funcId} string - An id for this attached motor, corresponding to id's in html to retrieve input values
+	* @returns {undefined}
+	*/
+	const setDrive2 = function(data) {
+		if (data.power !== 0) {
+			// drive does not seem to work below some power level
+			// define the power range within which the drive does work
+			const powerRange = mySBrick.MAX - MIN_VALUE_BELOW_WHICH_MOTOR_DOES_NOT_WORK;
+			data.power = Math.round(powerRange * data.power/100 + MIN_VALUE_BELOW_WHICH_MOTOR_DOES_NOT_WORK);
+		}
+		mySBrick.drive(data);
+	};
+
+
+
+	/**
+	* update a servo motor
+	* @param {string} portId - The number (0-3) of the port this motor is attached to
+	* @param {funcId} string - An id for this attached motor, corresponding to id's in html to retrieve input values
+	* @returns {undefined}
+	*/
+	const setServo2 = function(data) {
+		data.power = Math.round(mySBrick.MAX * data.power/100);
+		mySBrick.drive(data);
+	};
+
+
+
+
+
+	
+
+
+	/**
+	* update a set of lights
+	* @param {string} portId - The number (0-3) of the port this set of lights is attached to
+	* @param {funcId} string - An id for this attached set of lights, corresponding to id's in html to retrieve input values
+	* @returns {undefined}
+	*/
 	const setLights = function(portId, funcId) {
 		let	power = document.getElementById(funcId + '-power').value;
 
@@ -239,14 +288,27 @@
 				func = list.getAttribute('data-function');
 
 			list.querySelectorAll('a').forEach((button) => {
-				button.addEventListener('click', function(e) {
+				button.addEventListener('click', (e) => {
 					e.preventDefault();
-					const valueStr = this.getAttribute('href'),
-						power = parseInt(valueStr, 10),
-						portId = PORTS[portName];
-						dir = valueStr.indexOf('-') === 0 ? mySBrick.CCW : mySBrick.CW;
+					const valueStr = e.target.getAttribute('href');
+					const data = {
+						portId: PORTS[portName],
+						power: Math.abs(parseInt(valueStr, 10)),
+						direction: valueStr.indexOf('-') === 0 ? mySBrick.CCW : mySBrick.CW
+					};
 
-					console.log(valueStr, power, portId, dir);
+					switch (func) {
+						case 'lights':
+							setLights2(data);
+							break;
+						case 'drive':
+							setDrive2(data);
+							break;
+						case 'servo':
+							setServo2(data);
+							break;
+					}
+					console.log(valueStr, data);
 
 				});// eventListener
 			});// forEach(btn)
