@@ -7,7 +7,7 @@
 	
 	<title>SBrick MVC</title>
 	<link rel="stylesheet" href="css/base.css">
-	<link rel="stylesheet" href="css/interface.css">
+	<link rel="stylesheet" href="css/interface.css?b=1">
 	<link rel="stylesheet" href="css/buttons.css">
 	<link rel="stylesheet" href="css/button-controller.css?a=2">
 	<link rel="stylesheet" href="css/sbrick-icon-view.css">
@@ -21,7 +21,7 @@
 
 	<div class="viewport">
 
-		<div id="connect-screen" class="connect-screen">
+		<div id="connect-screen" class="screen connect-screen">
 
 			<div class="sbrick-icon">
 				<div class="sbrick-icon__face sbrick-icon__face--side-top"></div>
@@ -34,7 +34,7 @@
 				<div class="sbrick-icon__port sbrick-icon__port--bottom-right"></div>
 			</div>
 
-			<div class="busy-indicator"></div>
+			<div class="busy-indicator">&ndash; connecting to the SBrick &ndash;</div>
 
 			<button id="connect-btn" class="btn btn--start btn--connect">
 				Connect
@@ -43,7 +43,7 @@
 		</div>
 
 		
-		<div id="controlPanel" class="control-panel is-hidden">
+		<div id="controlPanel" class="screen control-panel is-hidden">
 
 			<div class="sbrick-icon">
 				<div class="sbrick-icon__face sbrick-icon__face--side-top"></div>
