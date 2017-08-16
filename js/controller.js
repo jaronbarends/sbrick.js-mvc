@@ -38,12 +38,6 @@
 	* @returns {undefined}
 	*/
 	const setDrive = function(data) {
-		// if (data.power !== 0) {
-		// 	// drive does not seem to work below some power level
-		// 	// define the power range within which the drive does work
-		// 	const powerRange = mySBrick.MAX - MIN_VALUE_BELOW_WHICH_MOTOR_DOES_NOT_WORK;
-		// 	data.power = Math.round(powerRange * data.power/100 + MIN_VALUE_BELOW_WHICH_MOTOR_DOES_NOT_WORK);
-		// }
 		data.power = window.sbrickUtil.drivePercentageToPower(data.power);
 		mySBrick.drive(data);
 	};
@@ -57,7 +51,6 @@
 	* @returns {undefined}
 	*/
 	const setServo = function(data) {
-		// data.power = Math.round(mySBrick.MAX * data.power/100);
 		data.power = window.sbrickUtil.servoAngleToPower(data.power);
 		mySBrick.drive(data);
 	};
@@ -142,8 +135,6 @@
 			}
 		}
 
-		// console.log(power);
-
 		const container = document.querySelector('.btn-list[data-port="'+portName+'"]');
 		if (container) {
 			const func = container.getAttribute('data-function'),
@@ -173,11 +164,7 @@
 	*/
 	const portchangeHandler = function(e) {
 		let data = e.detail;
-		// console.log(data);
 		updateActiveButton(data);
-		// we should update the controller when another script changes a value
-		// i.e. set active state here
-		// window.util.log('port change: portId:' + data.portId + ' pwr:' + data.power + ' dir:'+data.direction);
 	};
 
 
@@ -192,42 +179,6 @@
 	};
 
 	
-
-	/**
-	* watch tilt sensor
-	* @returns {undefined}
-	*/
-	// const watchTilt = function() {
-	// 	let outputElm = document.getElementById('output--tilt1'),
-	// 		portId = 3;
-		
-	// 	let counter = 0,
-	// 		ch0 = document.getElementById('output-tilt-ch0'),
-	// 		ch1 = document.getElementById('output-tilt-ch1'),
-	// 		tiltVal = document.getElementById('output-tilt-val'),
-	// 		measureInterval = 20,// interval between tilt measurements
-	// 		maxMeasureTime = 50,// number of seconds we'll check tilt
-	// 		maxMeasurementCount = 1000 * maxMeasureTime / measureInterval;
-
-	// 	const getSensorData = function() {
-	// 		clearTimeout(sensorTimer);
-
-	// 		mySBrick.getSensor(3, 'wedo')
-	// 			.then((m) => {
-	// 				ch0.textContent = m.ch0_raw;
-	// 				ch1.textContent = m.ch1_raw;
-	// 				tiltVal.textContent = m.value;
-
-	// 				counter++;
-	// 				if (counter < maxMeasurementCount) {
-	// 					sensorTimer = setTimeout(getSensorData, 20);
-	// 				}
-	// 			});
-	// 	}
-
-	// 	getSensorData();		
-	// };
-
 
 	/**
 	* read sensor data and send event
@@ -264,12 +215,6 @@
 		let outputElm = document.getElementById('output--tilt1'),
 			portId = 3;
 		
-			// let counter = 0;
-			// measureInterval = 20,// interval between tilt measurements
-			// maxMeasureTime = 5,// number of seconds we'll check tilt
-			// maxMeasurementCount = 1000 * maxMeasureTime / measureInterval;
-
-
 		getSensorData();		
 	};
 
@@ -323,7 +268,6 @@
 	* @returns {undefined}
 	*/
 	const initInfoControls = function() {
-		// document.getElementById('watch-tilt').addEventListener('click', watchTilt);
 		document.getElementById('toggle-sensor').addEventListener('click', toggleSensor);
 
 		// set listeners for sbrick events
