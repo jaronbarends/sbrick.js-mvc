@@ -90,6 +90,24 @@
 		});
 
 	};
+
+
+	/**
+	* handle change of sensor value
+	* @returns {undefined}
+	*/
+	const sensorchangeHandler = function(e) {
+		const sensorData = e.detail,
+			sensorType = sensorData.type;// tilt | motion
+			sensorInterpration = window.sbrickUtil.getSensorInterpretation(sensorData.value, sensorType);
+
+		document.getElementById('table-view__port-3-function').textContent = window.util.capitalize(sensorType);
+		document.getElementById('table-view__power--port-3').textContent = window.util.capitalize(sensorInterpration);
+
+		// document.getElementById('table-view__port-3-function').textContent = sensorData.ch0;
+		document.getElementById('table-view__power--port-3').textContent = sensorData.value;
+	};
+	
 	
 
 	/**
@@ -98,6 +116,7 @@
 	*/
 	const addEventListeners = function() {
 		body.addEventListener('portchange.sbrick', portchangeHandler);
+		body.addEventListener('sensorchange.sbrick', sensorchangeHandler);
 	};
 
 

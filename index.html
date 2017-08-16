@@ -10,6 +10,7 @@
 	<link rel="stylesheet" href="css/interface.css?b=1">
 	<link rel="stylesheet" href="css/buttons.css">
 	<link rel="stylesheet" href="css/button-controller.css?a=2">
+	<link rel="stylesheet" href="css/speech.css">
 	<link rel="stylesheet" href="css/sbrick-icon-view.css">
 	<link rel="stylesheet" href="css/sbrick-table-view.css">
 	<link rel="stylesheet" href="css/log-window.css">
@@ -56,46 +57,98 @@
 				<div class="sbrick-icon__port sbrick-icon__port--bottom-right"></div>
 			</div>
 
-			<div class="buttons-list lights-buttons-container" data-port="PORT_TOP_LEFT" data-function="lights">
-				<a href="0" class="lights-button">0</a>
-				<a href="25" class="lights-button">25</a>
-				<a href="50" class="lights-button">50</a>
-				<a href="75" class="lights-button">75</a>
-				<a href="100" class="lights-button">100</a>
+			<div class="btn-list btn-container--lights" data-port="PORT_TOP_LEFT" data-function="lights">
+				<a href="0" class="btn btn--lights">0</a>
+				<a href="25" class="btn btn--lights">25</a>
+				<a href="50" class="btn btn--lights">50</a>
+				<a href="75" class="btn btn--lights">75</a>
+				<a href="100" class="btn btn--lights">100</a>
 			</div>
 
-			<div class="buttons-list drive-buttons-container" data-port="PORT_BOTTOM_LEFT" data-function="drive">
-				<a href="-100" class="drive-button">100</a>
-				<a href="-75" class="drive-button">75</a>
-				<a href="-50" class="drive-button">50</a>
-				<a href="-25" class="drive-button">25</a>
-				<a href="0" class="drive-button">0</a>
-				<a href="25" class="drive-button">25</a>
-				<a href="50" class="drive-button">50</a>
-				<a href="75" class="drive-button">75</a>
-				<a href="100" class="drive-button">100</a>
+			<div class="btn-list btn-container--drive" data-port="PORT_BOTTOM_LEFT" data-function="drive">
+				<a href="-100" class="btn btn--drive">100</a>
+				<a href="-75" class="btn btn--drive">75</a>
+				<a href="-50" class="btn btn--drive">50</a>
+				<a href="-25" class="btn btn--drive">25</a>
+				<a href="0" class="btn btn--drive">0</a>
+				<a href="25" class="btn btn--drive">25</a>
+				<a href="50" class="btn btn--drive">50</a>
+				<a href="75" class="btn btn--drive">75</a>
+				<a href="100" class="btn btn--drive">100</a>
 			</div>
 
 			<!-- motors can handle only -->
-			<div class="buttons-list servo-buttons-container" data-port="PORT_TOP_RIGHT" data-function="servo">
-				<a href="-90" class="servo-button" data-angle="-90"></a>
-				<a href="-78" class="servo-button" data-angle="-78"></a>
-				<a href="-65" class="servo-button" data-angle="-65"></a>
-				<a href="-52" class="servo-button" data-angle="-52"></a>
-				<a href="-39" class="servo-button" data-angle="-39"></a>
-				<a href="-26" class="servo-button" data-angle="-26"></a>
-				<a href="-13" class="servo-button" data-angle="-13"></a>
-				<a href="0" class="servo-button" data-angle="0"></a>
-				<a href="13" class="servo-button" data-angle="13"></a>
-				<a href="26" class="servo-button" data-angle="26"></a>
-				<a href="39" class="servo-button" data-angle="39"></a>
-				<a href="52" class="servo-button" data-angle="52"></a>
-				<a href="65" class="servo-button" data-angle="65"></a>
-				<a href="78" class="servo-button" data-angle="78"></a>
-				<a href="90" class="servo-button" data-angle="90"></a>
+			<div class="btn-list btn-container--servo" data-port="PORT_TOP_RIGHT" data-function="servo">
+				<a href="-90" class="btn btn--servo" data-angle="-90"></a>
+				<a href="-78" class="btn btn--servo" data-angle="-78"></a>
+				<a href="-65" class="btn btn--servo" data-angle="-65"></a>
+				<a href="-52" class="btn btn--servo" data-angle="-52"></a>
+				<a href="-39" class="btn btn--servo" data-angle="-39"></a>
+				<a href="-26" class="btn btn--servo" data-angle="-26"></a>
+				<a href="-13" class="btn btn--servo" data-angle="-13"></a>
+				<a href="0" class="btn btn--servo" data-angle="0"></a>
+				<a href="13" class="btn btn--servo" data-angle="13"></a>
+				<a href="26" class="btn btn--servo" data-angle="26"></a>
+				<a href="39" class="btn btn--servo" data-angle="39"></a>
+				<a href="52" class="btn btn--servo" data-angle="52"></a>
+				<a href="65" class="btn btn--servo" data-angle="65"></a>
+				<a href="78" class="btn btn--servo" data-angle="78"></a>
+				<a href="90" class="btn btn--servo" data-angle="90"></a>
 			</div>
 
 
+			<a href="#" id="toggle-sensor" class="btn">activate sensor</a>
+
+
+			<button id="stop-all" class="btn btn--stop">stop all</button>
+			<button id="disconnect-btn" class="btn btn--disconnect">Disconnect</button>
+
+			<div class="speech-controller">
+
+				<div class="speech-interface">
+					<div id="div_start" class="btn-container--mic">
+					  <button class="btn btn--mic" id="start_button"><img alt="Start" id="start_img"
+					  src="img/mic.gif"></button>
+					  <!-- Possible Speech commands: <em>start motor</em>, <em>stop motor</em>, <em>lights on</em>, <em>lights off</em> -->
+					</div>
+					<div id="results" class="results">
+					  <span class="final" id="final_span"></span> <span class="interim" id=
+					  "interim_span"></span>
+					</div>
+				</div>
+
+
+				<div id="info">
+				  <p id="info_speak_now" style="display:none">
+				    Speak now.
+				  </p>
+				  <p id="info_no_speech" style="display:none">
+				    No speech was detected. You may need to adjust your <a href=
+				    "//support.google.com/chrome/bin/answer.py?hl=en&amp;answer=1407892">microphone
+				    settings</a>.
+				  </p>
+				  <p id="info_no_microphone" style="display:none">
+				    No microphone was found. Ensure that a microphone is installed and that
+				    <a href="//support.google.com/chrome/bin/answer.py?hl=en&amp;answer=1407892">
+				    microphone settings</a> are configured correctly.
+				  </p>
+				  <p id="info_allow" style="display:none">
+				    Click the "Allow" button above to enable your microphone.
+				  </p>
+				  <p id="info_denied" style="display:none">
+				    Permission to use microphone was denied.
+				  </p>
+				  <p id="info_blocked" style="display:none">
+				    Permission to use microphone is blocked. To change, go to
+				    chrome://settings/contentExceptions#media-stream
+				  </p>
+				  <p id="info_upgrade" style="display:none">
+				    Web Speech API is not supported by this browser. Upgrade to <a href=
+				    "//www.google.com/chrome">Chrome</a> version 25 or later.
+				  </p>
+				</div>
+
+			</div>
 
 
 
@@ -131,65 +184,6 @@
 			</div>
 			
 
-			<div class="speech-controller">
-				<div id="div_start">
-				  <button id="start_button"><img alt="Start" id="start_img"
-				  src="img/mic.gif"></button>
-				  <!-- Possible Speech commands: <em>start motor</em>, <em>stop motor</em>, <em>lights on</em>, <em>lights off</em> -->
-				</div>
-
-
-				<div id="info">
-				  <p id="info_speak_now" style="display:none">
-				    Speak now.
-				  </p>
-				  <p id="info_no_speech" style="display:none">
-				    No speech was detected. You may need to adjust your <a href=
-				    "//support.google.com/chrome/bin/answer.py?hl=en&amp;answer=1407892">microphone
-				    settings</a>.
-				  </p>
-				  <p id="info_no_microphone" style="display:none">
-				    No microphone was found. Ensure that a microphone is installed and that
-				    <a href="//support.google.com/chrome/bin/answer.py?hl=en&amp;answer=1407892">
-				    microphone settings</a> are configured correctly.
-				  </p>
-				  <p id="info_allow" style="display:none">
-				    Click the "Allow" button above to enable your microphone.
-				  </p>
-				  <p id="info_denied" style="display:none">
-				    Permission to use microphone was denied.
-				  </p>
-				  <p id="info_blocked" style="display:none">
-				    Permission to use microphone is blocked. To change, go to
-				    chrome://settings/contentExceptions#media-stream
-				  </p>
-				  <p id="info_upgrade" style="display:none">
-				    Web Speech API is not supported by this browser. Upgrade to <a href=
-				    "//www.google.com/chrome">Chrome</a> version 25 or later.
-				  </p>
-				</div>
-
-				<div id="results" class="results">
-				  <span class="final" id="final_span"></span> <span class="interim" id=
-				  "interim_span"></span>
-				</div>
-			</div>
-
-			<a href="#" id="watch-tilt">Watch tilt</a>
-
-			<div class="port-controls">
-				<h2 class="port-title">Port 3 - Tilt</h2>
-				<!-- <button class="btn btn--start" data-port="3" data-func-type="tilt" data-func-id="tilt1">Tilt</button> -->
-				<output id="output-tilt-ch0"></output>
-				<output id="output-tilt-ch1"></output>
-				<output id="output-tilt-val"></output>
-			</div>
-
-			<button id="stop-all" class="btn btn--stop">stop all</button>
-
-
-
-			<button id="disconnect-btn" class="btn btn--disconnect">Disconnect</button>
 		</div>
 
 

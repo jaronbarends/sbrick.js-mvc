@@ -45,12 +45,82 @@
 
 		return power;
 	};
+
+
+	/**
+	* check if a value is between two other values
+	* @returns {undefined}
+	*/
+	const isValueBetween = function(value, compare1, compare2) {
+		const min = (compare1 <= compare2) ? compare1 : compare2,
+			max = (compare1 > compare2) ? compare1 : compare2;
+
+		return (value >= min && value <= max);
+	};
+	
+	
+
+
+	/**
+	* get the type of sensor (tilt, motion) by channel value
+	* @returns {undefined}
+	*/
+	const getSensorType = function(ch0Value) {
+		let sensorType = 'unknown';
+		if (isValueBetween(ch0Value, 48, 52)) {
+			sensorType = 'tilt';
+		} if (isValueBetween(ch0Value, 105, 110)) {
+			sensorType = 'motion';
+		}
+
+		return sensorType;
+	};
+
+
+	/**
+	* get interpretation for a sensor value
+	* @returns {undefined}
+	*/
+	const getSensorInterpretation = function(value, sensorType) {
+		let interpretation = 'unknown';
+
+		if (sensorType === 'motion') {
+
+			if (value <= 60) {
+				interpretation = 'close';
+			} else if (value >= 110) {
+				interpretation = 'clear';
+			} else {
+				interpretation = 'nearing';
+			}
+
+		} else if (sensorType === 'tilt') {
+
+			if (isValueBetween(value, 14, 18)) {
+				interpretation = 'up';
+			} else if (isValueBetween(value, 51, 55)) {
+				interpretation = 'right';
+			} else if (isValueBetween(value, 95, 100)) {
+				interpretation = 'flat';
+			} else if (isValueBetween(value, 143, 148)) {
+				interpretation = 'down';
+			} else if (isValueBetween(value, 191, 196)) {
+				interpretation = 'left';
+			}
+
+		}
+
+		return interpretation;
+	};
+	
 	
 
 
 	// now make functions available to outside world
 	window.sbrickUtil = {
-		servoAngleToPower
+		servoAngleToPower,
+		getSensorType,
+		getSensorInterpretation
 	};
 
 

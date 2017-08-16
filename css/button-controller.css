@@ -1,50 +1,45 @@
 
-.drive-buttons-container,
-.lights-buttons-container {
+.btn-container--drive,
+.btn-container--lights {
 	margin: 2em auto;
 	text-align: center;
 }
 
-.drive-button,
-.lights-button {
-	display: inline-block;
-	border: 2px solid rgba(0,0,0,0.1);
-	border-radius: 5px;
+.btn--drive,
+.btn--lights {
+	padding: 0;
 	width: 32px;
-	height: 32px;
-	line-height: 1.7;
-	color: rgba(0, 0, 0, 0.3);
-	text-decoration: none;
 }
 
-.lights-button {
+.btn--lights {
 	width: 60px;
 }
 
 
-.lights-button[href="25"]  { background: rgba(255, 255, 205, 0.1); }
-.lights-button[href="50"]  { background: rgba(255, 255, 205, 0.2); }
-.lights-button[href="75"]  { background: rgba(255, 255, 205, 0.4); }
-.lights-button[href="100"] { background: rgba(255, 255, 205, 0.6); }
+.btn--lights[href="25"]  { background: rgba(255, 255, 205, 0.1); }
+.btn--lights[href="50"]  { background: rgba(255, 255, 205, 0.2); }
+.btn--lights[href="75"]  { background: rgba(255, 255, 205, 0.4); }
+.btn--lights[href="100"] { background: rgba(255, 255, 205, 0.6); }
 
 
-.drive-button[href="0"]		{ background: rgba(0, 0, 0, 0.05); }
-.drive-button[href*="25"]	{ background: rgba(0, 0, 0, 0.10); }
-.drive-button[href*="50"]	{ background: rgba(0, 0, 0, 0.15); }
-.drive-button[href*="75"]	{ background: rgba(0, 0, 0, 0.20); }
-.drive-button[href*="100"]	{ background: rgba(0, 0, 0, 0.32); }
+.btn--drive[href="0"]		{ background: rgba(0, 0, 0, 0.05); }
+.btn--drive[href*="25"]	{ background: rgba(0, 0, 0, 0.10); }
+.btn--drive[href*="50"]	{ background: rgba(0, 0, 0, 0.15); }
+.btn--drive[href*="75"]	{ background: rgba(0, 0, 0, 0.20); }
+.btn--drive[href*="100"]	{ background: rgba(0, 0, 0, 0.32); }
 
 
-.servo-buttons-container {
+.btn-container--servo {
 	position: relative;
 	margin: 0 auto 20px;
 	width: 300px;
 	height: 180px;
 }
 
-.servo-button {
-	display: block;
+.btn--servo {
+	/*display: block;*/
 	position: absolute;
+	border: none;
 	width: 0;
 	height: 0;
 	top: 0;
@@ -52,7 +47,7 @@
 	transform-origin: 0px 150px;
 }
 
-.servo-button::after {
+.btn--servo::after {
 	content: '';
 	position: absolute;
 	box-sizing: border-box;
@@ -66,17 +61,17 @@
 	background: rgba(0, 0, 0, 0.05);
 }
 
-.servo-button[data-angle="-90"] { transform: rotate(-90deg) translateX(-3px); }/* this angle differs 12 deg with next, so adjust a bit */
-.servo-button[data-angle="-78"] { transform: rotate(-78deg); }
-.servo-button[data-angle="-65"] { transform: rotate(-65deg); }
-.servo-button[data-angle="-52"] { transform: rotate(-52deg); }
-.servo-button[data-angle="-39"] { transform: rotate(-39deg); }
-.servo-button[data-angle="-26"] { transform: rotate(-26deg); }
-.servo-button[data-angle="-13"] { transform: rotate(-13deg); }
-.servo-button[data-angle="13"]  { transform: rotate(13deg); }
-.servo-button[data-angle="26"]  { transform: rotate(26deg); }
-.servo-button[data-angle="39"]  { transform: rotate(39deg); }
-.servo-button[data-angle="52"]  { transform: rotate(52deg); }
-.servo-button[data-angle="65"]  { transform: rotate(65deg); }
-.servo-button[data-angle="78"]  { transform: rotate(78deg); }
-.servo-button[data-angle="90"]  { transform: rotate(90deg) translateX(3px); }/* this angle differs 12 deg with previous, so adjust a bit */
+.btn--servo[data-angle="-90"] { transform: rotate(-90deg) translateX(-3px); }/* this angle differs 12 deg with next, so adjust a bit */
+.btn--servo[data-angle="-78"] { transform: rotate(-78deg); }
+.btn--servo[data-angle="-65"] { transform: rotate(-65deg); }
+.btn--servo[data-angle="-52"] { transform: rotate(-52deg); }
+.btn--servo[data-angle="-39"] { transform: rotate(-39deg); }
+.btn--servo[data-angle="-26"] { transform: rotate(-26deg); }
+.btn--servo[data-angle="-13"] { transform: rotate(-13deg); }
+.btn--servo[data-angle="13"]  { transform: rotate(13deg); }
+.btn--servo[data-angle="26"]  { transform: rotate(26deg); }
+.btn--servo[data-angle="39"]  { transform: rotate(39deg); }
+.btn--servo[data-angle="52"]  { transform: rotate(52deg); }
+.btn--servo[data-angle="65"]  { transform: rotate(65deg); }
+.btn--servo[data-angle="78"]  { transform: rotate(78deg); }
+.btn--servo[data-angle="90"]  { transform: rotate(90deg) translateX(3px); }/* this angle differs 12 deg with previous, so adjust a bit */

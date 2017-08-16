@@ -16,8 +16,21 @@
 	};
 
 
+	/**
+	* make first letter uppercase
+	* @returns {undefined}
+	*/
+	const capitalize = function(str) {
+		return str.charAt(0).toUpperCase() + str.substr(1);
+	};
+	
+
+
+
+
 	// now make functions available to outside world
 	window.util = {
+		capitalize,
 		log
 	};
 
