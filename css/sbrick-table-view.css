@@ -9,8 +9,22 @@
 }
 
 .table-view td {
-	border: 1px solid #ccc;
+	/*border: 1px solid #ccc;*/
 	padding: 0.2em 0.5em;
 	width: 3em;
 	text-align: right;
+}
+
+td.table-view__function,
+td.table-view__function {
+	padding-right: 0;
+}
+
+td.table-view__power {
+	padding-right: 0;
+}
+
+td.table-view__direction {
+	padding-left: 0.2em;
+	width: 2em;
 }

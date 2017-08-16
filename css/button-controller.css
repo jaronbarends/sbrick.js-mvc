@@ -16,16 +16,14 @@
 }
 
 
-.btn--lights[href="25"]  { background: rgba(255, 255, 205, 0.1); }
-.btn--lights[href="50"]  { background: rgba(255, 255, 205, 0.2); }
-.btn--lights[href="75"]  { background: rgba(255, 255, 205, 0.4); }
-.btn--lights[href="100"] { background: rgba(255, 255, 205, 0.6); }
-
-
+.btn--lights[href="25"]  	{ background: rgba(255, 255, 205, 0.2); }
+.btn--lights[href="50"]  	{ background: rgba(255, 255, 205, 0.4); }
+.btn--lights[href="75"]  	{ background: rgba(255, 255, 205, 0.6); }
+.btn--lights[href="100"] 	{ background: rgba(255, 255, 205, 0.8); }
 .btn--drive[href="0"]		{ background: rgba(0, 0, 0, 0.05); }
-.btn--drive[href*="25"]	{ background: rgba(0, 0, 0, 0.10); }
-.btn--drive[href*="50"]	{ background: rgba(0, 0, 0, 0.15); }
-.btn--drive[href*="75"]	{ background: rgba(0, 0, 0, 0.20); }
+.btn--drive[href*="25"]		{ background: rgba(0, 0, 0, 0.10); }
+.btn--drive[href*="50"]		{ background: rgba(0, 0, 0, 0.15); }
+.btn--drive[href*="75"]		{ background: rgba(0, 0, 0, 0.20); }
 .btn--drive[href*="100"]	{ background: rgba(0, 0, 0, 0.32); }
 
 
@@ -75,3 +73,13 @@
 .btn--servo[data-angle="65"]  { transform: rotate(65deg); }
 .btn--servo[data-angle="78"]  { transform: rotate(78deg); }
 .btn--servo[data-angle="90"]  { transform: rotate(90deg) translateX(3px); }/* this angle differs 12 deg with previous, so adjust a bit */
+
+
+
+
+.btn[href].btn--is-active,
+.btn--servo.btn--is-active::after {
+	/*add .btn[href] selector to increase specificity */
+	background: cornflowerblue;
+	color: white;
+}

@@ -105,7 +105,7 @@
 		document.getElementById('table-view__power--port-3').textContent = window.util.capitalize(sensorInterpration);
 
 		// document.getElementById('table-view__port-3-function').textContent = sensorData.ch0;
-		document.getElementById('table-view__power--port-3').textContent = sensorData.value;
+		// document.getElementById('table-view__power--port-3').textContent = sensorData.value;
 	};
 	
 	

@@ -26,6 +26,8 @@
 		{ angle: 90, power: 200, powerMin: 180, powerMax: 255}
 	];
 
+	const MIN_VALUE_BELOW_WHICH_MOTOR_DOES_NOT_WORK = 98;// somehow, motor does not seem to work for power values < 98
+
 
 	/**
 	* translate servo's angle to corresponding power-value
@@ -45,6 +47,64 @@
 
 		return power;
 	};
+
+
+	/**
+	* translate servo's power to corresponding angle-value
+	* @param {number} power - The current power of the servo motor
+	* @returns {number} The corresponding angle value
+	*/
+	const servoPowerToAngle = function(power) {
+		let angle = 0;
+		power = parseInt(power, 10);
+		for (let i=0, len=powerAngles.length; i<len; i++) {
+			const obj = powerAngles[i];
+			if (power === obj.power) {
+				angle = obj.angle;
+				break;
+			}
+		}
+
+		return angle;
+	};
+
+
+	/**
+	* drive motor does not seem to work below certain power threshold value
+	* translate the requested percentage to the actual working power range
+	* @param {number} powerPerc - The requested power as percentage
+	* @returns {number}	- A value within the acutal power range
+	*/
+	const drivePercentageToPower = function(powerPerc) {
+		let power = 0;
+		if (powerPerc !== 0) {
+			// define the power range within which the drive does work
+			const powerRange = mySBrick.MAX - MIN_VALUE_BELOW_WHICH_MOTOR_DOES_NOT_WORK;
+			power = Math.round(powerRange * powerPerc/100 + MIN_VALUE_BELOW_WHICH_MOTOR_DOES_NOT_WORK);
+		}
+
+		return power;
+	};
+
+
+	/**
+	* drive motor does not seem to work below certain power threshold value
+	* translate the actual power in the percentage within the actual working power range
+	* @returns {number} - The percentage within the actual power range
+	*/
+	const drivePowerToPercentage = function(power) {
+		// define the power range within which the drive does work
+		let powerPerc = 0;
+		if (power !== 0) {
+			const powerRange = mySBrick.MAX - MIN_VALUE_BELOW_WHICH_MOTOR_DOES_NOT_WORK,
+				relativePower = power - MIN_VALUE_BELOW_WHICH_MOTOR_DOES_NOT_WORK;
+			powerPerc = Math.round(100 * relativePower / powerRange);
+		}
+
+		return powerPerc;
+	};
+	
+	
 
 
 	/**
@@ -118,7 +178,10 @@
 
 	// now make functions available to outside world
 	window.sbrickUtil = {
+		drivePercentageToPower,
+		drivePowerToPercentage,
 		servoAngleToPower,
+		servoPowerToAngle,
 		getSensorType,
 		getSensorInterpretation
 	};
