@@ -7,15 +7,7 @@
 	// (optional) tell jshint about globals (they should remain commented out)
 	/* globals SBrick */ //Tell jshint someGlobalVar exists as global var
 
-	const SBRICKNAME = 'SBrick',
-		MIN_VALUE_BELOW_WHICH_MOTOR_DOES_NOT_WORK = 98;// somehow, motor does not seem to work for power values < 98
-
-	const PORTS = {
-		PORT_TOP_LEFT: 0,
-		PORT_BOTTOM_LEFT: 1,
-		PORT_TOP_RIGHT: 2,
-		PORT_BOTTOM_RIGHT: 3
-	};
+	const SBRICKNAME = 'SBrick';
 
 	let body = document.body,
 		connectScreen,

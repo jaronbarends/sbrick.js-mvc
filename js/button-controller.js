@@ -1,20 +1,10 @@
 (() => {
 
-	// (optional) tell jshint about globals (they should remain commented out)
-	/* globals SBrick */ //Tell jshint someGlobalVar exists as global var
-
-	const SBRICKNAME = 'SBrick';
-		
-
-	const PORTS = {
-		PORT_TOP_LEFT: 0,
-		PORT_BOTTOM_LEFT: 1,
-		PORT_TOP_RIGHT: 2,
-		PORT_BOTTOM_RIGHT: 3
-	};
+	// tell jshint about globals (they should remain commented out)
+	/* globals SBrick */ //Tell jshint SBrick exists as global var
 
 	let mySBrick,
-	sensorTimer;
+		sensorTimer;
 
 
 
@@ -129,8 +119,8 @@
 		let portName;
 
 		// check which type of function this is
-		for (let portNm in PORTS) {
-			if (PORTS[portNm] === portId) {
+		for (let portNm in window.sbrickUtil.PORTS) {
+			if (window.sbrickUtil.PORTS[portNm] === portId) {
 				portName = portNm;
 			}
 		}
@@ -184,23 +174,16 @@
 	* read sensor data and send event
 	* @returns {undefined}
 	*/
-	const getSensorData = function() {
+	const getSensorData = function(portId) {
 		clearTimeout(sensorTimer);
 
-		let ch0 = document.getElementById('output-tilt-ch0'),
-			ch1 = document.getElementById('output-tilt-ch1'),
-			tiltVal = document.getElementById('output-tilt-val');
-
-		mySBrick.getSensor(3, 'wedo')
+		mySBrick.getSensor(portId, 'wedo')
 			.then((m) => {
-				// ch0.textContent = m.ch0_raw;
-				// ch1.textContent = m.ch1_raw;
-				// tiltVal.textContent = m.value;
 				let sensorData = m;// { type, voltage, ch0_raw, ch1_raw }
 
 				const event = new CustomEvent('sensorchange.sbrick', {detail: sensorData});
 				document.body.dispatchEvent(event);
-				sensorTimer = setTimeout(getSensorData, 20);
+				sensorTimer = setTimeout(() => {getSensorData(portId);}, 20);
 			});
 
 	}
@@ -213,10 +196,35 @@
 	*/
 	const toggleSensor = function() {
 		let outputElm = document.getElementById('output--tilt1'),
-			portId = 3;
+			portId = window.sbrickUtil.PORTS.PORT_BOTTOM_RIGHT;
 		
-		getSensorData();		
+		startSensor(portId);
 	};
+
+
+	/**
+	* stop the sensor
+	* @returns {undefined}
+	*/
+	const startSensor = function(portId) {
+		getSensorData(portId);
+
+		const event = new CustomEvent('sensorstart.sbrick', {detail: {portId}});
+		document.body.dispatchEvent(event);
+	};
+
+
+	/**
+	* stop the sensor
+	* @returns {undefined}
+	*/
+	const stopSensor = function(portId) {
+		clearTimeout(sensorTimer);
+
+		const event = new CustomEvent('sensorstop.sbrick', {detail: {portId}});
+		document.body.dispatchEvent(event);
+	};
+	
 
 
 	
@@ -234,7 +242,7 @@
 					e.preventDefault();
 					const valueStr = e.target.getAttribute('href');
 					const data = {
-						portId: PORTS[portName],
+						portId: window.sbrickUtil.PORTS[portName],
 						power: Math.abs(parseInt(valueStr, 10)),
 						direction: valueStr.indexOf('-') === 0 ? mySBrick.CCW : mySBrick.CW
 					};
@@ -257,7 +265,7 @@
 
 		document.getElementById('stop-all').addEventListener('click', () => {
 			mySBrick.stopAll();
-			clearTimeout(sensorTimer);
+			stopSensor(window.sbrickUtil.PORTS.PORT_BOTTOM_RIGHT);
 		});
 	};
 	

@@ -5,6 +5,14 @@
 
 	// (optional) tell jshint about globals (they should remain commented out)
 	/* globals SBrick */ //Tell jshint someGlobalVar exists as global var
+		
+
+	const PORTS = {
+		PORT_TOP_LEFT: 0,
+		PORT_BOTTOM_LEFT: 1,
+		PORT_TOP_RIGHT: 2,
+		PORT_BOTTOM_RIGHT: 3
+	};
 
 	/**
 	* servo motor only supports 7 angles per 90 degrees
@@ -178,6 +186,7 @@
 
 	// now make functions available to outside world
 	window.sbrickUtil = {
+		PORTS,
 		drivePercentageToPower,
 		drivePowerToPercentage,
 		servoAngleToPower,
