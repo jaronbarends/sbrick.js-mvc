@@ -4,7 +4,8 @@
 	/* globals SBrick */ //Tell jshint SBrick exists as global var
 
 	let mySBrick,
-		sensorTimer;
+		sensorTimer,
+		sensorSwitch;
 
 
 
@@ -195,10 +196,13 @@
 	* @returns {undefined}
 	*/
 	const toggleSensor = function() {
-		let outputElm = document.getElementById('output--tilt1'),
-			portId = window.sbrickUtil.PORTS.PORT_BOTTOM_RIGHT;
-		
-		startSensor(portId);
+		let portId = window.sbrickUtil.PORTS.PORT_BOTTOM_RIGHT;
+		// if (sensorSwitch.classList.indexOf('btn'))
+		if (sensorSwitch.classList.contains('btn--is-active')) {
+			stopSensor(portId);
+		} else {
+			startSensor(portId);
+		}
 	};
 
 
@@ -224,6 +228,25 @@
 		const event = new CustomEvent('sensorstop.sbrick', {detail: {portId}});
 		document.body.dispatchEvent(event);
 	};
+
+
+	/**
+	* handle starting of sensor
+	* @returns {undefined}
+	*/
+	const sensorstartHandler = function(e) {
+		sensorSwitch.classList.add('btn--is-active');
+	};
+
+
+	/**
+	* handle starting of sensor
+	* @returns {undefined}
+	*/
+	const sensorstopHandler = function(e) {
+		sensorSwitch.classList.remove('btn--is-active');
+	};
+	
 	
 
 
@@ -276,11 +299,14 @@
 	* @returns {undefined}
 	*/
 	const initInfoControls = function() {
-		document.getElementById('toggle-sensor').addEventListener('click', toggleSensor);
+		sensorSwitch = document.getElementById('toggle-sensor');
+		sensorSwitch.addEventListener('click', toggleSensor);
 
 		// set listeners for sbrick events
 		document.body.addEventListener('portchange.sbrick', portchangeHandler);
 		document.body.addEventListener('sensorchange.sbrick', sensorchangeHandler);
+   		document.body.addEventListener('sensorstart.sbrick', sensorstartHandler);
+   		document.body.addEventListener('sensorstop.sbrick', sensorstopHandler);
 	};
 
 

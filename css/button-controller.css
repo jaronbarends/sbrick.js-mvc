@@ -79,9 +79,49 @@
 
 
 
-.btn[href].btn--is-active,
+.btn[href].btn--is-active:not(.switch),
 .btn--servo.btn--is-active::after {
 	/*add .btn[href] selector to increase specificity */
 	background: cornflowerblue;
 	color: white;
+}
+
+.switch {
+	position: relative;
+	background: none;
+}
+
+.switch::after {
+	display: block;
+	position: absolute;
+	content: '';
+	top: 2px;
+	left: 2px;
+	border: 2px solid rgba(0,0,0,0.1);
+	border-radius: 3px;
+	height: calc(100% - 4px);
+	width: 50%;
+	background: rgb(229, 229, 229);
+	transition: transform 0.2s, background-color 0.3s;
+}
+
+.switch[href].btn--is-active {
+}
+
+.switch.btn--is-active::after {
+	background: cornflowerblue;
+	transform: translateX(90%);
+}
+
+.switch--on,
+.switch--off {
+	display: inline-block;
+	width: 20px;
+	font-size: 1.2rem;
+	text-transform: uppercase;
+}
+
+.switch--on {
+	margin-right: 6px;
+	color: cornflowerblue;
 }
