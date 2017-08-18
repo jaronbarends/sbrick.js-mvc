@@ -156,10 +156,10 @@
 
 			if (value <= 60) {
 				interpretation = 'close';
+			} else if (isValueBetween(value, 61, 109)) {
+				interpretation = 'nearing';
 			} else if (value >= 110) {
 				interpretation = 'clear';
-			} else {
-				interpretation = 'nearing';
 			}
 
 		} else if (sensorType === 'tilt') {

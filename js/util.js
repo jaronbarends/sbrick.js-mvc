@@ -4,7 +4,17 @@
 	/* globals SBrick */ //Tell jshint someGlobalVar exists as global var
 
 
-	const logWin = document.getElementById('log-window');
+	const logMsgBox = document.getElementById('log-msg-box');
+
+
+	/**
+	* clear the log window
+	* @returns {undefined}
+	*/
+	const clearLog = function() {
+		logMsgBox.innerHTML = '';
+	};
+	
 
 	/**
 	* log to page's log window
@@ -12,7 +22,7 @@
 	*/
 	let log = function(...msg) {// use let instead of const so we can reassign to console.log
 		msg = msg.join(', ');
-		logWin.innerHTML += '<p>' + msg + '</p>';
+		logMsgBox.innerHTML += '<p>' + msg + '</p>';
 	};
 
 
@@ -26,6 +36,16 @@
 	
 
 
+	/**
+	* 
+	* @returns {undefined}
+	*/
+	const init = function() {
+		document.getElementById('clear-log').addEventListener('click', clearLog);		
+	};
+	
+
+	document.addEventListener('DOMContentLoaded', init);
 
 
 	// now make functions available to outside world

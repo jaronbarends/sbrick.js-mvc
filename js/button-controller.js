@@ -5,6 +5,7 @@
 
 	let mySBrick,
 		sensorTimer,
+		sensorTimeoutIsCancelled = false,
 		sensorSwitch;
 
 
@@ -176,7 +177,7 @@
 	* @returns {undefined}
 	*/
 	const getSensorData = function(portId) {
-		clearTimeout(sensorTimer);
+		// clearTimeout(sensorTimer);
 
 		mySBrick.getSensor(portId, 'wedo')
 			.then((m) => {
@@ -184,7 +185,12 @@
 
 				const event = new CustomEvent('sensorchange.sbrick', {detail: sensorData});
 				document.body.dispatchEvent(event);
-				sensorTimer = setTimeout(() => {getSensorData(portId);}, 20);
+				clearTimeout(sensorTimer);// clear timeout within then-clause so it will always clear right before setting new one
+				if (!sensorTimeoutIsCancelled) {
+					// other functions may want to cancel the sensorData timeout
+					// but they can't call clearTimeout, because that might be called when the promise is pending
+					sensorTimer = setTimeout(() => {getSensorData(portId);}, 20);
+				}
 			});
 
 	}
@@ -211,6 +217,7 @@
 	* @returns {undefined}
 	*/
 	const startSensor = function(portId) {
+		sensorTimeoutIsCancelled = false;
 		getSensorData(portId);
 
 		const event = new CustomEvent('sensorstart.sbrick', {detail: {portId}});
@@ -223,7 +230,10 @@
 	* @returns {undefined}
 	*/
 	const stopSensor = function(portId) {
-		clearTimeout(sensorTimer);
+		// sensorData timeout is only set when the promise resolves
+		// but in the time the promise is pending, there is no timeout to cancel
+		// so let's set a var that has to be checked before calling a new setTimeout
+		sensorTimeoutIsCancelled = true;
 
 		const event = new CustomEvent('sensorstop.sbrick', {detail: {portId}});
 		document.body.dispatchEvent(event);
@@ -288,6 +298,7 @@
 
 		document.getElementById('stop-all').addEventListener('click', () => {
 			mySBrick.stopAll();
+			window.util.log('stop');
 			stopSensor(window.sbrickUtil.PORTS.PORT_BOTTOM_RIGHT);
 		});
 	};

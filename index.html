@@ -39,7 +39,7 @@
 			<div class="busy-indicator">&ndash; connecting to the SBrick &ndash;</div>
 
 			<button id="connect-btn" class="btn btn--start btn--connect">
-				Connect
+				Connect...
 			</button>
 
 		</div>
@@ -189,20 +189,23 @@
 
 
 
-		<div id="log-window" class="log-window"></div>
+		<div id="log-window" class="log-window">
+			<a href="#" id="clear-log">clear</a>
+			<div id="log-msg-box"></div>
+		</div>
 
 	</div><!-- /.viewport -->
 
 	<script src="js/vendor/promise-queue.js"></script>
 	<script src="js/vendor/bluetooth.js"></script>
 	<script src="js/vendor/bluetooth-dummy.js"></script>
-	<script src="js/vendor/sbrick.js"></script>
+	<script src="js/vendor/sbrick.js?a=3"></script>
 	<script src="js/sbrick-util.js"></script>
 	<script src="js/util.js"></script>
-	<script src="js/sbrick-table-view.js"></script>
+	<script src="js/sbrick-table-view.js?a=0"></script>
 	<script src="js/sbrick-icon-view.js"></script>
 
-	<script src="js/button-controller.js"></script>
+	<script src="js/button-controller.js?a=3"></script>
 	<script src="js/speech-recognition.js"></script>
 	<script src="js/speech-commands.js"></script>
 	<script src="js/interface.js"></script>
