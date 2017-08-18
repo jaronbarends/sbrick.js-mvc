@@ -298,7 +298,6 @@
 
 		document.getElementById('stop-all').addEventListener('click', () => {
 			mySBrick.stopAll();
-			window.util.log('stop');
 			stopSensor(window.sbrickUtil.PORTS.PORT_BOTTOM_RIGHT);
 		});
 	};
