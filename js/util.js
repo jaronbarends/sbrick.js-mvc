@@ -21,7 +21,7 @@
 	* @returns {undefined}
 	*/
 	let log = function(...msg) {// use let instead of const so we can reassign to console.log
-		msg = msg.join(', ');
+		msg = msg.join(' ');
 		logMsgBox.innerHTML += '<p>' + msg + '</p>';
 	};
 
