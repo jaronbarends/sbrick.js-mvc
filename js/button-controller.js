@@ -312,11 +312,6 @@
 		sensorSwitch = document.getElementById('toggle-sensor');
 		sensorSwitch.addEventListener('click', toggleSensor);
 
-		document.getElementById('stop-3').addEventListener('click', (e) => {
-			e.preventDefault();
-			mySBrick.stop(3);
-		});
-
 		// set listeners for sbrick events
 		document.body.addEventListener('portchange.sbrick', portchangeHandler);
 		document.body.addEventListener('sensorchange.sbrick', sensorchangeHandler);

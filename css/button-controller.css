@@ -125,3 +125,7 @@
 	margin-right: 6px;
 	color: cornflowerblue;
 }
+
+.btn--stop-all {
+	margin: 0 1em;
+}

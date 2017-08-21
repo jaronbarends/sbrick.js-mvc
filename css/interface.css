@@ -1,6 +1,6 @@
 .viewport {
 	position: relative;
-	border-bottom: 1px dotted #000;
+	margin: 0 auto;
 	width: 360px;
 	height: 560px;
 	text-align: center;
