@@ -181,7 +181,7 @@
 
 		mySBrick.getSensor(portId, 'wedo')
 			.then((m) => {
-				let sensorData = m;// { type, voltage, ch0_raw, ch1_raw }
+				let sensorData = m;// { type, voltage, ch0_raw, ch1_raw, value }
 
 				const event = new CustomEvent('sensorchange.sbrick', {detail: sensorData});
 				document.body.dispatchEvent(event);
@@ -311,11 +311,6 @@
 	const initInfoControls = function() {
 		sensorSwitch = document.getElementById('toggle-sensor');
 		sensorSwitch.addEventListener('click', toggleSensor);
-
-		document.getElementById('stop-3').addEventListener('click', (e) => {
-			e.preventDefault();
-			mySBrick.stop(3);
-		});
 
 		// set listeners for sbrick events
 		document.body.addEventListener('portchange.sbrick', portchangeHandler);
