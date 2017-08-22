@@ -181,7 +181,7 @@
 
 		mySBrick.getSensor(portId, 'wedo')
 			.then((m) => {
-				let sensorData = m;// { type, voltage, ch0_raw, ch1_raw }
+				let sensorData = m;// { type, voltage, ch0_raw, ch1_raw, value }
 
 				const event = new CustomEvent('sensorchange.sbrick', {detail: sensorData});
 				document.body.dispatchEvent(event);
