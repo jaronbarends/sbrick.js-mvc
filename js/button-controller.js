@@ -301,6 +301,22 @@
 			stopSensor(window.sbrickUtil.PORTS.PORT_BOTTOM_RIGHT);
 		});
 	};
+
+
+	/**
+	* 
+	* @returns {undefined}
+	*/
+	const drive3power0 = function() {
+		const data = {
+			portId: window.sbrickUtil.PORTS.PORT_BOTTOM_RIGHT,
+			power: 0,
+			direction: mySBrick.CCW
+		};
+		setDrive(data);
+		console.log('drove');
+	};
+	
 	
 
 
@@ -311,6 +327,8 @@
 	const initInfoControls = function() {
 		sensorSwitch = document.getElementById('toggle-sensor');
 		sensorSwitch.addEventListener('click', toggleSensor);
+
+		document.getElementById('drive-3-0').addEventListener('click', drive3power0);
 
 		// set listeners for sbrick events
 		document.body.addEventListener('portchange.sbrick', portchangeHandler);
