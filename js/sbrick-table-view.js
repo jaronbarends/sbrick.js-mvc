@@ -76,9 +76,12 @@
 
 
 	/**
-	* handle change of lights
+	* handle change of port power
+	* @param {event} e - portchange.sbrick event with detail: portObjs {portId, power, direction}
 	* @returns {undefined}
 	*/
+	// TODO: sbrick.js does seem to send consecutive portchange events for quickDrive, instead of just 1
+	// so change that in sbrick.js
 	const portchangeHandler = function(e) {
 		let portObjs = e.detail;
 		if (!Array.isArray(portObjs)) {

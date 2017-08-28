@@ -12,8 +12,7 @@
 
 	/**
 	* update a set of lights
-	* @param {string} portId - The number (0-3) of the port this set of lights is attached to
-	* @param {funcId} string - An id for this attached set of lights, corresponding to id's in html to retrieve input values
+	* @param {object} data - New settings for this port {portId, power, direction}
 	* @returns {undefined}
 	*/
 	const setLights = function(data) {
@@ -25,8 +24,7 @@
 
 	/**
 	* update a drive motor
-	* @param {string} portId - The number (0-3) of the port this motor is attached to
-	* @param {funcId} string - An id for this attached motor, corresponding to id's in html to retrieve input values
+	* @param {object} data - New settings for this port {portId, power, direction}
 	* @returns {undefined}
 	*/
 	const setDrive = function(data) {
@@ -38,8 +36,7 @@
 
 	/**
 	* update a servo motor
-	* @param {string} portId - The number (0-3) of the port this motor is attached to
-	* @param {funcId} string - An id for this attached motor, corresponding to id's in html to retrieve input values
+	* @param {object} data - New settings for this port {portId, power, direction}
 	* @returns {undefined}
 	*/
 	const setServo = function(data) {
@@ -51,7 +48,7 @@
 
 	/**
 	* get the indicator for which lights button is active
-	* @param {number} data - The current values of the port ({portId, data, direction})
+	* @param {object} data - The current values of the port ({portId, power, direction})
 	* @returns {undefined}
 	*/
 	const getActiveLightsHrefValue = function(data) {
@@ -63,7 +60,7 @@
 
 	/**
 	* get the indicator for which lights button is active
-	* @param {number} data - The current values of the port ({portId, data, direction})
+	* @param {object} data - The current values of the port ({portId, power, direction})
 	* @returns {undefined}
 	*/
 	const getActiveDriveHrefValue = function(data) {
@@ -78,7 +75,7 @@
 
 	/**
 	* get the indicator for which lights button is active
-	* @param {number} data - The current values of the port ({portId, data, direction})
+	* @param {number} data - The current values of the port ({portId, power, direction})
 	* @returns {undefined}
 	*/
 	const getActiveServoHrefValue = function(data) {
@@ -111,6 +108,7 @@
 
 	/**
 	* update which button is active when port value changes
+	* @param {object} data - Changed port's data {portId, direction, power}
 	* @returns {undefined}
 	*/
 	const updateActiveButton = function(data) {
@@ -151,7 +149,7 @@
 
 	/**
 	* handle when port has changed
-	* @param {event} e - change event sent by sbrick.js
+	* @param {event} e - portchange.sbrick event sent by sbrick.js event.detail: {portId, direction, power}
 	* @returns {undefined}
 	*/
 	const portchangeHandler = function(e) {
@@ -163,7 +161,7 @@
 
 	/**
 	* handle when sensor has changed
-	* @param {event} e - change event sent by sbrick.js
+	* @param {event} e - sensorchange.sbrick event; At this time sent by this very script; should me moved to sbrick.js
 	* @returns {undefined}
 	*/
 	const sensorchangeHandler = function(e) {
@@ -174,17 +172,17 @@
 
 	/**
 	* read sensor data and send event
+	* @param {number} portId - The id of the port to read sensor data from
 	* @returns {undefined}
 	*/
+	// TODO: I think this should be implemented in sbrick.js
 	const getSensorData = function(portId) {
-		// clearTimeout(sensorTimer);
-
 		mySBrick.getSensor(portId, 'wedo')
 			.then((m) => {
 				let sensorData = m;// { type, voltage, ch0_raw, ch1_raw, value }
-
 				const event = new CustomEvent('sensorchange.sbrick', {detail: sensorData});
 				document.body.dispatchEvent(event);
+
 				clearTimeout(sensorTimer);// clear timeout within then-clause so it will always clear right before setting new one
 				if (!sensorTimeoutIsCancelled) {
 					// other functions may want to cancel the sensorData timeout
@@ -192,7 +190,6 @@
 					sensorTimer = setTimeout(() => {getSensorData(portId);}, 20);
 				}
 			});
-
 	}
 
 	
@@ -203,7 +200,6 @@
 	*/
 	const toggleSensor = function() {
 		let portId = window.sbrickUtil.PORTS.PORT_BOTTOM_RIGHT;
-		// if (sensorSwitch.classList.indexOf('btn'))
 		if (sensorSwitch.classList.contains('btn--is-active')) {
 			stopSensor(portId);
 		} else {
@@ -242,6 +238,7 @@
 
 	/**
 	* handle starting of sensor
+	* @param {event} e - * @param {event} e - sensorstart.sbrick event; At this time sent by this very script; should me moved to sbrick.js
 	* @returns {undefined}
 	*/
 	const sensorstartHandler = function(e) {
@@ -251,6 +248,7 @@
 
 	/**
 	* handle starting of sensor
+	* @param {event} e - * @param {event} e - sensorstop.sbrick event; At this time sent by this very script; should me moved to sbrick.js
 	* @returns {undefined}
 	*/
 	const sensorstopHandler = function(e) {
