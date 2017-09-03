@@ -59,6 +59,7 @@
 
 	/**
 	* show a ports state
+	* @param {object} portObj - The port's current settings {portId, power, direction}
 	* @returns {undefined}
 	*/
 	const showState = function(portObj) {
@@ -97,6 +98,7 @@
 
 	/**
 	* handle change of sensor value
+	* @param {event} e - sensorchange.sbrick event; At this time sent by button-controller.js; should me moved to sbrick.js
 	* @returns {undefined}
 	*/
 	const sensorchangeHandler = function(e) {
