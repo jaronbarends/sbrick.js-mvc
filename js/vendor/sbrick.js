@@ -14,7 +14,6 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-
 let SBrick = (function() {
 	'use strict';
 
@@ -58,15 +57,16 @@ let SBrick = (function() {
 
 	// SBrick Ports / Channels
 	const PORTS = [
-		{ hexId: 0x00, channelHexIds: [ 0x00, 0x01 ]},
-		{ hexId: 0x01, channelHexIds: [ 0x02, 0x03 ]},
-		{ hexId: 0x02, channelHexIds: [ 0x04, 0x05 ]},
-		{ hexId: 0x03, channelHexIds: [ 0x06, 0x07 ]}
+		{ portId: 0x00, channelsId: [ 0x00, 0x01 ]},
+		{ portId: 0x01, channelsId: [ 0x02, 0x03 ]},
+		{ portId: 0x02, channelsId: [ 0x04, 0x05 ]},
+		{ portId: 0x03, channelsId: [ 0x06, 0x07 ]}
 	];
 
 	// Port Mode
 	const INPUT  = 'input';
 	const OUTPUT = 'output';
+	const BREAK  = 'break';
 
 	// Direction
 	const CLOCKWISE        = 0x00; // Clockwise
@@ -77,6 +77,10 @@ let SBrick = (function() {
 	const MAX      = 255; // Max Speed
 	const MAX_QD   = 127; // Max Speed for QuickDrive
 	const MAX_VOLT = 9;   // Max Voltage = Full battery
+
+	// Times in milliseconds
+	const T_KA  = 300; // Time interval for the keepalive loop (must be < 500ms - watchdog default)
+	const T_PVM = 500; // Time delay for PVM completion: the registry is update approximately 5 times per second (must be > 200ms)
 
 	// Sbrick class definition
 	class SBrick {
@@ -92,10 +96,10 @@ let SBrick = (function() {
 
 			// export constants
 			this.NAME     = sbrick_name || "";
-			this.PORT0    = PORTS[0].hexId;
-			this.PORT1    = PORTS[1].hexId;
-			this.PORT2    = PORTS[2].hexId;
-			this.PORT3    = PORTS[3].hexId;
+			this.PORT0    = this.TOPLEFT     = PORTS[0].portId;
+			this.PORT1    = this.BOTTOMLEFT  = PORTS[1].portId;
+			this.PORT2    = this.TOPRIGHT    = PORTS[2].portId;
+			this.PORT3    = this.BOTTOMRIGHT = PORTS[3].portId;
 			this.CW       = CLOCKWISE;
 			this.CCW      = COUNTERCLOCKWISE;
 			this.MAX      = MAX;
@@ -104,10 +108,10 @@ let SBrick = (function() {
 			// status
 			this.keepalive = null;
 			this.ports     = [
-				{ id: 0, power: MIN, direction: CLOCKWISE, mode: OUTPUT, pvmActive: false, busy: false },
-				{ id: 1, power: MIN, direction: CLOCKWISE, mode: OUTPUT, pvmActive: false, busy: false },
-				{ id: 2, power: MIN, direction: CLOCKWISE, mode: OUTPUT, pvmActive: false, busy: false },
-				{ id: 3, power: MIN, direction: CLOCKWISE, mode: OUTPUT, pvmActive: false, busy: false }
+				{ power: MIN, direction: CLOCKWISE, mode: OUTPUT, busy: false },
+				{ power: MIN, direction: CLOCKWISE, mode: OUTPUT, busy: false },
+				{ power: MIN, direction: CLOCKWISE, mode: OUTPUT, busy: false },
+				{ power: MIN, direction: CLOCKWISE, mode: OUTPUT, busy: false }
 			];
 
 			// queue
@@ -211,7 +215,8 @@ let SBrick = (function() {
 					reject('Not connected');
 				}
 			} ).then( ()=> {
-				return this.stopAll().then( ()=>{
+				return this.stopAll()
+				.then( ()=> {
 					clearInterval( this.keepalive );
 					return this.webbluetooth.disconnect();
 				} );
@@ -221,7 +226,7 @@ let SBrick = (function() {
 
 
 		/**
-		* check if the SBrick is connected to the browser
+		* Check if the SBrick is connected to the browser
 		* @returns {boolean}
 		*/
 		isConnected() {
@@ -229,7 +234,7 @@ let SBrick = (function() {
 		}
 
 		/**
-		* get the SBrick's model number
+		* Get the SBrick's model number
 		* @returns {promise returning string}
 		*/
 		getModelNumber() {
@@ -237,7 +242,7 @@ let SBrick = (function() {
 		}
 
 		/**
-		* get the SBrick's firmware version
+		* Get the SBrick's firmware version
 		* @returns {promise returning string}
 		*/
 		getFirmwareVersion() {
@@ -245,7 +250,7 @@ let SBrick = (function() {
 		}
 
 		/**
-		* get the SBrick's hardware version
+		* Get the SBrick's hardware version
 		* @returns {promise returning string}
 		*/
 		getHardwareVersion() {
@@ -253,7 +258,7 @@ let SBrick = (function() {
 		}
 
 		/**
-		* get the SBrick's software version
+		* Get the SBrick's software version
 		* @returns {promise returning string}
 		*/
 		getSoftwareVersion() {
@@ -261,7 +266,7 @@ let SBrick = (function() {
 		}
 
 		/**
-		* get the SBrick's manufacturer's name
+		* Get the SBrick's manufacturer's name
 		* @returns {promise returning string}
 		*/
 		getManufacturerName() {
@@ -270,27 +275,27 @@ let SBrick = (function() {
 
 
 		/**
-		* send drive command
+		* Send drive command
 		* @param {object} portObj - {portId, direction, power}
 		*		portId: {number} The index (0-3) of the port to update in the this.ports array
 		*		direction: {hexadecimal number} The drive direction (0x00, 0x01 - you can use the constants SBrick.CLOCKWISE and SBrick.COUNTERCLOCKWISE)
-		*		power {number} - The power level for the drive command 0-255
+		*		power: {number} - The power level for the drive command 0-255
 		* @returns {promise returning object} - Returned object: portId, direction, power
 		*/
 		drive( portObj ) {
 			if (typeof portObj !== 'object') {
 				// the old version with 3 params was used
 				portObj = {
-					portId: 	arguments[0],
-					direction: 	arguments[1] || CLOCKWISE,
-					power: 		arguments[2]
+					portId: 	  arguments[0],
+					direction: 	arguments[1],
+					power: 		  arguments[2]
 				};
-				this._log('calling drive with 3 arguments is deprecated. use 1 object {portId, direction, power} instead.');
+				this._log('Calling drive with 3 arguments is deprecated: use 1 object {portId, direction, power} instead.');
 			}
 
-			const portId = portObj.portId,
-				direction = portObj.direction || CLOCKWISE,
-				power = portObj.power;
+			const portId 		= portObj.portId,
+						direction = portObj.direction || CLOCKWISE,
+						power 		= ( portObj.power === undefined ) ? MAX : portObj.power
 
 			return new Promise( (resolve, reject) => {
 				if( portId !== undefined && direction !== undefined && power !== undefined ) {
@@ -306,11 +311,7 @@ let SBrick = (function() {
 				}
 			} )
 			.then( ()=> {
-				// I think this promise could be removed:
-				// all ports have mode:OUTPUT by default
-				// and only change from OUTPUT to INPUT on sensors
-				// output ports don't need pvm
-				return this._pvm( { portId:portId, mode:OUTPUT, pvmActive: false } );
+				return this._pvm( { portId:portId, mode:OUTPUT } );
 			})
 			.then( () => {
 				let port = this.ports[portId];
@@ -324,7 +325,7 @@ let SBrick = (function() {
 						port.busy = false;
 						return this.webbluetooth.writeCharacteristicValue(
 							UUID_CHARACTERISTIC_REMOTECONTROL,
-							new Uint8Array([ CMD_DRIVE, PORTS[portId].hexId, port.direction, port.power ])
+							new Uint8Array([ CMD_DRIVE, PORTS[portId].portId, port.direction, port.power ])
 						) }
 					);
 				}
@@ -341,9 +342,8 @@ let SBrick = (function() {
 
 
 		/**
-		* send quickDrive command
-		* @param {array} portObjs - An array with a setting objects {port, direction, power}
-									for every port you want to update
+		* Send quickDrive command
+		* @param {array} portObjs - An array with a setting objects {port, direction, power} for every port you want to update
 		* @returns {promise returning array} - Returned array: [{portId, direction, power}, {...}, {...}, {...}]
 		*/
 		quickDrive( portObjs ) {
@@ -355,32 +355,40 @@ let SBrick = (function() {
 				}
 			} )
 			.then( ()=> {
-				portObjs.forEach( (portObj) => {
-					let portId = parseInt( portObj.portId );
-					if (isNaN(portId)) {
-						// the old version with port instead of portId was used
-						portId = parseInt( portObj.port );
-						this._log('object property port is deprecated. use portId instead.');
-					}
-					let port = this.ports[portId];
-					port.power     = Math.min(Math.max(parseInt(Math.abs(portObj.power)), MIN), MAX);
-					port.direction = portObj.direction ? COUNTERCLOCKWISE : CLOCKWISE;
+				let array = [];
+				let allPorts = this._getPorts();
+				allPorts.forEach( (portId) => {
+					array.push( {
+						portId: portId,
+						mode: OUTPUT
+					} );
 				});
-				
-				if(this._allPortsAreIdle()) {
-					this._setAllPortsBusy();
-
+				console.log(array);
+				return this._pvm( array );
+			})
+			.then( ()=> {
+				// updating ports status
+				portObjs.forEach( (portObj) => {
+		      let portId = parseInt( portObj.portId );
+		      if (isNaN(portId)) {
+		        // the old version with port instead of portId was used
+		        portId = parseInt( portObj.port );
+		        this._log('object property port is deprecated. use portId instead.');
+		      }
+		      let port       = this.ports[portId];
+		      port.power     = Math.min(Math.max(parseInt(Math.abs(portObj.power)), MIN), MAX);
+		      port.direction = portObj.direction ? COUNTERCLOCKWISE : CLOCKWISE;
+		    });
+				// send command
+				if(this._portsIdle(this._getPorts())) {
+					// set all ports busy
+		      this._setPortsBusy(this._getPorts(), true);
 					this.queue.add( () => {
 						let command = [];
-						this.ports.forEach( (port) => {
-							port.busy = false;
-							if( port.mode===OUTPUT ) {
+						this.ports.forEach( (port, index) => {
+								port.busy = false;
 								command.push( parseInt( parseInt(port.power/MAX*MAX_QD).toString(2) + port.direction, 2 ) );
-							} else {
-								command.push( null );
-							}
 						});
-						
 						return this.webbluetooth.writeCharacteristicValue(
 							UUID_CHARACTERISTIC_QUICKDRIVE,
 							new Uint8Array( command )
@@ -411,13 +419,16 @@ let SBrick = (function() {
 
 
 		/**
-		* stop a port
+		* Stop a port
 		* @param {number | array} portIds - The number or array of numbers of channels to stop
 		* @returns {promise}
 		*/
 		stop( portIds ) {
 			return new Promise( (resolve, reject) => {
 				if( portIds!==null ) {
+					if( !Array.isArray(portIds) ) {
+						portIds = [ portIds ];
+					}
 					resolve();
 				} else {
 					reject('wrong input');
@@ -425,43 +436,31 @@ let SBrick = (function() {
 			} )
 			.then( ()=> {
 				let array = [];
-				if( !Array.isArray(portIds) ) {
-					portIds = [ portIds ];
-				}
 				portIds.forEach( (portId) => {
-					// set pvm of input ports to false
-					const port = this.ports[portId];
-					let pvmActive = true;
-					if (port.mode === INPUT) {
-						pvmActive = false;
-					}
-					// TODO: I think object needs only to be pushed when it's input-port
 					array.push( {
 						portId: portId,
-						mode: port.mode,
-						pvmActive: pvmActive
+						mode: BREAK
 					} );
 				});
 				return this._pvm( array );
 			})
 			.then( ()=> {
-				let command = [ CMD_BREAK ];
+				let portsToUpdate = [];
 				// update object values and build the command
-				// only send command to output ports, otherwise sensor values get messed up
 				portIds.forEach( (portId) => {
 					let port = this.ports[portId];
-					if (port.mode === OUTPUT) {
-						port.power = 0;
-						command.push(PORTS[portId].hexId);
+					port.power = 0;
+					if(!port.busy) {
+						portsToUpdate.push(portId);
 					}
 				});
-
-				if (command.length > 1) {
-					// there is at least one output port
+				if( portsToUpdate.length ) {
+					this._setPortsBusy(portsToUpdate, true);
 					this.queue.add( () => {
+						this._setPortsBusy(portsToUpdate, false);
 						return this.webbluetooth.writeCharacteristicValue(
 							UUID_CHARACTERISTIC_REMOTECONTROL,
-							new Uint8Array( command )
+							new Uint8Array( [ CMD_BREAK ].concat(portsToUpdate) )
 						);
 					});
 				}
@@ -469,10 +468,8 @@ let SBrick = (function() {
 			.then( () => {
 				// all went well, return an array with the channels and the settings we just applied
 				let returnData = [];
-
 				portIds.forEach((portId) => {
-					
-					//send event for this port
+					// send event for this port
 					let portData = this._getPortData(portId);
 					this._sendPortChangeEvent(portData);
 					returnData.push(portData);
@@ -484,16 +481,16 @@ let SBrick = (function() {
 
 
 		/**
-		* stop all ports
+		* Stop all ports
 		* @returns {promise}
 		*/
 		stopAll() {
-			return this.stop([0, 1, 2, 3])
+			return this.stop( this._getPorts() );
 		}
 
 
 		/**
-		* get battery percentage
+		* Get battery percentage
 		* @returns {promise returning number}
 		*/
 		getBattery() {
@@ -505,7 +502,7 @@ let SBrick = (function() {
 
 
 		/**
-		* get sbrick's temperature in degrees Celsius (default) or Fahrenheit
+		* Get sbrick's temperature in degrees Celsius (default) or Fahrenheit
 		* @param {boolean} fahrenheit - If true, temperature is returned in Fahrenheit
 		* @returns {promise returning number}
 		*/
@@ -536,12 +533,21 @@ let SBrick = (function() {
 				} else {
 					reject('wrong input');
 				}
-			}).then( ()=> {
-				this.ports[portId].mode = INPUT;// apparently, this is a sensor. So make sure its mode is set to input
-				return this._pvm( { portId: portId, mode:INPUT, pvmActive: true } );
-			}).then( ()=> {
+			}).then( () => {
+				let newPortStatus = { portId: portId, mode:INPUT };
+				// reset the port if is in "break mode" (short circuited) or driving before activate PVM
+				if(this.ports[portId].mode===BREAK || this.ports[portId].power!=0) {
+					return this.drive(portId,CLOCKWISE,0)
+					.then( () => {
+						return this._pvm( newPortStatus );
+					} );
+				} else {
+					return this._pvm( newPortStatus );
+				}
+			}).then( () => {
 				let channels = this._getPortChannels(portId);
-				return this._adc([CMD_ADC_VOLT].concat(channels)).then( data => {
+				return this._adc([CMD_ADC_VOLT].concat(channels))
+				.then( data => {
 					let arrayData = [];
 					for (let i = 0; i < data.byteLength; i+=2) {
 						arrayData.push( data.getUint16(i, true) );
@@ -623,7 +629,7 @@ let SBrick = (function() {
 						);
 					} );
 				}
-			}, 300);
+			}, T_KA);
 		}
 
 		/**
@@ -651,7 +657,7 @@ let SBrick = (function() {
 		/**
 		* Enable "Power Voltage Measurements" (five times a second) on a specific PORT (on both CHANNELS)
 		* the values are stored in internal SBrick variables, to read them use _adc()
-		* @param {array} portObjs - an array of port status objects { portId, mode: INPUT | OUTPUT, pvmActive: true | false}
+		* @param {array} portObjs - an array of port status objects { portId, mode: INPUT-OUTPUT}
 		* @returns {promise} - undefined
 		*/
 		_pvm( portObjs ) {
@@ -665,30 +671,27 @@ let SBrick = (function() {
 				if( !Array.isArray(portObjs) ) {
 					portObjs = [ portObjs ];
 				}
-
 				let update_pvm = false;
 				portObjs.forEach( (portObj) => {
 					let portId = portObj.portId;
-					let pvmActive = portObj.pvmActive;
-					if( this.ports[portId].pvmActive != pvmActive ) {
-						this.ports[portId].pvmActive = pvmActive;
+					let mode = portObj.mode;
+					if( this.ports[portId].mode != mode ) {
+						this.ports[portId].mode = mode;
 						update_pvm = true;
 					}
 				});
-
 				if(update_pvm) {
 					let command = [CMD_PVM];
 					let srt = "";
 					this.ports.forEach( (port, i) => {
-						if(port.pvmActive === true) {
+						if(port.mode==INPUT) {
 							let channels = this._getPortChannels(i);
 							command.push(channels[0]);
 							command.push(channels[1]);
 							srt += " PORT"+ i + " (CH" + channels[0] + " CH" + channels[1]+")";
 						}
 					});
-
-					return this.queue.add( () => {
+					this.queue.add( () => {
 						return this.webbluetooth.writeCharacteristicValue(
 							UUID_CHARACTERISTIC_REMOTECONTROL,
 							new Uint8Array(command)
@@ -697,6 +700,8 @@ let SBrick = (function() {
 							this._log( "PVM set" + ( srt=="" ? " OFF" : srt ) );
 						});
 					});
+					// PVM has a delay before start to collect actual data
+					return this._delay(T_PVM);
 				}
 				return false;
 			});
@@ -726,24 +731,33 @@ let SBrick = (function() {
 		}
 
 		/**
+		* Helper function to get ports Ids
+		* @returns {boolean}
+		*/
+		_getPorts() {
+			return PORTS.map( function(obj) {return obj.portId;} );
+		}
+
+		/**
 		* Helper function to find a port channel numbers
 		* @param {number} portId - The index of the port in the this.ports array
 		* @returns {array} - hexadecimal numbers of both channels
 		*/
 		_getPortChannels( portId ) {
-			return PORTS[portId].channelHexIds;
+			return PORTS[portId].channelsId;
 		}
 
 		/**
-		* get the settings of a specific port
+		* Get the settings of a specific port
 		* @returns {object} portId, direction, power
 		*/
 		_getPortData(portId) {
 			const port = this.ports[portId],
 				data = {
-					portId: portId,
+					portId:    portId,
 					direction: port.direction,
-					power: port.power
+					power:     port.power,
+					mode:      port.mode
 				};
 			return data;
 		}
@@ -771,7 +785,17 @@ let SBrick = (function() {
 		}
 
 		/**
-		* trigger event on body to notify listeners that a port's values have changed
+		* Delay promise
+		* @param {number} t - time in milliseconds
+		*/
+		_delay(t) {
+			return new Promise(function(resolve) {
+		 		setTimeout(resolve, t)
+		 	});
+		}
+
+		/**
+		* Trigger event on body to notify listeners that a port's values have changed
 		* @param {object} portData - The data ({portId, power, direction}) for the port that was changed
 		* @returns {undefined}
 		*/
@@ -781,32 +805,28 @@ let SBrick = (function() {
 		}
 
 		/**
-		* check if no port is busy
+		* Check if ports are busy
 		* @returns {boolean}
 		*/
-		_allPortsAreIdle() {
+		_portsIdle(ports) {
 			let allAreIdle = true;
-			this.ports.forEach((port) => {
-				if (port.busy) {
+			ports.forEach( (port) => {
+				if (this.ports[port].busy) {
 					allAreIdle = false;
 				}
 			});
-			
 			return allAreIdle;
 		}
 
-
 		/**
-		* set all ports to busy
+		* Set all ports to busy
 		* @returns {undefined}
 		*/
-		_setAllPortsBusy() {
-			this.ports.forEach((port) => {
-				port.busy = true;
+		_setPortsBusy(ports, status) {
+			ports.forEach( (port) => {
+				this.ports[port].busy = status;
 			});
 		};
-
-
 
 	}
 
