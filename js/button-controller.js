@@ -299,6 +299,22 @@
 			stopSensor(window.sbrickUtil.PORTS.PORT_BOTTOM_RIGHT);
 		});
 	};
+
+
+	/**
+	* 
+	* @returns {undefined}
+	*/
+	const drive3power0 = function() {
+		const data = {
+			portId: window.sbrickUtil.PORTS.PORT_BOTTOM_RIGHT,
+			power: 0,
+			direction: mySBrick.CCW
+		};
+		setDrive(data);
+		console.log('drove');
+	};
+	
 	
 
 
