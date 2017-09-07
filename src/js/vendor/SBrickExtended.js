@@ -117,11 +117,11 @@ let SBrickExtended = (function() {
 			/**
 			* update a set of lights
 			* @param {object} data - New settings for this port {portId, power (0-100), direction}
-			* @returns {undefined}
+			* @returns {promise returning object} - { Returned object: portId, direction, power (0-255!), mode}
 			*/
 			setLights(data) {
 				data.power = Math.round(this.MAX * data.power/100);
-				this.drive(data);
+				return this.drive(data);
 			};
 
 
@@ -129,11 +129,11 @@ let SBrickExtended = (function() {
 			/**
 			* update a drive motor
 			* @param {object} data - New settings for this port {portId, power (0-100), direction}
-			* @returns {undefined}
+			* @returns {promise returning object} - { Returned object: portId, direction, power (0-255!), mode}
 			*/
 			setDrive(data) {
 				data.power = this.drivePercentageToPower(data.power);
-				this.drive(data);
+				return this.drive(data);
 			};
 
 
@@ -141,11 +141,11 @@ let SBrickExtended = (function() {
 			/**
 			* update a servo motor
 			* @param {object} data - New settings for this port {portId, angle (0-90), direction}
-			* @returns {undefined}
+			* @returns {promise returning object} - { Returned object: portId, direction, power (0-255!), mode}
 			*/
 			setServo(data) {
 				data.power = this.servoAngleToPower(data.angle);
-				this.drive(data);
+				return this.drive(data);
 			};
 
 
@@ -153,17 +153,17 @@ let SBrickExtended = (function() {
 			/**
 			* start stream of sensor measurements and send a sensorstart.sbrick event
 			* @param {number} portId - The id of the port to read sensor data from
-			* @returns {undefined}
+			* @returns {promise returning undefined} - The promise returned by sbrick.getSensor, but somehow that promise's data isn't returned
 			*/
 			startSensor(portId) {
 				const sensorObj = this._getSensorObj(portId);
 				sensorObj.keepAlive = true;
 
-				this._getNextSensorData(portId);
-				const data = {portId};
-
-				const event = new CustomEvent('sensorstart.sbrick', {detail: data});
+				const data = {portId},
+					event = new CustomEvent('sensorstart.sbrick', {detail: data});
 				document.body.dispatchEvent(event);
+
+				return this._getNextSensorData(portId);
 			}
 
 
@@ -299,7 +299,7 @@ let SBrickExtended = (function() {
 			*/
 			_getNextSensorData(portId, sensorSeries = 'wedo') {
 				let sensorObj = this._getSensorObj(portId);
-				this.getSensor(portId, sensorSeries)
+				return this.getSensor(portId, sensorSeries)
 					.then((sensorData) => {
 						// sensorData looks like this: { type, voltage, ch0_raw, ch1_raw, value }
 
