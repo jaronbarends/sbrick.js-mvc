@@ -108,7 +108,7 @@ let SBrickExtended = (function() {
 				// vars for sensor timeouts
 				this.sensorTimer = null;
 				this.sensorTimeoutIsCancelled = false;
-				this.sensors = [];// will contain object for each sensor port with timer: {lastValue, lastInterpretation, timer, keepAlive}
+				this.sensors = [];// will contain object for each sensor port with timer: {lastValue, lastState, timer, keepAlive}
 			};
 
 
@@ -271,19 +271,19 @@ let SBrickExtended = (function() {
 
 
 			/**
-			* get interpretation for a sensor value, depending on the kind of sensor
-			* @returns {string} Interpretation: unknown (default) or [close | midrange | clear] (motion) or [flat | left | right | up | down] (tilt)
+			* determine the state for a sensor value, depending on the kind of sensor
+			* @returns {string} state: unknown (default) or [close | midrange | clear] (motion) or [flat | left | right | up | down] (tilt)
 			*/
-			getSensorInterpretation(value, sensorType) {
-				let interpretation = 'unknown';
+			getSensorState(value, sensorType) {
+				let state = 'unknown';
 
 				if (sensorType === 'motion') {
-					interpretation = _rangeValueToType(value, motionStates);
+					state = _rangeValueToType(value, motionStates);
 				} else if (sensorType === 'tilt') {
-					interpretation = _rangeValueToType(value, tiltStates);
+					state = _rangeValueToType(value, tiltStates);
 				}
 
-				return interpretation;
+				return state;
 			};
 
 
@@ -303,11 +303,11 @@ let SBrickExtended = (function() {
 					.then((sensorData) => {
 						// sensorData looks like this: { type, voltage, ch0_raw, ch1_raw, value }
 
-						const interpretation = this.getSensorInterpretation(sensorData.value, sensorData.type),
+						const state = this.getSensorState(sensorData.value, sensorData.type),
 							{value, type} = sensorData;
 
-						// add interpretation to sensorData obj
-						sensorData.interpretation = interpretation;
+						// add state to sensorData obj
+						sensorData.state = state;
 
 						// send event if the raw value of the sensor has changed
 						if (value !== sensorObj.lastValue) {
@@ -316,9 +316,9 @@ let SBrickExtended = (function() {
 							document.body.dispatchEvent(changeValueEvent);
 						}
 
-						// send event if the interpretation of the sensor has changed
-						if (interpretation !== sensorObj.lastInterpretation) {
-							sensorObj.lastInterpretation = interpretation;
+						// send event if the state of the sensor has changed
+						if (state !== sensorObj.lastState) {
+							sensorObj.lastState = state;
 							const event = new CustomEvent('sensorchange.sbrick', {detail: sensorData});
 							document.body.dispatchEvent(event);
 							
@@ -341,14 +341,14 @@ let SBrickExtended = (function() {
 			/**
 			* get a ports object with sensor properties (lastValue etc)
 			* @param {number} portId - The id of the port we want to read the sensor from
-			* @returns {object} - object with sensor properties ({lastValue, lastInterpretation, timer, keepAlive})
+			* @returns {object} - object with sensor properties ({lastValue, lastState, timer, keepAlive})
 			*/
 			_getSensorObj(portId) {
 				let sensorObj = this.sensors[portId];
 				if (typeof sensorObj === 'undefined') {
 					sensorObj = {
 						lastValue: null,
-						lastInterpretation: null,
+						lastState: null,
 						timer: null,
 						keepAlive: true
 					};
