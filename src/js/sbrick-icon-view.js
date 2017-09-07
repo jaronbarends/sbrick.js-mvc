@@ -83,7 +83,7 @@
 	* @returns {undefined}
 	*/
 	const init = function() {
-		window.mySBrick = window.mySBrick || new SBrick();
+		window.mySBrick = window.mySBrick || new SBrickExtended();
 		mySBrick = window.mySBrick;
 
 		defineElms();

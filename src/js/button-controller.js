@@ -11,42 +11,6 @@
 
 
 	/**
-	* update a set of lights
-	* @param {object} data - New settings for this port {portId, power, direction}
-	* @returns {undefined}
-	*/
-	const setLights = function(data) {
-		data.power = Math.round(mySBrick.MAX * data.power/100);
-		mySBrick.drive(data);
-	};
-
-
-
-	/**
-	* update a drive motor
-	* @param {object} data - New settings for this port {portId, power, direction}
-	* @returns {undefined}
-	*/
-	const setDrive = function(data) {
-		data.power = window.sbrickUtil.drivePercentageToPower(data.power);
-		mySBrick.drive(data);
-	};
-
-
-
-	/**
-	* update a servo motor
-	* @param {object} data - New settings for this port {portId, power, direction}
-	* @returns {undefined}
-	*/
-	const setServo = function(data) {
-		data.power = window.sbrickUtil.servoAngleToPower(data.power);
-		mySBrick.drive(data);
-	};
-
-
-
-	/**
 	* get the indicator for which lights button is active
 	* @param {object} data - The current values of the port ({portId, power, direction})
 	* @returns {undefined}
@@ -64,7 +28,7 @@
 	* @returns {undefined}
 	*/
 	const getActiveDriveHrefValue = function(data) {
-		let perc = window.sbrickUtil.drivePowerToPercentage(data.power);
+		let perc = mySBrick.drivePowerToPercentage(data.power);
 		if (data.direction === mySBrick.CCW) {
 			perc = -1*perc;
 		}
@@ -79,7 +43,7 @@
 	* @returns {undefined}
 	*/
 	const getActiveServoHrefValue = function(data) {
-		let angle = window.sbrickUtil.servoPowerToAngle(data.power);
+		let angle = mySBrick.servoPowerToAngle(data.power);
 		if (data.direction === mySBrick.CCW) {
 			angle = -1*angle;
 		}
@@ -117,10 +81,16 @@
 			direction = data.direction;
 
 		let portName;
+		let ports = {
+				TOPLEFT: mySBrick.TOPLEFT,
+				BOTTOMLEFT: mySBrick.BOTTOMLEFT,
+				TOPRIGHT: mySBrick.TOPRIGHT,
+				BOTTOMRIGHT: mySBrick.BOTTOMRIGHT
+			};
 
 		// check which type of function this is
-		for (let portNm in window.sbrickUtil.PORTS) {
-			if (window.sbrickUtil.PORTS[portNm] === portId) {
+		for (let portNm in ports) {
+			if (ports[portNm] === portId) {
 				portName = portNm;
 			}
 		}
@@ -199,7 +169,7 @@
 	* @returns {undefined}
 	*/
 	const toggleSensor = function() {
-		let portId = window.sbrickUtil.PORTS.PORT_BOTTOM_RIGHT;
+		let portId = mySBrick.BOTTOMRIGHT;
 		if (sensorSwitch.classList.contains('btn--is-active')) {
 			stopSensor(portId);
 		} else {
@@ -273,20 +243,22 @@
 					e.preventDefault();
 					const valueStr = e.target.getAttribute('href');
 					const data = {
-						portId: window.sbrickUtil.PORTS[portName],
+						portId: mySBrick[portName],
 						power: Math.abs(parseInt(valueStr, 10)),
 						direction: valueStr.indexOf('-') === 0 ? mySBrick.CCW : mySBrick.CW
 					};
 
 					switch (func) {
 						case 'lights':
-							setLights(data);
+							mySBrick.setLights(data);
 							break;
 						case 'drive':
-							setDrive(data);
+							mySBrick.setDrive(data);
 							break;
 						case 'servo':
-							setServo(data);
+							data.angle = data.power;
+							delete data.power;
+							mySBrick.setServo(data);
 							break;
 					}
 
@@ -296,26 +268,10 @@
 
 		document.getElementById('stop-all').addEventListener('click', () => {
 			mySBrick.stopAll();
-			stopSensor(window.sbrickUtil.PORTS.PORT_BOTTOM_RIGHT);
+			stopSensor(mySBrick.BOTTOMRIGHT);
 		});
 	};
 
-
-	/**
-	* 
-	* @returns {undefined}
-	*/
-	const drive3power0 = function() {
-		const data = {
-			portId: window.sbrickUtil.PORTS.PORT_BOTTOM_RIGHT,
-			power: 0,
-			direction: mySBrick.CCW
-		};
-		setDrive(data);
-		console.log('drove');
-	};
-	
-	
 
 
 	/**
@@ -341,7 +297,7 @@
 	* @returns {undefined}
 	*/
 	const init = function() {
-		window.mySBrick = window.mySBrick || new SBrick();
+		window.mySBrick = window.mySBrick || new SBrickExtended();
 		mySBrick = window.mySBrick;
 
 		initInfoControls();

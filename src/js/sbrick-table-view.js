@@ -104,7 +104,8 @@
 	const sensorchangeHandler = function(e) {
 		const sensorData = e.detail,
 			sensorType = sensorData.type;// tilt | motion
-			sensorInterpration = window.sbrickUtil.getSensorInterpretation(sensorData.value, sensorType);
+			// sensorInterpration = window.sbrickUtil.getSensorInterpretation(sensorData.value, sensorType);
+			sensorInterpration = mySBrick.getSensorInterpretation(sensorData.value, sensorType);
 
 		document.getElementById('table-view__port-3-function').textContent = window.util.capitalize(sensorType);
 		document.getElementById('table-view__power--port-3').textContent = window.util.capitalize(sensorInterpration);
@@ -129,7 +130,7 @@
 	* @returns {undefined}
 	*/
 	const init = function() {
-		window.mySBrick = window.mySBrick || new SBrick();
+		window.mySBrick = window.mySBrick || new SBrickExtended();
 		mySBrick = window.mySBrick;
 		
 		tableView = document.getElementById('table-view');

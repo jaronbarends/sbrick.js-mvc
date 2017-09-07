@@ -120,8 +120,8 @@
 	* @returns {undefined}
 	*/
 	const init = function() {
-		window.mySBrick = window.mySBrick || new SBrick();
-		mySBrick = window.mySBrick;
+		window.mySBrick = window.mySBrick || new SBrickExtended();
+		mySBrick = window.mySBrick;// local var
 		defineCommands();
 		addSpeechCommandListeners();
 	};

@@ -190,7 +190,7 @@
 	* @returns {undefined}
 	*/
 	const init = function() {
-		window.mySBrick = window.mySBrick || new SBrick();
+		window.mySBrick = window.mySBrick || new SBrickExtended();
 		mySBrick = window.mySBrick;
 		connectScreen = document.getElementById('connect-screen');
 		connectBtn = document.getElementById('connect-btn');
